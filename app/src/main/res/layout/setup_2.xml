@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+
+        <TextView
+            android:id="@+id/txtBackSetting2"
+            android:gravity="center"
+            android:text="@string/back"
+            android:textSize="35sp"
+            android:textColor="#ffffff"
+            android:layout_width="50dp"
+            android:layout_height="50dp">
+        </TextView>
+
+        <TextView
+            android:gravity="center"
+            android:text="@string/setting"
+            android:textColor="#ffffff"
+            android:textSize="25sp"
+            android:layout_marginLeft="20dp"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp">
+        </TextView>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:weightSum="4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/ST2txtMotor1"
+                android:gravity="center"
+                android:text="Motor 1"
+                android:layout_marginTop="50dp"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtMotor2"
+                android:gravity="center"
+                android:text="Motor 2"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtMotor3"
+                android:gravity="center"
+                android:text="Motor 3"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtMotor4"
+                android:gravity="center"
+                android:text="Motor 4"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtMotor5"
+                android:gravity="center"
+                android:text="Motor 5"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtMotor6"
+                android:gravity="center"
+                android:text="Motor 6"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="SLOW (%)"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtSlowPulse1"
+                android:hint="Slow 1"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtSlowPulse2"
+                android:hint="Slow 2"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtSlowPulse3"
+                android:hint="Slow 3"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtSlowPulse4"
+                android:hint="Slow 4"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtSlowPulse5"
+                android:hint="Slow 5"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtSlowPulse6"
+                android:hint="Slow 6"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="SPEED (max255)"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtSpeed1"
+                android:hint="Speed 1"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtSpeed2"
+                android:hint="Speed 2"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtSpeed3"
+                android:hint="Speed 3"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtSpeed4"
+                android:hint="Speed 4"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtSpeed5"
+                android:hint="Speed 5"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtSpeed6"
+                android:hint="Speed 6"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="TIME RETURN (x10ms)"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtReturn1"
+                android:hint="Return 1"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtReturn2"
+                android:hint="Return 2"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtReturn3"
+                android:hint="Return 3"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtReturn4"
+                android:hint="Return 4"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtReturn5"
+                android:hint="Return 5"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+            <TextView
+                android:id="@+id/ST2txtReturn6"
+                android:hint="Return 6"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+            </TextView>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:weightSum="5.5"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+        <LinearLayout
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Spinner
+                android:id="@+id/ST2spinerName"
+                android:spinnerMode="dropdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </Spinner>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <EditText
+                android:id="@+id/ST2edtSlowDistant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </EditText>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <EditText
+                android:id="@+id/ST2edtSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </EditText>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <EditText
+                android:id="@+id/ST2timeReturn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </EditText>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <Button
+            android:id="@+id/ST2btnSave"
+            android:text="SEND"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </Button>
+    </LinearLayout>
+</LinearLayout>
