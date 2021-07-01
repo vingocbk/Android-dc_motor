@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     //------------------setup-------------------------
     TextView txtMotor1,txtMotor2,txtMotor3,txtMotor4,txtMotor5,txtMotor6;
     TextView txtVoltage1,txtVoltage2,txtVoltage3,txtVoltage4,txtVoltage5,txtVoltage6;
+    TextView txtCurrent1,txtCurrent2,txtCurrent3,txtCurrent4,txtCurrent5,txtCurrent6;
     EditText edtSetDistantMotor1,edtSetDistantMotor2,edtSetDistantMotor3,edtSetDistantMotor4,edtSetDistantMotor5,edtSetDistantMotor6;
     Button btnRunDistantMotor1,btnRunDistantMotor2,btnRunDistantMotor3,btnRunDistantMotor4,btnRunDistantMotor5,btnRunDistantMotor6;
     Button btnSetDistantMotor1,btnSetDistantMotor2,btnSetDistantMotor3,btnSetDistantMotor4,btnSetDistantMotor5,btnSetDistantMotor6;
@@ -637,7 +638,7 @@ public class MainActivity extends AppCompatActivity {
                 btnRunDistantMotor5.setText("RUN");
                 btnRunDistantMotor6.setText("RUN");
 
-                layoutSetup.setVisibility(View.VISIBLE);
+//                layoutSetup.setVisibility(View.VISIBLE);
                 if (mmDevice !=null && isConnected(mmDevice)) {
                     String data = "{\"type\":\"get_status\",\"name\":\"\"}";
                     byte[] bytes = data.getBytes(Charset.defaultCharset());
@@ -1047,6 +1048,13 @@ public class MainActivity extends AppCompatActivity {
         txtVoltage5 = findViewById(R.id.txtVoltage5);
         txtVoltage6 = findViewById(R.id.txtVoltage6);
 
+        txtCurrent1 = findViewById(R.id.txtCurrent1);
+        txtCurrent2 = findViewById(R.id.txtCurrent2);
+        txtCurrent3 = findViewById(R.id.txtCurrent3);
+        txtCurrent4 = findViewById(R.id.txtCurrent4);
+        txtCurrent5 = findViewById(R.id.txtCurrent5);
+        txtCurrent6 = findViewById(R.id.txtCurrent6);
+
         edtSetDistantMotor1 = findViewById(R.id.edtSetDistantMotor1);
         edtSetDistantMotor2 = findViewById(R.id.edtSetDistantMotor2);
         edtSetDistantMotor3 = findViewById(R.id.edtSetDistantMotor3);
@@ -1257,68 +1265,55 @@ public class MainActivity extends AppCompatActivity {
                     if(incomingMessage.contains("}")){
                         Log.d(TAG, "InputStream: " + incomingMessage);
                         JSONObject reader = new JSONObject(incomingMessage);
-                        //all distant
-                        data[0] = reader.getString("1-1");
-                        data[1] = reader.getString("2-1");
-                        data[2] = reader.getString("3-1");
-                        data[3] = reader.getString("4-1");
-                        data[4] = reader.getString("5-1");
-                        data[5] = reader.getString("6-1");
-                        //% slow
-                        data[6] = reader.getString("1-2");
-                        data[7] = reader.getString("2-2");
-                        data[8] = reader.getString("3-2");
-                        data[9] = reader.getString("4-2");
-                        data[10] = reader.getString("5-2");
-                        data[11] = reader.getString("6-2");
-                        //speed
-                        data[12] = reader.getString("1-3");
-                        data[13] = reader.getString("2-3");
-                        data[14] = reader.getString("3-3");
-                        data[15] = reader.getString("4-3");
-                        data[16] = reader.getString("5-3");
-                        data[17] = reader.getString("6-3");
-                        //return
-                        data[18] = reader.getString("1-4");
-                        data[19] = reader.getString("2-4");
-                        data[20] = reader.getString("3-4");
-                        data[21] = reader.getString("4-4");
-                        data[22] = reader.getString("5-4");
-                        data[23] = reader.getString("6-4");
+                        //voltage
+                        data[0] = reader.getString("11");
+                        data[1] = reader.getString("21");
+                        data[2] = reader.getString("31");
+                        data[3] = reader.getString("41");
+                        data[4] = reader.getString("51");
+                        data[5] = reader.getString("61");
+                        //current
+                        data[6] = reader.getString("12");
+                        data[7] = reader.getString("22");
+                        data[8] = reader.getString("32");
+                        data[9] = reader.getString("42");
+                        data[10] = reader.getString("52");
+                        data[11] = reader.getString("62");
+                        //time return
+                        data[12] = reader.getString("13");
+                        data[13] = reader.getString("23");
+                        data[14] = reader.getString("33");
+                        data[15] = reader.getString("43");
+                        data[16] = reader.getString("53");
+                        data[17] = reader.getString("63");
                         incomingMessage = "";
                     }
                     runOnUiThread(new Runnable() {
 
+                        @SuppressLint("SetTextI18n")
                         @Override
                         public void run() {
                             //-------
-                            txtVoltage1.setText(data[0]);
-                            txtVoltage2.setText(data[1]);
-                            txtVoltage3.setText(data[2]);
-                            txtVoltage4.setText(data[3]);
-                            txtVoltage5.setText(data[4]);
-                            txtVoltage6.setText(data[5]);
+                            txtVoltage1.setText(data[0] + " V");
+                            txtVoltage2.setText(data[1] + " V");
+                            txtVoltage3.setText(data[2] + " V");
+                            txtVoltage4.setText(data[3] + " V");
+                            txtVoltage5.setText(data[4] + " V");
+                            txtVoltage6.setText(data[5] + " V");
                             //-------
-                            ST2txtSlowPulse1.setText(data[6]);
-                            ST2txtSlowPulse2.setText(data[7]);
-                            ST2txtSlowPulse3.setText(data[8]);
-                            ST2txtSlowPulse4.setText(data[9]);
-                            ST2txtSlowPulse5.setText(data[10]);
-                            ST2txtSlowPulse6.setText(data[11]);
-                            //--------
-                            ST2txtSpeed1.setText(data[12]);
-                            ST2txtSpeed2.setText(data[13]);
-                            ST2txtSpeed3.setText(data[14]);
-                            ST2txtSpeed4.setText(data[15]);
-                            ST2txtSpeed5.setText(data[16]);
-                            ST2txtSpeed6.setText(data[17]);
+                            txtCurrent1.setText(data[6] + " mA");
+                            txtCurrent2.setText(data[7] + " mA");
+                            txtCurrent3.setText(data[8] + " mA");
+                            txtCurrent4.setText(data[9] + " mA");
+                            txtCurrent5.setText(data[10] + " mA");
+                            txtCurrent6.setText(data[11] + " mA");
                             //---------
-                            ST2txtReturn1.setText(data[18]);
-                            ST2txtReturn2.setText(data[19]);
-                            ST2txtReturn3.setText(data[20]);
-                            ST2txtReturn4.setText(data[21]);
-                            ST2txtReturn5.setText(data[22]);
-                            ST2txtReturn6.setText(data[23]);
+                            ST2txtReturn1.setText(data[12]);
+                            ST2txtReturn2.setText(data[13]);
+                            ST2txtReturn3.setText(data[14]);
+                            ST2txtReturn4.setText(data[15]);
+                            ST2txtReturn5.setText(data[16]);
+                            ST2txtReturn6.setText(data[17]);
                         }
                     });
 
