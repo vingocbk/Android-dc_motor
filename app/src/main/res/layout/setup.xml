@@ -90,12 +90,20 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_weight="1"
-                android:weightSum="3"
+                android:weightSum="4"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    android:id="@+id/txtViewDistantMotor1"
+                    android:id="@+id/txtVoltage1"
+                    android:text="Gia tri 1"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/txtCurrent1"
                     android:text="Gia tri 1"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -157,12 +165,20 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_weight="1"
-                android:weightSum="3"
+                android:weightSum="4"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    android:id="@+id/txtViewDistantMotor2"
+                    android:id="@+id/txtVoltage2"
+                    android:text="Gia tri 2"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/txtCurrent2"
                     android:text="Gia tri 2"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -213,6 +229,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </TextView>
+
                 <Button
                     android:id="@+id/btnRunDistantMotor3"
                     android:layout_weight="0"
@@ -224,12 +241,20 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_weight="1"
-                android:weightSum="3"
+                android:weightSum="4"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    android:id="@+id/txtViewDistantMotor3"
+                    android:id="@+id/txtVoltage3"
+                    android:text="Gia tri 3"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/txtCurrent3"
                     android:text="Gia tri 3"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -291,12 +316,20 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_weight="1"
-                android:weightSum="3"
+                android:weightSum="4"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    android:id="@+id/txtViewDistantMotor4"
+                    android:id="@+id/txtVoltage4"
+                    android:text="Gia tri 4"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/txtCurrent4"
                     android:text="Gia tri 4"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -359,12 +392,20 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_weight="1"
-                android:weightSum="3"
+                android:weightSum="4"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    android:id="@+id/txtViewDistantMotor5"
+                    android:id="@+id/txtVoltage5"
+                    android:text="Gia tri 5"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/txtCurrent5"
                     android:text="Gia tri 5"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -426,12 +467,20 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_weight="1"
-                android:weightSum="3"
+                android:weightSum="4"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    android:id="@+id/txtViewDistantMotor6"
+                    android:id="@+id/txtVoltage6"
+                    android:text="Gia tri 6"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/txtCurrent6"
                     android:text="Gia tri 6"
                     android:layout_weight="1"
                     android:gravity="center"

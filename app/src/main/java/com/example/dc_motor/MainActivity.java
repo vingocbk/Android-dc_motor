@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     //------------------setup-------------------------
     TextView txtMotor1,txtMotor2,txtMotor3,txtMotor4,txtMotor5,txtMotor6;
-    TextView txtViewDistantMotor1,txtViewDistantMotor2,txtViewDistantMotor3,txtViewDistantMotor4,txtViewDistantMotor5,txtViewDistantMotor6;
+    TextView txtVoltage1,txtVoltage2,txtVoltage3,txtVoltage4,txtVoltage5,txtVoltage6;
     EditText edtSetDistantMotor1,edtSetDistantMotor2,edtSetDistantMotor3,edtSetDistantMotor4,edtSetDistantMotor5,edtSetDistantMotor6;
     Button btnRunDistantMotor1,btnRunDistantMotor2,btnRunDistantMotor3,btnRunDistantMotor4,btnRunDistantMotor5,btnRunDistantMotor6;
     Button btnSetDistantMotor1,btnSetDistantMotor2,btnSetDistantMotor3,btnSetDistantMotor4,btnSetDistantMotor5,btnSetDistantMotor6;
@@ -637,7 +637,7 @@ public class MainActivity extends AppCompatActivity {
                 btnRunDistantMotor5.setText("RUN");
                 btnRunDistantMotor6.setText("RUN");
 
-//                layoutSetup.setVisibility(View.VISIBLE);
+                layoutSetup.setVisibility(View.VISIBLE);
                 if (mmDevice !=null && isConnected(mmDevice)) {
                     String data = "{\"type\":\"get_status\",\"name\":\"\"}";
                     byte[] bytes = data.getBytes(Charset.defaultCharset());
@@ -1040,12 +1040,12 @@ public class MainActivity extends AppCompatActivity {
         txtMotor5 = findViewById(R.id.txtMotor5);
         txtMotor6 = findViewById(R.id.txtMotor6);
 
-        txtViewDistantMotor1 = findViewById(R.id.txtViewDistantMotor1);
-        txtViewDistantMotor2 = findViewById(R.id.txtViewDistantMotor2);
-        txtViewDistantMotor3 = findViewById(R.id.txtViewDistantMotor3);
-        txtViewDistantMotor4 = findViewById(R.id.txtViewDistantMotor4);
-        txtViewDistantMotor5 = findViewById(R.id.txtViewDistantMotor5);
-        txtViewDistantMotor6 = findViewById(R.id.txtViewDistantMotor6);
+        txtVoltage1 = findViewById(R.id.txtVoltage1);
+        txtVoltage2 = findViewById(R.id.txtVoltage2);
+        txtVoltage3 = findViewById(R.id.txtVoltage3);
+        txtVoltage4 = findViewById(R.id.txtVoltage4);
+        txtVoltage5 = findViewById(R.id.txtVoltage5);
+        txtVoltage6 = findViewById(R.id.txtVoltage6);
 
         edtSetDistantMotor1 = findViewById(R.id.edtSetDistantMotor1);
         edtSetDistantMotor2 = findViewById(R.id.edtSetDistantMotor2);
@@ -1292,12 +1292,12 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             //-------
-                            txtViewDistantMotor1.setText(data[0]);
-                            txtViewDistantMotor2.setText(data[1]);
-                            txtViewDistantMotor3.setText(data[2]);
-                            txtViewDistantMotor4.setText(data[3]);
-                            txtViewDistantMotor5.setText(data[4]);
-                            txtViewDistantMotor6.setText(data[5]);
+                            txtVoltage1.setText(data[0]);
+                            txtVoltage2.setText(data[1]);
+                            txtVoltage3.setText(data[2]);
+                            txtVoltage4.setText(data[3]);
+                            txtVoltage5.setText(data[4]);
+                            txtVoltage6.setText(data[5]);
                             //-------
                             ST2txtSlowPulse1.setText(data[6]);
                             ST2txtSlowPulse2.setText(data[7]);
