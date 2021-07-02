@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity {
     Spinner ST2spinerName;
     TextView ST2txtMotor1,ST2txtMotor2,ST2txtMotor3,ST2txtMotor4,ST2txtMotor5,ST2txtMotor6;
     TextView ST2txtSlowPulse1,ST2txtSlowPulse2,ST2txtSlowPulse3,ST2txtSlowPulse4,ST2txtSlowPulse5,ST2txtSlowPulse6;
-    TextView ST2txtSpeed1,ST2txtSpeed2,ST2txtSpeed3,ST2txtSpeed4,ST2txtSpeed5,ST2txtSpeed6;
+    TextView ST2txtMaxCurrent1,ST2txtMaxCurrent2,ST2txtMaxCurrent3,ST2txtMaxCurrent4,ST2txtMaxCurrent5,ST2txtMaxCurrent6;
     TextView ST2txtReturn1,ST2txtReturn2,ST2txtReturn3,ST2txtReturn4,ST2txtReturn5,ST2txtReturn6;
-    EditText ST2edtSlowDistant,ST2edtSpeed,ST2timeReturn;
+    EditText ST2edtSlowDistant,ST2edtMaxCurrent,ST2timeReturn;
     Button ST2btnSave;
 
     ArrayAdapter<String> arrayAdapterListdevice;
@@ -640,9 +640,9 @@ public class MainActivity extends AppCompatActivity {
 
 //                layoutSetup.setVisibility(View.VISIBLE);
                 if (mmDevice !=null && isConnected(mmDevice)) {
-                    String data = "{\"type\":\"get_status\",\"name\":\"\"}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
+//                    String data = "{\"type\":\"get_status\",\"name\":\"\"}";
+//                    byte[] bytes = data.getBytes(Charset.defaultCharset());
+//                    mConnectedThread.write(bytes);
                     layoutSetup.setVisibility(View.VISIBLE);
                 }
             }
@@ -895,13 +895,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
 
-                    String data = "{\"type\":\"config\",\"name\":\"";
+                    String data = "{\"type\":\"save_data\",\"name\":\"";
                     data += ST2spinerName.getSelectedItemPosition();
-                    data += "\",\"slow\":\"";
-                    data += ST2edtSlowDistant.getText().toString();
-                    data += "\",\"speed\":\"";
-                    data += ST2edtSpeed.getText().toString();
-                    data += "\",\"return\":\"";
+                    data += "\",\"max_current\":\"";
+                    data += ST2edtMaxCurrent.getText().toString();
+                    data += "\",\"time_return\":\"";
                     data += ST2timeReturn.getText().toString();
                     data += "\"}";
                     byte[] bytes = data.getBytes(Charset.defaultCharset());
@@ -1093,12 +1091,12 @@ public class MainActivity extends AppCompatActivity {
         ST2txtSlowPulse5 = findViewById(R.id.ST2txtSlowPulse5);
         ST2txtSlowPulse6 = findViewById(R.id.ST2txtSlowPulse6);
 
-        ST2txtSpeed1 = findViewById(R.id.ST2txtSpeed1);
-        ST2txtSpeed2 = findViewById(R.id.ST2txtSpeed2);
-        ST2txtSpeed3 = findViewById(R.id.ST2txtSpeed3);
-        ST2txtSpeed4 = findViewById(R.id.ST2txtSpeed4);
-        ST2txtSpeed5 = findViewById(R.id.ST2txtSpeed5);
-        ST2txtSpeed6 = findViewById(R.id.ST2txtSpeed6);
+        ST2txtMaxCurrent1 = findViewById(R.id.ST2txtMaxCurrent1);
+        ST2txtMaxCurrent2 = findViewById(R.id.ST2txtMaxCurrent2);
+        ST2txtMaxCurrent3 = findViewById(R.id.ST2txtMaxCurrent3);
+        ST2txtMaxCurrent4 = findViewById(R.id.ST2txtMaxCurrent4);
+        ST2txtMaxCurrent5 = findViewById(R.id.ST2txtMaxCurrent5);
+        ST2txtMaxCurrent6 = findViewById(R.id.ST2txtMaxCurrent6);
 
         ST2txtReturn1 = findViewById(R.id.ST2txtReturn1);
         ST2txtReturn2 = findViewById(R.id.ST2txtReturn2);
@@ -1108,7 +1106,7 @@ public class MainActivity extends AppCompatActivity {
         ST2txtReturn6 = findViewById(R.id.ST2txtReturn6);
 
         ST2edtSlowDistant = findViewById(R.id.ST2edtSlowDistant);
-        ST2edtSpeed = findViewById(R.id.ST2edtSpeed);
+        ST2edtMaxCurrent = findViewById(R.id.ST2edtMaxCurrent);
         ST2timeReturn = findViewById(R.id.ST2timeReturn);
         ST2btnSave = findViewById(R.id.ST2btnSave);
 
@@ -1279,13 +1277,20 @@ public class MainActivity extends AppCompatActivity {
                         data[9] = reader.getString("42");
                         data[10] = reader.getString("52");
                         data[11] = reader.getString("62");
-                        //time return
+                        //max current
                         data[12] = reader.getString("13");
                         data[13] = reader.getString("23");
                         data[14] = reader.getString("33");
                         data[15] = reader.getString("43");
                         data[16] = reader.getString("53");
                         data[17] = reader.getString("63");
+                        //time return
+                        data[18] = reader.getString("14");
+                        data[19] = reader.getString("24");
+                        data[20] = reader.getString("34");
+                        data[21] = reader.getString("44");
+                        data[22] = reader.getString("54");
+                        data[23] = reader.getString("64");
                         incomingMessage = "";
                     }
                     runOnUiThread(new Runnable() {
@@ -1308,12 +1313,19 @@ public class MainActivity extends AppCompatActivity {
                             txtCurrent5.setText(data[10] + " mA");
                             txtCurrent6.setText(data[11] + " mA");
                             //---------
-                            ST2txtReturn1.setText(data[12]);
-                            ST2txtReturn2.setText(data[13]);
-                            ST2txtReturn3.setText(data[14]);
-                            ST2txtReturn4.setText(data[15]);
-                            ST2txtReturn5.setText(data[16]);
-                            ST2txtReturn6.setText(data[17]);
+                            ST2txtMaxCurrent1.setText(data[12]);
+                            ST2txtMaxCurrent2.setText(data[13]);
+                            ST2txtMaxCurrent3.setText(data[14]);
+                            ST2txtMaxCurrent4.setText(data[15]);
+                            ST2txtMaxCurrent5.setText(data[16]);
+                            ST2txtMaxCurrent6.setText(data[17]);
+                            //---------
+                            ST2txtReturn1.setText(data[18]);
+                            ST2txtReturn2.setText(data[19]);
+                            ST2txtReturn3.setText(data[20]);
+                            ST2txtReturn4.setText(data[21]);
+                            ST2txtReturn5.setText(data[22]);
+                            ST2txtReturn6.setText(data[23]);
                         }
                     });
 
