@@ -110,55 +110,55 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
-                android:text="SLOW (%)"
+                android:text="Min Ampe (mA)"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp">
             </TextView>
             <TextView
-                android:id="@+id/ST2txtSlowPulse1"
-                android:hint="Slow 1"
+                android:id="@+id/ST2txtMinCurrent1"
+                android:hint="Min 1"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp">
             </TextView>
             <TextView
-                android:id="@+id/ST2txtSlowPulse2"
-                android:hint="Slow 2"
+                android:id="@+id/ST2txtMinCurrent2"
+                android:hint="Min 2"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp">
             </TextView>
             <TextView
-                android:id="@+id/ST2txtSlowPulse3"
-                android:hint="Slow 3"
+                android:id="@+id/ST2txtMinCurrent3"
+                android:hint="Min 3"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp">
             </TextView>
             <TextView
-                android:id="@+id/ST2txtSlowPulse4"
-                android:hint="Slow 4"
+                android:id="@+id/ST2txtMinCurrent4"
+                android:hint="Min 4"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp">
             </TextView>
             <TextView
-                android:id="@+id/ST2txtSlowPulse5"
-                android:hint="Slow 5"
+                android:id="@+id/ST2txtMinCurrent5"
+                android:hint="Min 5"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp">
             </TextView>
             <TextView
-                android:id="@+id/ST2txtSlowPulse6"
-                android:hint="Slow 6"
+                android:id="@+id/ST2txtMinCurrent6"
+                android:hint="Min 6"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -172,7 +172,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
-                android:text="max Ampe (mA)"
+                android:text="Max Ampe (mA)"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -180,7 +180,7 @@
             </TextView>
             <TextView
                 android:id="@+id/ST2txtMaxCurrent1"
-                android:hint="current 1"
+                android:hint="Max 1"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -188,7 +188,7 @@
             </TextView>
             <TextView
                 android:id="@+id/ST2txtMaxCurrent2"
-                android:hint="current 2"
+                android:hint="Max 2"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -196,7 +196,7 @@
             </TextView>
             <TextView
                 android:id="@+id/ST2txtMaxCurrent3"
-                android:hint="current 3"
+                android:hint="Max 3"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -204,7 +204,7 @@
             </TextView>
             <TextView
                 android:id="@+id/ST2txtMaxCurrent4"
-                android:hint="current 4"
+                android:hint="Max 4"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -212,7 +212,7 @@
             </TextView>
             <TextView
                 android:id="@+id/ST2txtMaxCurrent5"
-                android:hint="current 5"
+                android:hint="Max 5"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -220,7 +220,7 @@
             </TextView>
             <TextView
                 android:id="@+id/ST2txtMaxCurrent6"
-                android:hint="current 6"
+                android:hint="Max 6"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -313,7 +313,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <EditText
-                android:id="@+id/ST2edtSlowDistant"
+                android:id="@+id/ST2edtMinCurrent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </EditText>

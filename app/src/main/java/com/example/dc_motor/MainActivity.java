@@ -83,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
     //----------------setup 2-------------------------
     Spinner ST2spinerName;
     TextView ST2txtMotor1,ST2txtMotor2,ST2txtMotor3,ST2txtMotor4,ST2txtMotor5,ST2txtMotor6;
-    TextView ST2txtSlowPulse1,ST2txtSlowPulse2,ST2txtSlowPulse3,ST2txtSlowPulse4,ST2txtSlowPulse5,ST2txtSlowPulse6;
     TextView ST2txtMaxCurrent1,ST2txtMaxCurrent2,ST2txtMaxCurrent3,ST2txtMaxCurrent4,ST2txtMaxCurrent5,ST2txtMaxCurrent6;
+    TextView ST2txtMinCurrent1,ST2txtMinCurrent2,ST2txtMinCurrent3,ST2txtMinCurrent4,ST2txtMinCurrent5,ST2txtMinCurrent6;
     TextView ST2txtReturn1,ST2txtReturn2,ST2txtReturn3,ST2txtReturn4,ST2txtReturn5,ST2txtReturn6;
-    EditText ST2edtSlowDistant,ST2edtMaxCurrent,ST2timeReturn;
+    EditText ST2edtMinCurrent,ST2edtMaxCurrent,ST2timeReturn;
     Button ST2btnSave;
 
     ArrayAdapter<String> arrayAdapterListdevice;
@@ -901,6 +901,8 @@ public class MainActivity extends AppCompatActivity {
                     data += ST2edtMaxCurrent.getText().toString();
                     data += "\",\"time_return\":\"";
                     data += ST2timeReturn.getText().toString();
+                    data += "\",\"min_current\":\"";
+                    data += ST2edtMinCurrent.getText().toString();
                     data += "\"}";
                     byte[] bytes = data.getBytes(Charset.defaultCharset());
                     mConnectedThread.write(bytes);
@@ -1084,19 +1086,19 @@ public class MainActivity extends AppCompatActivity {
         ST2txtMotor5 = findViewById(R.id.ST2txtMotor5);
         ST2txtMotor6 = findViewById(R.id.ST2txtMotor6);
 
-        ST2txtSlowPulse1 = findViewById(R.id.ST2txtSlowPulse1);
-        ST2txtSlowPulse2 = findViewById(R.id.ST2txtSlowPulse2);
-        ST2txtSlowPulse3 = findViewById(R.id.ST2txtSlowPulse3);
-        ST2txtSlowPulse4 = findViewById(R.id.ST2txtSlowPulse4);
-        ST2txtSlowPulse5 = findViewById(R.id.ST2txtSlowPulse5);
-        ST2txtSlowPulse6 = findViewById(R.id.ST2txtSlowPulse6);
-
         ST2txtMaxCurrent1 = findViewById(R.id.ST2txtMaxCurrent1);
         ST2txtMaxCurrent2 = findViewById(R.id.ST2txtMaxCurrent2);
         ST2txtMaxCurrent3 = findViewById(R.id.ST2txtMaxCurrent3);
         ST2txtMaxCurrent4 = findViewById(R.id.ST2txtMaxCurrent4);
         ST2txtMaxCurrent5 = findViewById(R.id.ST2txtMaxCurrent5);
         ST2txtMaxCurrent6 = findViewById(R.id.ST2txtMaxCurrent6);
+
+        ST2txtMinCurrent1 = findViewById(R.id.ST2txtMinCurrent1);
+        ST2txtMinCurrent2 = findViewById(R.id.ST2txtMinCurrent2);
+        ST2txtMinCurrent3 = findViewById(R.id.ST2txtMinCurrent3);
+        ST2txtMinCurrent4 = findViewById(R.id.ST2txtMinCurrent4);
+        ST2txtMinCurrent5 = findViewById(R.id.ST2txtMinCurrent5);
+        ST2txtMinCurrent6 = findViewById(R.id.ST2txtMinCurrent6);
 
         ST2txtReturn1 = findViewById(R.id.ST2txtReturn1);
         ST2txtReturn2 = findViewById(R.id.ST2txtReturn2);
@@ -1105,7 +1107,7 @@ public class MainActivity extends AppCompatActivity {
         ST2txtReturn5 = findViewById(R.id.ST2txtReturn5);
         ST2txtReturn6 = findViewById(R.id.ST2txtReturn6);
 
-        ST2edtSlowDistant = findViewById(R.id.ST2edtSlowDistant);
+        ST2edtMinCurrent = findViewById(R.id.ST2edtMinCurrent);
         ST2edtMaxCurrent = findViewById(R.id.ST2edtMaxCurrent);
         ST2timeReturn = findViewById(R.id.ST2timeReturn);
         ST2btnSave = findViewById(R.id.ST2btnSave);
@@ -1250,7 +1252,7 @@ public class MainActivity extends AppCompatActivity {
             byte[] readBuffer = new byte[1024];;
             int readBufferPosition = 0;
             String incomingMessage = "";
-            String data[] = new String[24];
+            String data[] = new String[30];
             // Keep listening to the InputStream until an exception occurs
             while (true) {
 
@@ -1291,6 +1293,13 @@ public class MainActivity extends AppCompatActivity {
                         data[21] = reader.getString("44");
                         data[22] = reader.getString("54");
                         data[23] = reader.getString("64");
+                        //Min Current
+                        data[24] = reader.getString("15");
+                        data[25] = reader.getString("25");
+                        data[26] = reader.getString("35");
+                        data[27] = reader.getString("45");
+                        data[28] = reader.getString("55");
+                        data[29] = reader.getString("65");
                         incomingMessage = "";
                     }
                     runOnUiThread(new Runnable() {
@@ -1326,6 +1335,13 @@ public class MainActivity extends AppCompatActivity {
                             ST2txtReturn4.setText(data[21]);
                             ST2txtReturn5.setText(data[22]);
                             ST2txtReturn6.setText(data[23]);
+                            //---------
+                            ST2txtMinCurrent1.setText(data[24]);
+                            ST2txtMinCurrent2.setText(data[25]);
+                            ST2txtMinCurrent3.setText(data[26]);
+                            ST2txtMinCurrent4.setText(data[27]);
+                            ST2txtMinCurrent5.setText(data[28]);
+                            ST2txtMinCurrent6.setText(data[29]);
                         }
                     });
 
