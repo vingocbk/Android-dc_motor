@@ -40,6 +40,7 @@
     </ImageView>
 
     <RelativeLayout
+        android:id="@+id/layoutConnect"
         android:layout_marginTop="80dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
@@ -75,328 +76,361 @@
         </TextView>
     </RelativeLayout>
 
-    <LinearLayout
-        android:weightSum="7"
-        android:layout_marginTop="180dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
+    <ScrollView
+        android:layout_below="@+id/layoutConnect"
+        android:layout_margin="20dp"
         android:background="#45151414"
-        android:gravity="center"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <LinearLayout
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/edtNameMotor1"
-                android:text="Motor 1"
-                android:textColor="#FFFFFF"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                tools:ignore="NestedWeights">
-            </EditText>
 
-            <Button
-                android:id="@+id/btnOpenMotor1"
-                android:layout_margin="2dp"
-                android:textSize="12sp"
-                android:text="@string/open"
-                android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:weightSum="5"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            </Button>
-            <Button
-                android:id="@+id/btnStopMotor1"
-                android:layout_margin="2dp"
-                android:text="@string/stop"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
+                <EditText
+                    android:layout_weight="1"
+                    android:id="@+id/edtNameMotor1"
+                    android:text="Motor 1"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content">
+                </EditText>
+
+                <Button
+                    android:id="@+id/btnOpenMotor1"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:textSize="10sp"
+                    android:text="@string/open"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnStopMotor1"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:text="@string/stop"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnCloseMotor1"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:text="@string/close"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="100"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="4"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            </Button>
-            <Button
-                android:id="@+id/btnCloseMotor1"
-                android:layout_margin="2dp"
-                android:text="@string/close"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/edtNameMotor2"
+                    android:layout_weight="1"
+                    android:text="Motor 2"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    tools:ignore="NestedWeights">
+                </EditText>
+
+                <Button
+                    android:id="@+id/btnOpenMotor2"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:textSize="10sp"
+                    android:text="@string/open"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnStopMotor2"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:textSize="10sp"
+                    android:text="@string/stop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnCloseMotor2"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:textSize="10sp"
+                    android:text="@string/close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="4"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            </Button>
+                <EditText
+                    android:id="@+id/edtNameMotor3"
+                    android:text="Motor 3"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    tools:ignore="NestedWeights">
+                </EditText>
+
+                <Button
+                    android:id="@+id/btnOpenMotor3"
+                    android:layout_margin="2dp"
+                    android:text="@string/open"
+                    android:layout_weight="1"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnStopMotor3"
+                    android:layout_margin="2dp"
+                    android:text="@string/stop"
+                    android:layout_weight="1"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnCloseMotor3"
+                    android:layout_margin="2dp"
+                    android:text="@string/close"
+                    android:layout_weight="1"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/edtNameMotor4"
+                    android:text="Motor 4"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    tools:ignore="NestedWeights">
+                </EditText>
+
+                <Button
+                    android:id="@+id/btnOpenMotor4"
+                    android:layout_margin="2dp"
+                    android:text="@string/open"
+                    android:layout_weight="1"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnStopMotor4"
+                    android:layout_margin="2dp"
+                    android:text="@string/stop"
+                    android:layout_weight="1"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnCloseMotor4"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:textSize="10sp"
+                    android:text="@string/close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/edtNameMotor5"
+                    android:text="Motor 5"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    tools:ignore="NestedWeights">
+                </EditText>
+
+                <Button
+                    android:id="@+id/btnOpenMotor5"
+                    android:layout_margin="2dp"
+                    android:text="@string/open"
+                    android:layout_weight="1"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnStopMotor5"
+                    android:layout_margin="2dp"
+                    android:text="@string/stop"
+                    android:layout_weight="1"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnCloseMotor5"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:textSize="10sp"
+                    android:text="@string/close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/edtNameMotor6"
+                    android:text="Motor 6"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    tools:ignore="NestedWeights">
+                </EditText>
+
+                <Button
+                    android:id="@+id/btnOpenMotor6"
+                    android:layout_margin="2dp"
+                    android:text="@string/open"
+                    android:layout_weight="1"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnStopMotor6"
+                    android:layout_margin="2dp"
+                    android:text="@string/stop"
+                    android:layout_weight="1"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnCloseMotor6"
+                    android:layout_margin="2dp"
+                    android:text="@string/close"
+                    android:layout_weight="1"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="left"
+                android:weightSum="4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/btnSaveNameMotor"
+                    android:text="Save"
+                    android:textSize="10sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <TextView
+                    android:text="No test"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swTestDistantMotor"
+                    android:layout_weight="0"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </androidx.appcompat.widget.SwitchCompat>
+                <TextView
+                    android:text="Test"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <EditText
+                    android:id="@+id/edtStepCheckDistant"
+                    android:inputType="number"
+                    android:text="10"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right"
+                    android:visibility="invisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </EditText>
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swStepCheckDistant"
+                    android:layout_weight="0"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </androidx.appcompat.widget.SwitchCompat>
+                <TextView
+                    android:text="Step"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+
+            </LinearLayout>
 
         </LinearLayout>
-        <LinearLayout
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/edtNameMotor2"
-                android:text="Motor 2"
-                android:textColor="#FFFFFF"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                tools:ignore="NestedWeights">
-            </EditText>
-
-            <Button
-                android:id="@+id/btnOpenMotor2"
-                android:layout_margin="2dp"
-                android:textSize="12sp"
-                android:text="@string/open"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-            <Button
-                android:id="@+id/btnStopMotor2"
-                android:layout_margin="2dp"
-                android:textSize="12sp"
-                android:text="@string/stop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-            <Button
-                android:id="@+id/btnCloseMotor2"
-                android:layout_margin="2dp"
-                android:textSize="12sp"
-                android:text="@string/close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/edtNameMotor3"
-                android:text="Motor 3"
-                android:textColor="#FFFFFF"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                tools:ignore="NestedWeights">
-            </EditText>
-
-            <Button
-                android:id="@+id/btnOpenMotor3"
-                android:layout_margin="2dp"
-                android:text="@string/open"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-            <Button
-                android:id="@+id/btnStopMotor3"
-                android:layout_margin="2dp"
-                android:text="@string/stop"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-            <Button
-                android:id="@+id/btnCloseMotor3"
-                android:layout_margin="2dp"
-                android:text="@string/close"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/edtNameMotor4"
-                android:text="Motor 4"
-                android:textColor="#FFFFFF"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                tools:ignore="NestedWeights">
-            </EditText>
-
-            <Button
-                android:id="@+id/btnOpenMotor4"
-                android:layout_margin="2dp"
-                android:text="@string/open"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-            <Button
-                android:id="@+id/btnStopMotor4"
-                android:layout_margin="2dp"
-                android:text="@string/stop"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-            <Button
-                android:id="@+id/btnCloseMotor4"
-                android:layout_margin="2dp"
-                android:textSize="12sp"
-                android:text="@string/close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/edtNameMotor5"
-                android:text="Motor 5"
-                android:textColor="#FFFFFF"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                tools:ignore="NestedWeights">
-            </EditText>
-
-            <Button
-                android:id="@+id/btnOpenMotor5"
-                android:layout_margin="2dp"
-                android:text="@string/open"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-            <Button
-                android:id="@+id/btnStopMotor5"
-                android:layout_margin="2dp"
-                android:text="@string/stop"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-            <Button
-                android:id="@+id/btnCloseMotor5"
-                android:layout_margin="2dp"
-                android:textSize="12sp"
-                android:text="@string/close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/edtNameMotor6"
-                android:text="Motor 6"
-                android:textColor="#FFFFFF"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                tools:ignore="NestedWeights">
-            </EditText>
-
-            <Button
-                android:id="@+id/btnOpenMotor6"
-                android:layout_margin="2dp"
-                android:text="@string/open"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-            <Button
-                android:id="@+id/btnStopMotor6"
-                android:layout_margin="2dp"
-                android:text="@string/stop"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-            <Button
-                android:id="@+id/btnCloseMotor6"
-                android:layout_margin="2dp"
-                android:text="@string/close"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-
-        </LinearLayout>
+    </ScrollView>
 
 
-        <LinearLayout
-            android:layout_weight="1"
-            android:gravity="left"
-            android:weightSum="4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/btnSaveNameMotor"
-                android:text="Save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
-            <TextView
-                android:text="No test"
-                android:layout_marginLeft="20dp"
-                android:textColor="#FFFFFF"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </TextView>
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/swTestDistantMotor"
-                android:layout_weight="0"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </androidx.appcompat.widget.SwitchCompat>
-            <TextView
-                android:text="Test"
-                android:textColor="#FFFFFF"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </TextView>
-            <EditText
-                android:id="@+id/edtStepCheckDistant"
-                android:layout_weight="1"
-                android:inputType="number"
-                android:text="10"
-                android:textColor="#FFFFFF"
-                android:gravity="right"
-                android:visibility="invisible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </EditText>
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/swStepCheckDistant"
-                android:layout_weight="0"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </androidx.appcompat.widget.SwitchCompat>
-            <TextView
-                android:text="Step"
-                android:textColor="#FFFFFF"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </TextView>
-
-        </LinearLayout>
-
-
-    </LinearLayout>
 
 
 
