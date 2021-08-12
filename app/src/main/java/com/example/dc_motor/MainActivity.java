@@ -28,6 +28,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -56,21 +57,51 @@ import java.util.UUID;
 import static android.R.layout.simple_list_item_1;
 import static android.R.layout.simple_spinner_dropdown_item;
 
+
+
 public class MainActivity extends AppCompatActivity {
+    int MAX_MOTOR = 9;
     ImageView imgSetup, imgMenuListdivice, imgBluetoothConnection;
-    View layoutSetup, layoutListdevice, layoutSetup2;
+    View layoutSetup, layoutListdevice, layoutSetup2, layoutSetupData, layoutSetupStep;
     TextView txtBackSetting, txtBackListdevice, txtNameBluetoothConnection, txtBackSetting2, txtNextSetting;
 
     ProgressBar pgbRefeshListdevice;
     ListView lvListdevice;
     //------------------ main menu---------------------
-    EditText edtNameMotor1,edtNameMotor2,edtNameMotor3,edtNameMotor4,edtNameMotor5,edtNameMotor6;
-    Button btnOpenMotor1,btnOpenMotor2,btnOpenMotor3,btnOpenMotor4,btnOpenMotor5,btnOpenMotor6;
-    Button btnStopMotor1,btnStopMotor2,btnStopMotor3,btnStopMotor4,btnStopMotor5,btnStopMotor6;
-    Button btnCloseMotor1,btnCloseMotor2,btnCloseMotor3,btnCloseMotor4,btnCloseMotor5,btnCloseMotor6;
+    EditText[] edtNameMotor = new EditText[MAX_MOTOR];
+    Button[] btnOpenMotor = new Button[MAX_MOTOR];
+    Button[] btnStopMotor = new Button[MAX_MOTOR];
+    Button[] btnCloseMotor = new Button[MAX_MOTOR];
+//    EditText edtNameMotor1,edtNameMotor2,edtNameMotor3,edtNameMotor4,edtNameMotor5,edtNameMotor6,edtNameMotor7,edtNameMotor8,edtNameMotor9;
+//    Button btnOpenMotor1,btnOpenMotor2,btnOpenMotor3,btnOpenMotor4,btnOpenMotor5,btnOpenMotor6,btnOpenMotor7,btnOpenMotor8,btnOpenMotor9;
+//    Button btnStopMotor1,btnStopMotor2,btnStopMotor3,btnStopMotor4,btnStopMotor5,btnStopMotor6,btnStopMotor7,btnStopMotor8,btnStopMotor9;
+//    Button btnCloseMotor1,btnCloseMotor2,btnCloseMotor3,btnCloseMotor4,btnCloseMotor5,btnCloseMotor6,btnCloseMotor7,btnCloseMotor8,btnCloseMotor9;
     Button btnSaveNameMotor;
     SwitchCompat swStepCheckDistant, swTestDistantMotor;
     EditText edtStepCheckDistant;
+
+    //---------------------------------------------------
+    TextView[] txtNameMotor = new TextView[MAX_MOTOR];
+    TextView[] txtMinMotor = new TextView[MAX_MOTOR];
+    TextView[] txtMaxMotor = new TextView[MAX_MOTOR];
+    TextView[] edtMinMotor = new TextView[MAX_MOTOR];
+    TextView[] edtMaxMotor = new TextView[MAX_MOTOR];
+    CheckBox[] checkReverseMotor = new CheckBox[MAX_MOTOR];
+    Button[] btnSaveDataMotor = new Button[MAX_MOTOR];
+
+    //---------------------------------------------
+    TextView[] txtNameOpenMotor = new TextView[MAX_MOTOR];
+    Spinner[] spnOpenStep1Motor = new Spinner[MAX_MOTOR];
+    Spinner[] spnOpenStep2Motor = new Spinner[MAX_MOTOR];
+    Spinner[] spnOpenStep3Motor = new Spinner[MAX_MOTOR];
+    TextView[] txtNameCloseMotor = new TextView[MAX_MOTOR];
+    Spinner[] spnCloseStep1Motor = new Spinner[MAX_MOTOR];
+    Spinner[] spnCloseStep2Motor = new Spinner[MAX_MOTOR];
+    Spinner[] spnCloseStep3Motor = new Spinner[MAX_MOTOR];
+    Button btnSaveStep;
+
+
+
 
     //------------------setup-------------------------
     TextView txtMotor1,txtMotor2,txtMotor3,txtMotor4,txtMotor5,txtMotor6;
@@ -112,12 +143,11 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     String nameMotor1,nameMotor2,nameMotor3,nameMotor4,nameMotor5,nameMotor6;
-    String name1 = "motor1";
-    String name2 = "motor2";
-    String name3 = "motor3";
-    String name4 = "motor4";
-    String name5 = "motor5";
-    String name6 = "motor6";
+    String[] name = {"Motor1","Motor2","Motor3","Motor4","Motor5","Motor6","Motor7","Motor8","Motor9"};
+
+
+
+    int OPEN = 0, CLOSE = 1, STOP = 2;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,27 +158,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Anhxa();
-        //---------------------------------------------------save name motor--------------------------------------
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = sharedPreferences.edit();
-        edtNameMotor1.setText(sharedPreferences.getString(name1, ""));
-        edtNameMotor2.setText(sharedPreferences.getString(name2, ""));
-        edtNameMotor3.setText(sharedPreferences.getString(name3, ""));
-        edtNameMotor4.setText(sharedPreferences.getString(name4, ""));
-        edtNameMotor5.setText(sharedPreferences.getString(name5, ""));
-        edtNameMotor6.setText(sharedPreferences.getString(name6, ""));
-        List<String> list = new ArrayList<>();
-        list.add(sharedPreferences.getString(name1, ""));
-        list.add(sharedPreferences.getString(name2, ""));
-        list.add(sharedPreferences.getString(name3, ""));
-        list.add(sharedPreferences.getString(name4, ""));
-        list.add(sharedPreferences.getString(name5, ""));
-        list.add(sharedPreferences.getString(name6, ""));
-        //ArrayAdapter spinAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
-        ArrayAdapter spinnerAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, list);
-        spinnerAdapter.setDropDownViewResource(simple_spinner_dropdown_item);
-        ST2spinerName.setAdapter(spinnerAdapter);
-        //------------------------------------------------------------------------------------------------------
+        LoadDataBegin();
+
 
         //--------------------------------------for bluetooth--------------------------------------------------------
         BluetoothAdapter BTAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -196,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //-------------------Main button OPEN------------------------------
-        btnOpenMotor1.setOnClickListener(new View.OnClickListener() {
+        btnOpenMotor[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -224,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnOpenMotor2.setOnClickListener(new View.OnClickListener() {
+        btnOpenMotor[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -252,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnOpenMotor3.setOnClickListener(new View.OnClickListener() {
+        btnOpenMotor[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -280,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnOpenMotor4.setOnClickListener(new View.OnClickListener() {
+        btnOpenMotor[3].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -308,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnOpenMotor5.setOnClickListener(new View.OnClickListener() {
+        btnOpenMotor[4].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -336,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnOpenMotor6.setOnClickListener(new View.OnClickListener() {
+        btnOpenMotor[5].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -364,8 +375,92 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        btnOpenMotor[6].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mmDevice !=null && isConnected(mmDevice)) {
+                    if(swTestDistantMotor.isChecked()){
+                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor7\",\"command\":\"open\"}";
+                        byte[] bytes = data.getBytes(Charset.defaultCharset());
+                        mConnectedThread.write(bytes);
+                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(swStepCheckDistant.isChecked()){
+                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor7\",\"command\":\"open\",\"data\":\"";
+                        data += edtStepCheckDistant.getText().toString();
+                        data += "\"}";
+                        byte[] bytes = data.getBytes(Charset.defaultCharset());
+                        mConnectedThread.write(bytes);
+                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                        //Log.d(TAG,data);
+                    }else {
+                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor7\",\"command\":\"open\"}";
+                        byte[] bytes = data.getBytes(Charset.defaultCharset());
+                        mConnectedThread.write(bytes);
+                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                        //Log.d(TAG,data);
+                    }
+                }
+            }
+        });
+        btnOpenMotor[7].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mmDevice !=null && isConnected(mmDevice)) {
+                    if(swTestDistantMotor.isChecked()){
+                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor8\",\"command\":\"open\"}";
+                        byte[] bytes = data.getBytes(Charset.defaultCharset());
+                        mConnectedThread.write(bytes);
+                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(swStepCheckDistant.isChecked()){
+                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor8\",\"command\":\"open\",\"data\":\"";
+                        data += edtStepCheckDistant.getText().toString();
+                        data += "\"}";
+                        byte[] bytes = data.getBytes(Charset.defaultCharset());
+                        mConnectedThread.write(bytes);
+                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                        //Log.d(TAG,data);
+                    }else {
+                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor8\",\"command\":\"open\"}";
+                        byte[] bytes = data.getBytes(Charset.defaultCharset());
+                        mConnectedThread.write(bytes);
+                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                        //Log.d(TAG,data);
+                    }
+                }
+            }
+        });
+        btnOpenMotor[8].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mmDevice !=null && isConnected(mmDevice)) {
+                    if(swTestDistantMotor.isChecked()){
+                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor9\",\"command\":\"open\"}";
+                        byte[] bytes = data.getBytes(Charset.defaultCharset());
+                        mConnectedThread.write(bytes);
+                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(swStepCheckDistant.isChecked()){
+                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor9\",\"command\":\"open\",\"data\":\"";
+                        data += edtStepCheckDistant.getText().toString();
+                        data += "\"}";
+                        byte[] bytes = data.getBytes(Charset.defaultCharset());
+                        mConnectedThread.write(bytes);
+                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                        //Log.d(TAG,data);
+                    }else {
+                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor9\",\"command\":\"open\"}";
+                        byte[] bytes = data.getBytes(Charset.defaultCharset());
+                        mConnectedThread.write(bytes);
+                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                        //Log.d(TAG,data);
+                    }
+                }
+            }
+        });
         //-------------------Main button STOP------------------------------
-        btnStopMotor1.setOnClickListener(new View.OnClickListener() {
+        btnStopMotor[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -377,7 +472,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnStopMotor2.setOnClickListener(new View.OnClickListener() {
+        btnStopMotor[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -389,7 +484,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnStopMotor3.setOnClickListener(new View.OnClickListener() {
+        btnStopMotor[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -401,7 +496,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnStopMotor4.setOnClickListener(new View.OnClickListener() {
+        btnStopMotor[3].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -413,7 +508,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnStopMotor5.setOnClickListener(new View.OnClickListener() {
+        btnStopMotor[4].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -425,7 +520,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnStopMotor6.setOnClickListener(new View.OnClickListener() {
+        btnStopMotor[5].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -438,7 +533,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //-------------------Main button CLOSE------------------------------
-        btnCloseMotor1.setOnClickListener(new View.OnClickListener() {
+        btnCloseMotor[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -466,7 +561,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnCloseMotor2.setOnClickListener(new View.OnClickListener() {
+        btnCloseMotor[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -494,7 +589,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnCloseMotor3.setOnClickListener(new View.OnClickListener() {
+        btnCloseMotor[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -522,7 +617,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnCloseMotor4.setOnClickListener(new View.OnClickListener() {
+        btnCloseMotor[3].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -550,7 +645,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnCloseMotor5.setOnClickListener(new View.OnClickListener() {
+        btnCloseMotor[4].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -578,7 +673,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnCloseMotor6.setOnClickListener(new View.OnClickListener() {
+        btnCloseMotor[5].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
@@ -610,283 +705,21 @@ public class MainActivity extends AppCompatActivity {
         btnSaveNameMotor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editor.putString(name1, edtNameMotor1.getText().toString());
-                editor.putString(name2, edtNameMotor2.getText().toString());
-                editor.putString(name3, edtNameMotor3.getText().toString());
-                editor.putString(name4, edtNameMotor4.getText().toString());
-                editor.putString(name5, edtNameMotor5.getText().toString());
-                editor.putString(name6, edtNameMotor6.getText().toString());
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    editor.putString(name[i], edtNameMotor[i].getText().toString());
+                }
                 editor.commit();
-            }
-        });
 
-        //-------------------------------------------------------------------
-        imgSetup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                txtMotor1.setText(sharedPreferences.getString(name1, ""));
-                txtMotor2.setText(sharedPreferences.getString(name2, ""));
-                txtMotor3.setText(sharedPreferences.getString(name3, ""));
-                txtMotor4.setText(sharedPreferences.getString(name4, ""));
-                txtMotor5.setText(sharedPreferences.getString(name5, ""));
-                txtMotor6.setText(sharedPreferences.getString(name6, ""));
-
-                btnRunDistantMotor1.setText("RUN");
-                btnRunDistantMotor2.setText("RUN");
-                btnRunDistantMotor3.setText("RUN");
-                btnRunDistantMotor4.setText("RUN");
-                btnRunDistantMotor5.setText("RUN");
-                btnRunDistantMotor6.setText("RUN");
-
-//                layoutSetup.setVisibility(View.VISIBLE);
-                if (mmDevice !=null && isConnected(mmDevice)) {
-//                    String data = "{\"type\":\"get_status\",\"name\":\"\"}";
-//                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-//                    mConnectedThread.write(bytes);
-                    layoutSetup.setVisibility(View.VISIBLE);
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    edtNameMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
+                    txtNameMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
+                    txtNameOpenMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
+                    txtNameCloseMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
                 }
             }
         });
 
-        txtBackSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //btnControl.setVisibility(View.VISIBLE);
-                layoutSetup.setVisibility(View.GONE);
-                layoutSetup2.setVisibility(View.GONE);
 
-            }
-        });
-        txtBackSetting2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                layoutSetup.setVisibility(View.VISIBLE);
-                layoutSetup2.setVisibility(View.GONE);
-            }
-        });
-        txtNextSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ST2txtMotor1.setText(sharedPreferences.getString(name1, ""));
-                ST2txtMotor2.setText(sharedPreferences.getString(name2, ""));
-                ST2txtMotor3.setText(sharedPreferences.getString(name3, ""));
-                ST2txtMotor4.setText(sharedPreferences.getString(name4, ""));
-                ST2txtMotor5.setText(sharedPreferences.getString(name5, ""));
-                ST2txtMotor6.setText(sharedPreferences.getString(name6, ""));
-                layoutSetup.setVisibility(View.GONE);
-                layoutSetup2.setVisibility(View.VISIBLE);
-
-            }
-        });
-        //------------------------------------------------------------------
-
-        //---------------------------Run with save distant-------------------------------------------------
-        btnRunDistantMotor1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(btnRunDistantMotor1.getText().toString().equals("RUN")){
-                        btnRunDistantMotor1.setText("STOP");
-                        String data = "{\"type\":\"run_save_distant\",\"name\":\"motor1\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        btnRunDistantMotor1.setText("RUN");
-                        String data = "{\"type\":\"run_save_distant\",\"name\":\"motor1\",\"command\":\"stop\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-        btnRunDistantMotor2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(btnRunDistantMotor2.getText().toString().equals("RUN")){
-                        btnRunDistantMotor2.setText("STOP");
-                        String data = "{\"type\":\"run_save_distant\",\"name\":\"motor2\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        btnRunDistantMotor2.setText("RUN");
-                        String data = "{\"type\":\"run_save_distant\",\"name\":\"motor2\",\"command\":\"stop\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-        btnRunDistantMotor3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(btnRunDistantMotor3.getText().toString().equals("RUN")){
-                        btnRunDistantMotor3.setText("STOP");
-                        String data = "{\"type\":\"run_save_distant\",\"name\":\"motor3\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        btnRunDistantMotor3.setText("RUN");
-                        String data = "{\"type\":\"run_save_distant\",\"name\":\"motor3\",\"command\":\"stop\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-        btnRunDistantMotor4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(btnRunDistantMotor4.getText().toString().equals("RUN")){
-                        btnRunDistantMotor4.setText("STOP");
-                        String data = "{\"type\":\"run_save_distant\",\"name\":\"motor4\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        btnRunDistantMotor4.setText("RUN");
-                        String data = "{\"type\":\"run_save_distant\",\"name\":\"motor4\",\"command\":\"stop\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-        btnRunDistantMotor5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(btnRunDistantMotor5.getText().toString().equals("RUN")){
-                        btnRunDistantMotor5.setText("STOP");
-                        String data = "{\"type\":\"run_save_distant\",\"name\":\"motor5\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        btnRunDistantMotor5.setText("RUN");
-                        String data = "{\"type\":\"run_save_distant\",\"name\":\"motor5\",\"command\":\"stop\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-        btnRunDistantMotor6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(btnRunDistantMotor6.getText().toString().equals("RUN")){
-                        btnRunDistantMotor6.setText("STOP");
-                        String data = "{\"type\":\"run_save_distant\",\"name\":\"motor6\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        btnRunDistantMotor6.setText("RUN");
-                        String data = "{\"type\":\"run_save_distant\",\"name\":\"motor6\",\"command\":\"stop\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
-        //------------------------Button save distant with edit text--------------------------
-        btnSetDistantMotor1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice) && !btnSetDistantMotor1.getText().toString().equals("")) {
-                    String data = "{\"type\":\"save_distant\",\"name\":\"motor1\",\"data\":\"";
-                    data += edtSetDistantMotor1.getText().toString();
-                    data += "\"}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
-                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        btnSetDistantMotor2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice) && !btnSetDistantMotor2.getText().toString().equals("")) {
-                    String data = "{\"type\":\"save_distant\",\"name\":\"motor2\",\"data\":\"";
-                    data += edtSetDistantMotor2.getText().toString();
-                    data += "\"}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
-                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        btnSetDistantMotor3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice) && !btnSetDistantMotor3.getText().toString().equals("")) {
-                    String data = "{\"type\":\"save_distant\",\"name\":\"motor3\",\"data\":\"";
-                    data += edtSetDistantMotor3.getText().toString();
-                    data += "\"}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
-                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        btnSetDistantMotor4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice) && !btnSetDistantMotor4.getText().toString().equals("")) {
-                    String data = "{\"type\":\"save_distant\",\"name\":\"motor4\",\"data\":\"";
-                    data += edtSetDistantMotor4.getText().toString();
-                    data += "\"}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
-                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        btnSetDistantMotor5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice) && !btnSetDistantMotor5.getText().toString().equals("")) {
-                    String data = "{\"type\":\"save_distant\",\"name\":\"motor5\",\"data\":\"";
-                    data += edtSetDistantMotor5.getText().toString();
-                    data += "\"}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
-                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        btnSetDistantMotor6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice) && !btnSetDistantMotor6.getText().toString().equals("")) {
-                    String data = "{\"type\":\"save_distant\",\"name\":\"motor6\",\"data\":\"";
-                    data += edtSetDistantMotor6.getText().toString();
-                    data += "\"}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
-                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
 
         //-----------------------SETUP UP 2 SEND BUTTON--------------------------------
@@ -981,6 +814,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     public void Anhxa(){
 
         imgSetup = findViewById(R.id.imgSetup);
@@ -991,6 +826,8 @@ public class MainActivity extends AppCompatActivity {
         layoutSetup = findViewById(R.id.layoutSetup);
         layoutSetup2 = findViewById(R.id.layoutSetup2);
         layoutListdevice = findViewById(R.id.layoutListdevice);
+        layoutSetupStep = findViewById(R.id.layoutSetupStep);
+
         txtBackListdevice = findViewById(R.id.txtBackListDevice);
         pgbRefeshListdevice = findViewById(R.id.pgbListdevice);
         imgMenuListdivice = findViewById(R.id.imgMenuListDevice);
@@ -999,38 +836,203 @@ public class MainActivity extends AppCompatActivity {
         imgBluetoothConnection = findViewById(R.id.imgBluetoothConnection);
         txtNameBluetoothConnection = findViewById(R.id.txtNameBluetoothConnection);
 
-        edtNameMotor1 = findViewById(R.id.edtNameMotor1);
-        edtNameMotor2 = findViewById(R.id.edtNameMotor2);
-        edtNameMotor3 = findViewById(R.id.edtNameMotor3);
-        edtNameMotor4 = findViewById(R.id.edtNameMotor4);
-        edtNameMotor5 = findViewById(R.id.edtNameMotor5);
-        edtNameMotor6 = findViewById(R.id.edtNameMotor6);
+        edtNameMotor[0] = findViewById(R.id.edtNameMotor1);
+        edtNameMotor[1] = findViewById(R.id.edtNameMotor2);
+        edtNameMotor[2] = findViewById(R.id.edtNameMotor3);
+        edtNameMotor[3] = findViewById(R.id.edtNameMotor4);
+        edtNameMotor[4] = findViewById(R.id.edtNameMotor5);
+        edtNameMotor[5] = findViewById(R.id.edtNameMotor6);
+        edtNameMotor[6] = findViewById(R.id.edtNameMotor7);
+        edtNameMotor[7] = findViewById(R.id.edtNameMotor8);
+        edtNameMotor[8] = findViewById(R.id.edtNameMotor9);
 
-        btnOpenMotor1 = findViewById(R.id.btnOpenMotor1);
-        btnOpenMotor2 = findViewById(R.id.btnOpenMotor2);
-        btnOpenMotor3 = findViewById(R.id.btnOpenMotor3);
-        btnOpenMotor4 = findViewById(R.id.btnOpenMotor4);
-        btnOpenMotor5 = findViewById(R.id.btnOpenMotor5);
-        btnOpenMotor6 = findViewById(R.id.btnOpenMotor6);
+        btnOpenMotor[0] = findViewById(R.id.btnOpenMotor1);
+        btnOpenMotor[1] = findViewById(R.id.btnOpenMotor2);
+        btnOpenMotor[2] = findViewById(R.id.btnOpenMotor3);
+        btnOpenMotor[3] = findViewById(R.id.btnOpenMotor4);
+        btnOpenMotor[4] = findViewById(R.id.btnOpenMotor5);
+        btnOpenMotor[5] = findViewById(R.id.btnOpenMotor6);
+        btnOpenMotor[6] = findViewById(R.id.btnOpenMotor7);
+        btnOpenMotor[7] = findViewById(R.id.btnOpenMotor8);
+        btnOpenMotor[8] = findViewById(R.id.btnOpenMotor9);
 
-        btnCloseMotor1 = findViewById(R.id.btnCloseMotor1);
-        btnCloseMotor2 = findViewById(R.id.btnCloseMotor2);
-        btnCloseMotor3 = findViewById(R.id.btnCloseMotor3);
-        btnCloseMotor4 = findViewById(R.id.btnCloseMotor4);
-        btnCloseMotor5 = findViewById(R.id.btnCloseMotor5);
-        btnCloseMotor6 = findViewById(R.id.btnCloseMotor6);
+        btnCloseMotor[0] = findViewById(R.id.btnCloseMotor1);
+        btnCloseMotor[1] = findViewById(R.id.btnCloseMotor2);
+        btnCloseMotor[2] = findViewById(R.id.btnCloseMotor3);
+        btnCloseMotor[3] = findViewById(R.id.btnCloseMotor4);
+        btnCloseMotor[4] = findViewById(R.id.btnCloseMotor5);
+        btnCloseMotor[5] = findViewById(R.id.btnCloseMotor6);
+        btnCloseMotor[6] = findViewById(R.id.btnCloseMotor4);
+        btnCloseMotor[7] = findViewById(R.id.btnCloseMotor5);
+        btnCloseMotor[8] = findViewById(R.id.btnCloseMotor6);
 
-        btnStopMotor1 = findViewById(R.id.btnStopMotor1);
-        btnStopMotor2 = findViewById(R.id.btnStopMotor2);
-        btnStopMotor3 = findViewById(R.id.btnStopMotor3);
-        btnStopMotor4 = findViewById(R.id.btnStopMotor4);
-        btnStopMotor5 = findViewById(R.id.btnStopMotor5);
-        btnStopMotor6 = findViewById(R.id.btnStopMotor6);
+        btnStopMotor[0] = findViewById(R.id.btnStopMotor1);
+        btnStopMotor[1] = findViewById(R.id.btnStopMotor2);
+        btnStopMotor[2] = findViewById(R.id.btnStopMotor3);
+        btnStopMotor[3] = findViewById(R.id.btnStopMotor4);
+        btnStopMotor[4] = findViewById(R.id.btnStopMotor5);
+        btnStopMotor[5] = findViewById(R.id.btnStopMotor6);
+        btnStopMotor[6] = findViewById(R.id.btnStopMotor4);
+        btnStopMotor[7] = findViewById(R.id.btnStopMotor5);
+        btnStopMotor[8] = findViewById(R.id.btnStopMotor6);
 
         btnSaveNameMotor = findViewById(R.id.btnSaveNameMotor);
         swStepCheckDistant = findViewById(R.id.swStepCheckDistant);
         swTestDistantMotor = findViewById(R.id.swTestDistantMotor);
         edtStepCheckDistant = findViewById(R.id.edtStepCheckDistant);
+
+        txtNameMotor[0] = findViewById(R.id.txtNameMotor1);
+        txtNameMotor[1] = findViewById(R.id.txtNameMotor2);
+        txtNameMotor[2] = findViewById(R.id.txtNameMotor3);
+        txtNameMotor[3] = findViewById(R.id.txtNameMotor4);
+        txtNameMotor[4] = findViewById(R.id.txtNameMotor5);
+        txtNameMotor[5] = findViewById(R.id.txtNameMotor6);
+        txtNameMotor[6] = findViewById(R.id.txtNameMotor7);
+        txtNameMotor[7] = findViewById(R.id.txtNameMotor8);
+        txtNameMotor[8] = findViewById(R.id.txtNameMotor9);
+
+        txtMinMotor[0] = findViewById(R.id.txtMinMotor1);
+        txtMinMotor[1] = findViewById(R.id.txtMinMotor2);
+        txtMinMotor[2] = findViewById(R.id.txtMinMotor3);
+        txtMinMotor[3] = findViewById(R.id.txtMinMotor4);
+        txtMinMotor[4] = findViewById(R.id.txtMinMotor5);
+        txtMinMotor[5] = findViewById(R.id.txtMinMotor6);
+        txtMinMotor[6] = findViewById(R.id.txtMinMotor7);
+        txtMinMotor[7] = findViewById(R.id.txtMinMotor8);
+        txtMinMotor[8] = findViewById(R.id.txtMinMotor9);
+
+        txtMaxMotor[0] = findViewById(R.id.txtMaxMotor1);
+        txtMaxMotor[1] = findViewById(R.id.txtMaxMotor2);
+        txtMaxMotor[2] = findViewById(R.id.txtMaxMotor3);
+        txtMaxMotor[3] = findViewById(R.id.txtMaxMotor4);
+        txtMaxMotor[4] = findViewById(R.id.txtMaxMotor5);
+        txtMaxMotor[5] = findViewById(R.id.txtMaxMotor6);
+        txtMaxMotor[6] = findViewById(R.id.txtMaxMotor7);
+        txtMaxMotor[7] = findViewById(R.id.txtMaxMotor8);
+        txtMaxMotor[8] = findViewById(R.id.txtMaxMotor9);
+
+        edtMinMotor[0] = findViewById(R.id.edtMinMotor1);
+        edtMinMotor[1] = findViewById(R.id.edtMinMotor2);
+        edtMinMotor[2] = findViewById(R.id.edtMinMotor3);
+        edtMinMotor[3] = findViewById(R.id.edtMinMotor4);
+        edtMinMotor[4] = findViewById(R.id.edtMinMotor5);
+        edtMinMotor[5] = findViewById(R.id.edtMinMotor6);
+        edtMinMotor[6] = findViewById(R.id.edtMinMotor7);
+        edtMinMotor[7] = findViewById(R.id.edtMinMotor8);
+        edtMinMotor[8] = findViewById(R.id.edtMinMotor9);
+
+        edtMaxMotor[0] = findViewById(R.id.edtMaxMotor1);
+        edtMaxMotor[1] = findViewById(R.id.edtMaxMotor2);
+        edtMaxMotor[2] = findViewById(R.id.edtMaxMotor3);
+        edtMaxMotor[3] = findViewById(R.id.edtMaxMotor4);
+        edtMaxMotor[4] = findViewById(R.id.edtMaxMotor5);
+        edtMaxMotor[5] = findViewById(R.id.edtMaxMotor6);
+        edtMaxMotor[6] = findViewById(R.id.edtMaxMotor7);
+        edtMaxMotor[7] = findViewById(R.id.edtMaxMotor8);
+        edtMaxMotor[8] = findViewById(R.id.edtMaxMotor9);
+
+        checkReverseMotor[0] = findViewById(R.id.checkReverseMotor1);
+        checkReverseMotor[1] = findViewById(R.id.checkReverseMotor2);
+        checkReverseMotor[2] = findViewById(R.id.checkReverseMotor3);
+        checkReverseMotor[3] = findViewById(R.id.checkReverseMotor4);
+        checkReverseMotor[4] = findViewById(R.id.checkReverseMotor5);
+        checkReverseMotor[5] = findViewById(R.id.checkReverseMotor6);
+        checkReverseMotor[6] = findViewById(R.id.checkReverseMotor7);
+        checkReverseMotor[7] = findViewById(R.id.checkReverseMotor8);
+        checkReverseMotor[8] = findViewById(R.id.checkReverseMotor9);
+
+        btnSaveDataMotor[0] = findViewById(R.id.btnSaveDataMotor1);
+        btnSaveDataMotor[1] = findViewById(R.id.btnSaveDataMotor2);
+        btnSaveDataMotor[2] = findViewById(R.id.btnSaveDataMotor3);
+        btnSaveDataMotor[3] = findViewById(R.id.btnSaveDataMotor4);
+        btnSaveDataMotor[4] = findViewById(R.id.btnSaveDataMotor5);
+        btnSaveDataMotor[5] = findViewById(R.id.btnSaveDataMotor6);
+        btnSaveDataMotor[6] = findViewById(R.id.btnSaveDataMotor7);
+        btnSaveDataMotor[7] = findViewById(R.id.btnSaveDataMotor8);
+        btnSaveDataMotor[8] = findViewById(R.id.btnSaveDataMotor9);
+
+        txtNameOpenMotor[0] = findViewById(R.id.txtNameOpenMotor1);
+        txtNameOpenMotor[1] = findViewById(R.id.txtNameOpenMotor2);
+        txtNameOpenMotor[2] = findViewById(R.id.txtNameOpenMotor3);
+        txtNameOpenMotor[3] = findViewById(R.id.txtNameOpenMotor4);
+        txtNameOpenMotor[4] = findViewById(R.id.txtNameOpenMotor5);
+        txtNameOpenMotor[5] = findViewById(R.id.txtNameOpenMotor6);
+        txtNameOpenMotor[6] = findViewById(R.id.txtNameOpenMotor7);
+        txtNameOpenMotor[7] = findViewById(R.id.txtNameOpenMotor8);
+        txtNameOpenMotor[8] = findViewById(R.id.txtNameOpenMotor9);
+
+        spnOpenStep1Motor[0] = findViewById(R.id.spnOpenStep1Motor1);
+        spnOpenStep1Motor[1] = findViewById(R.id.spnOpenStep1Motor2);
+        spnOpenStep1Motor[2] = findViewById(R.id.spnOpenStep1Motor3);
+        spnOpenStep1Motor[3] = findViewById(R.id.spnOpenStep1Motor4);
+        spnOpenStep1Motor[4] = findViewById(R.id.spnOpenStep1Motor5);
+        spnOpenStep1Motor[5] = findViewById(R.id.spnOpenStep1Motor6);
+        spnOpenStep1Motor[6] = findViewById(R.id.spnOpenStep1Motor7);
+        spnOpenStep1Motor[7] = findViewById(R.id.spnOpenStep1Motor8);
+        spnOpenStep1Motor[8] = findViewById(R.id.spnOpenStep1Motor9);
+
+        spnOpenStep2Motor[0] = findViewById(R.id.spnOpenStep2Motor1);
+        spnOpenStep2Motor[1] = findViewById(R.id.spnOpenStep2Motor2);
+        spnOpenStep2Motor[2] = findViewById(R.id.spnOpenStep2Motor3);
+        spnOpenStep2Motor[3] = findViewById(R.id.spnOpenStep2Motor4);
+        spnOpenStep2Motor[4] = findViewById(R.id.spnOpenStep2Motor5);
+        spnOpenStep2Motor[5] = findViewById(R.id.spnOpenStep2Motor6);
+        spnOpenStep2Motor[6] = findViewById(R.id.spnOpenStep2Motor7);
+        spnOpenStep2Motor[7] = findViewById(R.id.spnOpenStep2Motor8);
+        spnOpenStep2Motor[8] = findViewById(R.id.spnOpenStep2Motor9);
+
+        spnOpenStep3Motor[0] = findViewById(R.id.spnOpenStep3Motor1);
+        spnOpenStep3Motor[1] = findViewById(R.id.spnOpenStep3Motor2);
+        spnOpenStep3Motor[2] = findViewById(R.id.spnOpenStep3Motor3);
+        spnOpenStep3Motor[3] = findViewById(R.id.spnOpenStep3Motor4);
+        spnOpenStep3Motor[4] = findViewById(R.id.spnOpenStep3Motor5);
+        spnOpenStep3Motor[5] = findViewById(R.id.spnOpenStep3Motor6);
+        spnOpenStep3Motor[6] = findViewById(R.id.spnOpenStep3Motor7);
+        spnOpenStep3Motor[7] = findViewById(R.id.spnOpenStep3Motor8);
+        spnOpenStep3Motor[8] = findViewById(R.id.spnOpenStep3Motor9);
+
+        txtNameCloseMotor[0] = findViewById(R.id.txtNameCloseMotor1);
+        txtNameCloseMotor[1] = findViewById(R.id.txtNameCloseMotor2);
+        txtNameCloseMotor[2] = findViewById(R.id.txtNameCloseMotor3);
+        txtNameCloseMotor[3] = findViewById(R.id.txtNameCloseMotor4);
+        txtNameCloseMotor[4] = findViewById(R.id.txtNameCloseMotor5);
+        txtNameCloseMotor[5] = findViewById(R.id.txtNameCloseMotor6);
+        txtNameCloseMotor[6] = findViewById(R.id.txtNameCloseMotor7);
+        txtNameCloseMotor[7] = findViewById(R.id.txtNameCloseMotor8);
+        txtNameCloseMotor[8] = findViewById(R.id.txtNameCloseMotor9);
+
+        spnCloseStep1Motor[0] = findViewById(R.id.spnCloseStep1Motor1);
+        spnCloseStep1Motor[1] = findViewById(R.id.spnCloseStep1Motor2);
+        spnCloseStep1Motor[2] = findViewById(R.id.spnCloseStep1Motor3);
+        spnCloseStep1Motor[3] = findViewById(R.id.spnCloseStep1Motor4);
+        spnCloseStep1Motor[4] = findViewById(R.id.spnCloseStep1Motor5);
+        spnCloseStep1Motor[5] = findViewById(R.id.spnCloseStep1Motor6);
+        spnCloseStep1Motor[6] = findViewById(R.id.spnCloseStep1Motor7);
+        spnCloseStep1Motor[7] = findViewById(R.id.spnCloseStep1Motor8);
+        spnCloseStep1Motor[8] = findViewById(R.id.spnCloseStep1Motor9);
+
+        spnCloseStep2Motor[0] = findViewById(R.id.spnCloseStep2Motor1);
+        spnCloseStep2Motor[1] = findViewById(R.id.spnCloseStep2Motor2);
+        spnCloseStep2Motor[2] = findViewById(R.id.spnCloseStep2Motor3);
+        spnCloseStep2Motor[3] = findViewById(R.id.spnCloseStep2Motor4);
+        spnCloseStep2Motor[4] = findViewById(R.id.spnCloseStep2Motor5);
+        spnCloseStep2Motor[5] = findViewById(R.id.spnCloseStep2Motor6);
+        spnCloseStep2Motor[6] = findViewById(R.id.spnCloseStep2Motor7);
+        spnCloseStep2Motor[7] = findViewById(R.id.spnCloseStep2Motor8);
+        spnCloseStep2Motor[8] = findViewById(R.id.spnCloseStep2Motor9);
+
+        spnCloseStep3Motor[0] = findViewById(R.id.spnCloseStep3Motor1);
+        spnCloseStep3Motor[1] = findViewById(R.id.spnCloseStep3Motor2);
+        spnCloseStep3Motor[2] = findViewById(R.id.spnCloseStep3Motor3);
+        spnCloseStep3Motor[3] = findViewById(R.id.spnCloseStep3Motor4);
+        spnCloseStep3Motor[4] = findViewById(R.id.spnCloseStep3Motor5);
+        spnCloseStep3Motor[5] = findViewById(R.id.spnCloseStep3Motor6);
+        spnCloseStep3Motor[6] = findViewById(R.id.spnCloseStep3Motor7);
+        spnCloseStep3Motor[7] = findViewById(R.id.spnCloseStep3Motor8);
+        spnCloseStep3Motor[8] = findViewById(R.id.spnCloseStep3Motor9);
+        btnSaveStep = findViewById(R.id.btnSaveStep);
+
+
 
 
         //-----------------setup------------------------
@@ -1114,10 +1116,37 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void LoadDataBegin() {
+        //---------------------------------------------------save name motor--------------------------------------
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = sharedPreferences.edit();
+        for(int i = 0; i < MAX_MOTOR; i++){
+            edtNameMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
+            txtNameMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
+            txtNameOpenMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
+            txtNameCloseMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
+        }
+
+        List<String> list = new ArrayList<>();
+        list.add("O");
+        list.add("C");
+        list.add("S");
+        //ArrayAdapter spinAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+        ArrayAdapter spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_list, list);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_list);
+        for(int i = 0; i < MAX_MOTOR; i++){
+            spnOpenStep1Motor[i].setAdapter(spinnerAdapter);
+            spnOpenStep2Motor[i].setAdapter(spinnerAdapter);
+            spnOpenStep3Motor[i].setAdapter(spinnerAdapter);
+            spnCloseStep1Motor[i].setAdapter(spinnerAdapter);
+            spnCloseStep2Motor[i].setAdapter(spinnerAdapter);
+            spnCloseStep3Motor[i].setAdapter(spinnerAdapter);
+        }
 
 
 
-
+        //------------------------------------------------------------------------------------------------------
+    }
 
     public static boolean isBluetoothHeadsetConnected() {
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

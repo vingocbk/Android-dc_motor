@@ -42,8 +42,8 @@
     <RelativeLayout
         android:id="@+id/layoutConnect"
         android:layout_marginTop="80dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="#45151414"
         android:gravity="center_vertical"
         android:layout_width="match_parent"
@@ -78,7 +78,7 @@
 
     <ScrollView
         android:layout_below="@+id/layoutConnect"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:background="#45151414"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -99,7 +99,7 @@
                     android:id="@+id/edtNameMotor1"
                     android:text="Motor 1"
                     android:textColor="#FFFFFF"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </EditText>
 
@@ -107,9 +107,9 @@
                     android:id="@+id/btnOpenMotor1"
                     android:layout_weight="1"
                     android:layout_margin="2dp"
-                    android:textSize="10sp"
+                    android:textSize="8sp"
                     android:text="@string/open"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
                 <Button
@@ -117,8 +117,8 @@
                     android:layout_weight="1"
                     android:layout_margin="2dp"
                     android:text="@string/stop"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
                 <Button
@@ -126,27 +126,26 @@
                     android:layout_weight="1"
                     android:layout_margin="2dp"
                     android:text="@string/close"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
-                <LinearLayout
+                <TextView
+                    android:id="@+id/txtCurrent1"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:text="100.0mA"
                     android:layout_weight="1"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <TextView
-                        android:text="100"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                </LinearLayout>
+                </TextView>
 
 
             </LinearLayout>
             <LinearLayout
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:weightSum="4"
+                android:weightSum="5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <EditText
@@ -154,7 +153,7 @@
                     android:layout_weight="1"
                     android:text="Motor 2"
                     android:textColor="#FFFFFF"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:ignore="NestedWeights">
                 </EditText>
@@ -163,35 +162,44 @@
                     android:id="@+id/btnOpenMotor2"
                     android:layout_weight="1"
                     android:layout_margin="2dp"
-                    android:textSize="10sp"
+                    android:textSize="8sp"
                     android:text="@string/open"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
                 <Button
                     android:id="@+id/btnStopMotor2"
                     android:layout_weight="1"
                     android:layout_margin="2dp"
-                    android:textSize="10sp"
+                    android:textSize="8sp"
                     android:text="@string/stop"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
                 <Button
                     android:id="@+id/btnCloseMotor2"
                     android:layout_weight="1"
                     android:layout_margin="2dp"
-                    android:textSize="10sp"
+                    android:textSize="8sp"
                     android:text="@string/close"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
+                <TextView
+                    android:id="@+id/txtCurrent2"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:text="100mA"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </TextView>
 
             </LinearLayout>
             <LinearLayout
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:weightSum="4"
+                android:weightSum="5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <EditText
@@ -199,7 +207,7 @@
                     android:text="Motor 3"
                     android:layout_weight="1"
                     android:textColor="#FFFFFF"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:ignore="NestedWeights">
                 </EditText>
@@ -209,8 +217,8 @@
                     android:layout_margin="2dp"
                     android:text="@string/open"
                     android:layout_weight="1"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
                 <Button
@@ -218,8 +226,8 @@
                     android:layout_margin="2dp"
                     android:text="@string/stop"
                     android:layout_weight="1"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
                 <Button
@@ -227,16 +235,25 @@
                     android:layout_margin="2dp"
                     android:text="@string/close"
                     android:layout_weight="1"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
+                <TextView
+                    android:id="@+id/txtCurrent3"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:text="100mA"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </TextView>
 
             </LinearLayout>
             <LinearLayout
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:weightSum="4"
+                android:weightSum="5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <EditText
@@ -244,7 +261,7 @@
                     android:text="Motor 4"
                     android:layout_weight="1"
                     android:textColor="#FFFFFF"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:ignore="NestedWeights">
                 </EditText>
@@ -254,8 +271,8 @@
                     android:layout_margin="2dp"
                     android:text="@string/open"
                     android:layout_weight="1"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
                 <Button
@@ -263,25 +280,34 @@
                     android:layout_margin="2dp"
                     android:text="@string/stop"
                     android:layout_weight="1"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
                 <Button
                     android:id="@+id/btnCloseMotor4"
                     android:layout_margin="2dp"
                     android:layout_weight="1"
-                    android:textSize="10sp"
+                    android:textSize="8sp"
                     android:text="@string/close"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
+                <TextView
+                    android:id="@+id/txtCurrent4"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:text="100mA"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </TextView>
 
             </LinearLayout>
             <LinearLayout
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:weightSum="4"
+                android:weightSum="5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <EditText
@@ -289,7 +315,7 @@
                     android:text="Motor 5"
                     android:layout_weight="1"
                     android:textColor="#FFFFFF"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:ignore="NestedWeights">
                 </EditText>
@@ -299,8 +325,8 @@
                     android:layout_margin="2dp"
                     android:text="@string/open"
                     android:layout_weight="1"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
                 <Button
@@ -308,25 +334,33 @@
                     android:layout_margin="2dp"
                     android:text="@string/stop"
                     android:layout_weight="1"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
                 <Button
                     android:id="@+id/btnCloseMotor5"
                     android:layout_margin="2dp"
                     android:layout_weight="1"
-                    android:textSize="10sp"
+                    android:textSize="8sp"
                     android:text="@string/close"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
-
+                <TextView
+                    android:id="@+id/txtCurrent5"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:text="100mA"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </TextView>
             </LinearLayout>
             <LinearLayout
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:weightSum="4"
+                android:weightSum="5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <EditText
@@ -334,7 +368,7 @@
                     android:text="Motor 6"
                     android:layout_weight="1"
                     android:textColor="#FFFFFF"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:ignore="NestedWeights">
                 </EditText>
@@ -344,8 +378,8 @@
                     android:layout_margin="2dp"
                     android:text="@string/open"
                     android:layout_weight="1"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
                 <Button
@@ -353,8 +387,8 @@
                     android:layout_margin="2dp"
                     android:text="@string/stop"
                     android:layout_weight="1"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
                 <Button
@@ -362,11 +396,178 @@
                     android:layout_margin="2dp"
                     android:text="@string/close"
                     android:layout_weight="1"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </Button>
+                <TextView
+                    android:id="@+id/txtCurrent6"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:text="100mA"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </TextView>
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/edtNameMotor7"
+                    android:text="Motor 7"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:ignore="NestedWeights">
+                </EditText>
 
+                <Button
+                    android:id="@+id/btnOpenMotor7"
+                    android:layout_margin="2dp"
+                    android:text="@string/open"
+                    android:layout_weight="1"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnStopMotor7"
+                    android:layout_margin="2dp"
+                    android:text="@string/stop"
+                    android:layout_weight="1"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnCloseMotor7"
+                    android:layout_margin="2dp"
+                    android:text="@string/close"
+                    android:layout_weight="1"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Button>
+                <TextView
+                    android:id="@+id/txtCurrent7"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:text="100mA"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </TextView>
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/edtNameMotor8"
+                    android:text="Motor 8"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:ignore="NestedWeights">
+                </EditText>
+
+                <Button
+                    android:id="@+id/btnOpenMotor8"
+                    android:layout_margin="2dp"
+                    android:text="@string/open"
+                    android:layout_weight="1"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnStopMotor8"
+                    android:layout_margin="2dp"
+                    android:text="@string/stop"
+                    android:layout_weight="1"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnCloseMotor8"
+                    android:layout_margin="2dp"
+                    android:text="@string/close"
+                    android:layout_weight="1"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Button>
+                <TextView
+                    android:id="@+id/txtCurrent8"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:text="100mA"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </TextView>
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/edtNameMotor9"
+                    android:text="Motor 9"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:ignore="NestedWeights">
+                </EditText>
+
+                <Button
+                    android:id="@+id/btnOpenMotor9"
+                    android:layout_margin="2dp"
+                    android:text="@string/open"
+                    android:layout_weight="1"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnStopMotor9"
+                    android:layout_margin="2dp"
+                    android:text="@string/stop"
+                    android:layout_weight="1"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Button>
+                <Button
+                    android:id="@+id/btnCloseMotor9"
+                    android:layout_margin="2dp"
+                    android:text="@string/close"
+                    android:layout_weight="1"
+                    android:textSize="8sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Button>
+                <TextView
+                    android:id="@+id/txtCurrent9"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:text="100mA"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </TextView>
             </LinearLayout>
             <LinearLayout
                 android:gravity="left"
@@ -382,6 +583,7 @@
                 </Button>
                 <TextView
                     android:text="No test"
+                    android:textSize="12sp"
                     android:layout_marginLeft="10dp"
                     android:textColor="#FFFFFF"
                     android:layout_width="wrap_content"
@@ -397,6 +599,7 @@
                 </androidx.appcompat.widget.SwitchCompat>
                 <TextView
                     android:text="Test"
+                    android:textSize="12sp"
                     android:textColor="#FFFFFF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -420,13 +623,23 @@
                 </androidx.appcompat.widget.SwitchCompat>
                 <TextView
                     android:text="Step"
+                    android:textSize="12sp"
                     android:textColor="#FFFFFF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 </TextView>
 
             </LinearLayout>
-
+            <include
+                android:id="@+id/layoutSetupData"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/setupdata" />
+            <include
+                android:id="@+id/layoutSetupStep"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/setup_step" />
         </LinearLayout>
     </ScrollView>
 
