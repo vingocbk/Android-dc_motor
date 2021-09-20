@@ -106,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
     //------------------setup-------------------------
     TextView txtMotor1,txtMotor2,txtMotor3,txtMotor4,txtMotor5,txtMotor6;
     TextView txtVoltage1,txtVoltage2,txtVoltage3,txtVoltage4,txtVoltage5,txtVoltage6;
-    TextView txtCurrent1,txtCurrent2,txtCurrent3,txtCurrent4,txtCurrent5,txtCurrent6;
+    TextView[] txtCurrent = new TextView[MAX_MOTOR];
+//    TextView txtCurrent1,txtCurrent2,txtCurrent3,txtCurrent4,txtCurrent5,txtCurrent6;
     EditText edtSetDistantMotor1,edtSetDistantMotor2,edtSetDistantMotor3,edtSetDistantMotor4,edtSetDistantMotor5,edtSetDistantMotor6;
     Button btnRunDistantMotor1,btnRunDistantMotor2,btnRunDistantMotor3,btnRunDistantMotor4,btnRunDistantMotor5,btnRunDistantMotor6;
     Button btnSetDistantMotor1,btnSetDistantMotor2,btnSetDistantMotor3,btnSetDistantMotor4,btnSetDistantMotor5,btnSetDistantMotor6;
@@ -207,500 +208,93 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //-------------------Main button OPEN------------------------------
-        btnOpenMotor[0].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor1\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor1\",\"command\":\"open\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor1\",\"command\":\"open\"}";
+        for(int i = 0; i < MAX_MOTOR; i++){
+            int finalI = i;
+            btnOpenMotor[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mmDevice !=null && isConnected(mmDevice)) {
+                        String data = "{\"type\":\"run_no_step\",\"name\":\"" +
+                                Integer.toString(finalI) +
+                                "\",\"command\":\"open\"}";
                         byte[] bytes = data.getBytes(Charset.defaultCharset());
                         mConnectedThread.write(bytes);
                         Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
                         //Log.d(TAG,data);
                     }
                 }
-            }
-        });
-        btnOpenMotor[1].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor2\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor2\",\"command\":\"open\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor2\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }
-                }
-            }
-        });
-        btnOpenMotor[2].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor3\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor3\",\"command\":\"open\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor3\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }
-                }
-            }
-        });
-        btnOpenMotor[3].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor4\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor4\",\"command\":\"open\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor4\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }
-                }
-            }
-        });
-        btnOpenMotor[4].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor5\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor5\",\"command\":\"open\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor5\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }
-                }
-            }
-        });
-        btnOpenMotor[5].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor6\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor6\",\"command\":\"open\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor6\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }
-                }
-            }
-        });
-        btnOpenMotor[6].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor7\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor7\",\"command\":\"open\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor7\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }
-                }
-            }
-        });
-        btnOpenMotor[7].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor8\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor8\",\"command\":\"open\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor8\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }
-                }
-            }
-        });
-        btnOpenMotor[8].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor9\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor9\",\"command\":\"open\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor9\",\"command\":\"open\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }
-                }
-            }
-        });
+            });
+        }
         //-------------------Main button STOP------------------------------
-        btnStopMotor[0].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    String data = "{\"type\":\"run_no_step\",\"name\":\"motor1\",\"command\":\"stop\"}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
-                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    //Log.d(TAG,data);
+        for(int i = 0; i< MAX_MOTOR; i++){
+            int finalI = i;
+            btnStopMotor[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mmDevice !=null && isConnected(mmDevice)) {
+                        String data = "{\"type\":\"run_no_step\",\"name\":\"" +
+                                Integer.toString(finalI) +
+                                "\",\"command\":\"stop\"}";
+                        byte[] bytes = data.getBytes(Charset.defaultCharset());
+                        mConnectedThread.write(bytes);
+                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                        //Log.d(TAG,data);
+                    }
                 }
-            }
-        });
-        btnStopMotor[1].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    String data = "{\"type\":\"run_no_step\",\"name\":\"motor2\",\"command\":\"stop\"}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
-                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    //Log.d(TAG,data);
-                }
-            }
-        });
-        btnStopMotor[2].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    String data = "{\"type\":\"run_no_step\",\"name\":\"motor3\",\"command\":\"stop\"}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
-                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    //Log.d(TAG,data);
-                }
-            }
-        });
-        btnStopMotor[3].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    String data = "{\"type\":\"run_no_step\",\"name\":\"motor4\",\"command\":\"stop\"}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
-                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    //Log.d(TAG,data);
-                }
-            }
-        });
-        btnStopMotor[4].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    String data = "{\"type\":\"run_no_step\",\"name\":\"motor5\",\"command\":\"stop\"}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
-                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    //Log.d(TAG,data);
-                }
-            }
-        });
-        btnStopMotor[5].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    String data = "{\"type\":\"run_no_step\",\"name\":\"motor6\",\"command\":\"stop\"}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
-                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    //Log.d(TAG,data);
-                }
-            }
-        });
+            });
+        }
         //-------------------Main button CLOSE------------------------------
-        btnCloseMotor[0].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor1\",\"command\":\"close\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor1\",\"command\":\"close\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor1\",\"command\":\"close\"}";
+        for(int i = 0; i < MAX_MOTOR; i++){
+            int finalI = i;
+            btnCloseMotor[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mmDevice !=null && isConnected(mmDevice)) {
+                        String data = "{\"type\":\"run_no_step\",\"name\":\"" +
+                                Integer.toString(finalI) +
+                                "\",\"command\":\"close\"}";
                         byte[] bytes = data.getBytes(Charset.defaultCharset());
                         mConnectedThread.write(bytes);
                         Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
                         //Log.d(TAG,data);
                     }
                 }
-            }
-        });
-        btnCloseMotor[1].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor2\",\"command\":\"close\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor2\",\"command\":\"close\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
+            });
+        }
+        //--------------------------------------------------------------------
+
+        //-------------------Setup button Save data------------------------------
+        for(int i = 0; i < MAX_MOTOR; i++){
+            int finalI = i;
+            btnSaveDataMotor[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mmDevice !=null && isConnected(mmDevice)) {
+                        String data = "{\"type\":\"save_data\",\"name\":\"" +
+                                Integer.toString(finalI) +
+                                "\",\"min_current\":\"" +
+                                edtMinMotor[finalI].getText().toString() +
+                                "\",\"max_current\":\"" +
+                                edtMaxMotor[finalI].getText().toString() +
+                                "\",\"reverse\":\"";
+                        if(checkReverseMotor[finalI].isChecked()){
+                            data += "true";
+                        }
+                        else{
+                            data += "false";
+                        }
+
                         data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor2\",\"command\":\"close\"}";
                         byte[] bytes = data.getBytes(Charset.defaultCharset());
                         mConnectedThread.write(bytes);
                         Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
                         //Log.d(TAG,data);
                     }
                 }
-            }
-        });
-        btnCloseMotor[2].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor3\",\"command\":\"close\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor3\",\"command\":\"close\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor3\",\"command\":\"close\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }
-                }
-            }
-        });
-        btnCloseMotor[3].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor4\",\"command\":\"close\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor4\",\"command\":\"close\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor4\",\"command\":\"close\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }
-                }
-            }
-        });
-        btnCloseMotor[4].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor5\",\"command\":\"close\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor5\",\"command\":\"close\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor5\",\"command\":\"close\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }
-                }
-            }
-        });
-        btnCloseMotor[5].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-                    if(swTestDistantMotor.isChecked()){
-                        String data = "{\"type\":\"run_test_distant\",\"name\":\"motor6\",\"command\":\"close\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(swStepCheckDistant.isChecked()){
-                        String data = "{\"type\":\"run_with_step\",\"name\":\"motor6\",\"command\":\"close\",\"data\":\"";
-                        data += edtStepCheckDistant.getText().toString();
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }else {
-                        String data = "{\"type\":\"run_no_step\",\"name\":\"motor6\",\"command\":\"close\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }
-                }
-            }
-        });
+            });
+        }
+        //--------------------------------------------------------------------
+
 
         btnSaveNameMotor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -862,9 +456,9 @@ public class MainActivity extends AppCompatActivity {
         btnCloseMotor[3] = findViewById(R.id.btnCloseMotor4);
         btnCloseMotor[4] = findViewById(R.id.btnCloseMotor5);
         btnCloseMotor[5] = findViewById(R.id.btnCloseMotor6);
-        btnCloseMotor[6] = findViewById(R.id.btnCloseMotor4);
-        btnCloseMotor[7] = findViewById(R.id.btnCloseMotor5);
-        btnCloseMotor[8] = findViewById(R.id.btnCloseMotor6);
+        btnCloseMotor[6] = findViewById(R.id.btnCloseMotor7);
+        btnCloseMotor[7] = findViewById(R.id.btnCloseMotor8);
+        btnCloseMotor[8] = findViewById(R.id.btnCloseMotor9);
 
         btnStopMotor[0] = findViewById(R.id.btnStopMotor1);
         btnStopMotor[1] = findViewById(R.id.btnStopMotor2);
@@ -872,9 +466,9 @@ public class MainActivity extends AppCompatActivity {
         btnStopMotor[3] = findViewById(R.id.btnStopMotor4);
         btnStopMotor[4] = findViewById(R.id.btnStopMotor5);
         btnStopMotor[5] = findViewById(R.id.btnStopMotor6);
-        btnStopMotor[6] = findViewById(R.id.btnStopMotor4);
-        btnStopMotor[7] = findViewById(R.id.btnStopMotor5);
-        btnStopMotor[8] = findViewById(R.id.btnStopMotor6);
+        btnStopMotor[6] = findViewById(R.id.btnStopMotor7);
+        btnStopMotor[7] = findViewById(R.id.btnStopMotor8);
+        btnStopMotor[8] = findViewById(R.id.btnStopMotor9);
 
         btnSaveNameMotor = findViewById(R.id.btnSaveNameMotor);
         swStepCheckDistant = findViewById(R.id.swStepCheckDistant);
@@ -1050,12 +644,15 @@ public class MainActivity extends AppCompatActivity {
         txtVoltage5 = findViewById(R.id.txtVoltage5);
         txtVoltage6 = findViewById(R.id.txtVoltage6);
 
-        txtCurrent1 = findViewById(R.id.txtCurrent1);
-        txtCurrent2 = findViewById(R.id.txtCurrent2);
-        txtCurrent3 = findViewById(R.id.txtCurrent3);
-        txtCurrent4 = findViewById(R.id.txtCurrent4);
-        txtCurrent5 = findViewById(R.id.txtCurrent5);
-        txtCurrent6 = findViewById(R.id.txtCurrent6);
+        txtCurrent[0] = findViewById(R.id.txtCurrent1);
+        txtCurrent[1] = findViewById(R.id.txtCurrent2);
+        txtCurrent[2] = findViewById(R.id.txtCurrent3);
+        txtCurrent[3] = findViewById(R.id.txtCurrent4);
+        txtCurrent[4] = findViewById(R.id.txtCurrent5);
+        txtCurrent[5] = findViewById(R.id.txtCurrent6);
+        txtCurrent[6] = findViewById(R.id.txtCurrent7);
+        txtCurrent[7] = findViewById(R.id.txtCurrent8);
+        txtCurrent[8] = findViewById(R.id.txtCurrent9);
 
         edtSetDistantMotor1 = findViewById(R.id.edtSetDistantMotor1);
         edtSetDistantMotor2 = findViewById(R.id.edtSetDistantMotor2);
@@ -1281,7 +878,7 @@ public class MainActivity extends AppCompatActivity {
             byte[] readBuffer = new byte[1024];;
             int readBufferPosition = 0;
             String incomingMessage = "";
-            String data[] = new String[30];
+            String data[] = new String[9];
             // Keep listening to the InputStream until an exception occurs
             while (true) {
 
@@ -1294,85 +891,35 @@ public class MainActivity extends AppCompatActivity {
                     if(incomingMessage.contains("}")){
                         Log.d(TAG, "InputStream: " + incomingMessage);
                         JSONObject reader = new JSONObject(incomingMessage);
-                        //voltage
-                        data[0] = reader.getString("11");
-                        data[1] = reader.getString("21");
-                        data[2] = reader.getString("31");
-                        data[3] = reader.getString("41");
-                        data[4] = reader.getString("51");
-                        data[5] = reader.getString("61");
                         //current
-                        data[6] = reader.getString("12");
-                        data[7] = reader.getString("22");
-                        data[8] = reader.getString("32");
-                        data[9] = reader.getString("42");
-                        data[10] = reader.getString("52");
-                        data[11] = reader.getString("62");
-                        //max current
-                        data[12] = reader.getString("13");
-                        data[13] = reader.getString("23");
-                        data[14] = reader.getString("33");
-                        data[15] = reader.getString("43");
-                        data[16] = reader.getString("53");
-                        data[17] = reader.getString("63");
-                        //time return
-                        data[18] = reader.getString("14");
-                        data[19] = reader.getString("24");
-                        data[20] = reader.getString("34");
-                        data[21] = reader.getString("44");
-                        data[22] = reader.getString("54");
-                        data[23] = reader.getString("64");
-                        //Min Current
-                        data[24] = reader.getString("15");
-                        data[25] = reader.getString("25");
-                        data[26] = reader.getString("35");
-                        data[27] = reader.getString("45");
-                        data[28] = reader.getString("55");
-                        data[29] = reader.getString("65");
-                        incomingMessage = "";
-                    }
-                    runOnUiThread(new Runnable() {
+                        if(reader.has("setup")){
 
-                        @SuppressLint("SetTextI18n")
-                        @Override
-                        public void run() {
-                            //-------
-                            txtVoltage1.setText(data[0] + " V");
-                            txtVoltage2.setText(data[1] + " V");
-                            txtVoltage3.setText(data[2] + " V");
-                            txtVoltage4.setText(data[3] + " V");
-                            txtVoltage5.setText(data[4] + " V");
-                            txtVoltage6.setText(data[5] + " V");
-                            //-------
-                            txtCurrent1.setText(data[6] + " mA");
-                            txtCurrent2.setText(data[7] + " mA");
-                            txtCurrent3.setText(data[8] + " mA");
-                            txtCurrent4.setText(data[9] + " mA");
-                            txtCurrent5.setText(data[10] + " mA");
-                            txtCurrent6.setText(data[11] + " mA");
-                            //---------
-                            ST2txtMaxCurrent1.setText(data[12]);
-                            ST2txtMaxCurrent2.setText(data[13]);
-                            ST2txtMaxCurrent3.setText(data[14]);
-                            ST2txtMaxCurrent4.setText(data[15]);
-                            ST2txtMaxCurrent5.setText(data[16]);
-                            ST2txtMaxCurrent6.setText(data[17]);
-                            //---------
-                            ST2txtReturn1.setText(data[18]);
-                            ST2txtReturn2.setText(data[19]);
-                            ST2txtReturn3.setText(data[20]);
-                            ST2txtReturn4.setText(data[21]);
-                            ST2txtReturn5.setText(data[22]);
-                            ST2txtReturn6.setText(data[23]);
-                            //---------
-                            ST2txtMinCurrent1.setText(data[24]);
-                            ST2txtMinCurrent2.setText(data[25]);
-                            ST2txtMinCurrent3.setText(data[26]);
-                            ST2txtMinCurrent4.setText(data[27]);
-                            ST2txtMinCurrent5.setText(data[28]);
-                            ST2txtMinCurrent6.setText(data[29]);
                         }
-                    });
+                        else{
+                            data[0] = reader.getString("1");
+                            data[1] = reader.getString("2");
+                            data[2] = reader.getString("3");
+                            data[3] = reader.getString("4");
+                            data[4] = reader.getString("5");
+                            data[5] = reader.getString("6");
+                            data[6] = reader.getString("7");
+                            data[7] = reader.getString("8");
+                            data[8] = reader.getString("9");
+                            incomingMessage = "";
+                            runOnUiThread(new Runnable() {
+
+                                @SuppressLint("SetTextI18n")
+                                @Override
+                                public void run() {
+                                    //-------
+                                    for(int i =0; i < MAX_MOTOR; i++){
+                                        txtCurrent[i].setText(data[i] + " mA");
+                                    }
+                                }
+                            });
+                        }
+                    }
+
 
 
                 } catch (IOException | JSONException e) {
