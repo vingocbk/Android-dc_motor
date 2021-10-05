@@ -28,16 +28,16 @@
     </ImageView>
 
     <ImageView
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="20dp"
         android:id="@+id/imgSetup"
-        android:layout_marginTop="25dp"
-        android:background="@mipmap/ic_setup"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:visibility="invisible"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp">
-    </ImageView>
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@mipmap/ic_setup"></ImageView>
 
     <RelativeLayout
         android:id="@+id/layoutConnect"
@@ -577,7 +577,7 @@
                 <Button
                     android:id="@+id/btnSaveNameMotor"
                     android:text="Save"
-                    android:textSize="10sp"
+                    android:textSize="8sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 </Button>
@@ -586,6 +586,7 @@
                     android:textSize="12sp"
                     android:layout_marginLeft="10dp"
                     android:textColor="#FFFFFF"
+                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 </TextView>
@@ -594,6 +595,7 @@
                     android:id="@+id/swTestDistantMotor"
                     android:layout_weight="0"
                     android:gravity="center"
+                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 </androidx.appcompat.widget.SwitchCompat>
@@ -601,6 +603,7 @@
                     android:text="Test"
                     android:textSize="12sp"
                     android:textColor="#FFFFFF"
+                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 </TextView>
@@ -618,6 +621,7 @@
                     android:id="@+id/swStepCheckDistant"
                     android:layout_weight="0"
                     android:gravity="center"
+                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 </androidx.appcompat.widget.SwitchCompat>

@@ -41,6 +41,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    int OPEN = 0, CLOSE = 1, STOP = 2;
+    String OPEN = "1", CLOSE = "2", STOP = "0";
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -294,7 +295,47 @@ public class MainActivity extends AppCompatActivity {
             });
         }
         //--------------------------------------------------------------------
+        btnSaveStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mmDevice !=null && isConnected(mmDevice)) {
+                    String data = "{\"type\":\"step\",\"1\":[";
 
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        data += String.valueOf(spnOpenStep1Motor[i].getSelectedItemPosition());
+                        data += ",";
+                    }
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        data += String.valueOf(spnOpenStep2Motor[i].getSelectedItemPosition());
+                        data += ",";
+                    }
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        data += String.valueOf(spnOpenStep3Motor[i].getSelectedItemPosition());
+                        data += ",";
+                    }
+                    //---------Close------------------
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        data += String.valueOf(spnCloseStep1Motor[i].getSelectedItemPosition());
+                        data += ",";
+                    }
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        data += String.valueOf(spnCloseStep2Motor[i].getSelectedItemPosition());
+                        data += ",";
+                    }
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        data += String.valueOf(spnCloseStep3Motor[i].getSelectedItemPosition());
+                        if(i == (MAX_MOTOR - 1)){
+                            break;
+                        }
+                        data += ",";
+                    }
+                    data += "]}";
+                    byte[] bytes = data.getBytes(Charset.defaultCharset());
+                    mConnectedThread.write(bytes);
+                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         btnSaveNameMotor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -725,9 +766,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         List<String> list = new ArrayList<>();
+        list.add("S");
         list.add("O");
         list.add("C");
-        list.add("S");
         //ArrayAdapter spinAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
         ArrayAdapter spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_list, list);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_list);
@@ -878,7 +919,7 @@ public class MainActivity extends AppCompatActivity {
             byte[] readBuffer = new byte[1024];;
             int readBufferPosition = 0;
             String incomingMessage = "";
-            String data[] = new String[9];
+
             // Keep listening to the InputStream until an exception occurs
             while (true) {
 
@@ -892,28 +933,108 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "InputStream: " + incomingMessage);
                         JSONObject reader = new JSONObject(incomingMessage);
                         //current
-                        if(reader.has("setup")){
-
-                        }
-                        else{
-                            data[0] = reader.getString("1");
-                            data[1] = reader.getString("2");
-                            data[2] = reader.getString("3");
-                            data[3] = reader.getString("4");
-                            data[4] = reader.getString("5");
-                            data[5] = reader.getString("6");
-                            data[6] = reader.getString("7");
-                            data[7] = reader.getString("8");
-                            data[8] = reader.getString("9");
+                        if(reader.has("2")){
                             incomingMessage = "";
+                            JSONArray array= reader.getJSONArray("2");
                             runOnUiThread(new Runnable() {
-
                                 @SuppressLint("SetTextI18n")
                                 @Override
                                 public void run() {
                                     //-------
                                     for(int i =0; i < MAX_MOTOR; i++){
-                                        txtCurrent[i].setText(data[i] + " mA");
+                                        try {
+                                            txtMinMotor[i].setText(String.valueOf(array.getInt(i)));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    for(int i =0; i < MAX_MOTOR; i++){
+                                        try {
+                                            txtMaxMotor[i].setText(String.valueOf(array.getInt(MAX_MOTOR+i)));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            });
+
+                        }
+                        //Step
+                        else if(reader.has("3")){
+                            incomingMessage = "";
+                            JSONArray array= reader.getJSONArray("3");
+                            runOnUiThread(new Runnable() {
+                                @SuppressLint("SetTextI18n")
+                                @Override
+                                public void run() {
+                                    //-------------------OPEN STEP 1---------------------------
+                                    for(int i =0; i < MAX_MOTOR; i++){
+                                        try {
+                                            spnOpenStep1Motor[i].setSelection(array.getInt(i));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    //-------------------OPEN STEP 2---------------------------
+                                    for(int i =0; i < MAX_MOTOR; i++){
+                                        try {
+                                            spnOpenStep2Motor[i].setSelection(array.getInt(MAX_MOTOR+i));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    //-------------------OPEN STEP 3---------------------------
+                                    for(int i =0; i < MAX_MOTOR; i++){
+                                        try {
+                                            spnOpenStep3Motor[i].setSelection(array.getInt(2*MAX_MOTOR+i));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    //-------------------CLOSE STEP 1---------------------------
+                                    for(int i =0; i < MAX_MOTOR; i++){
+                                        try {
+                                            spnCloseStep1Motor[i].setSelection(array.getInt(3*MAX_MOTOR+i));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    //-------------------CLOSE STEP 2---------------------------
+                                    for(int i =0; i < MAX_MOTOR; i++){
+                                        try {
+                                            spnCloseStep2Motor[i].setSelection(array.getInt(4*MAX_MOTOR+i));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    //-------------------CLOSE STEP 3---------------------------
+                                    for(int i =0; i < MAX_MOTOR; i++){
+                                        try {
+                                            spnCloseStep3Motor[i].setSelection(array.getInt(5*MAX_MOTOR+i));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            });
+
+                        }
+                        else{
+                            double data[] = new double[9];
+                            incomingMessage = "";
+
+                            JSONArray array= reader.getJSONArray("1");
+                            for(int i = 0; i < array.length(); i++){
+                                data[i] = array.getDouble(i);
+                            }
+//                            Log.d(TAG, "InputStream: " + data[0]);
+                            runOnUiThread(new Runnable() {
+                                @SuppressLint("SetTextI18n")
+                                @Override
+                                public void run() {
+                                    //-------
+                                    for(int i =0; i < MAX_MOTOR; i++){
+                                        txtCurrent[i].setText(String.valueOf(data[i]) + " mA");
                                     }
                                 }
                             });

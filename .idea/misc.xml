@@ -3,11 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/HPT/AndroidStudio/Android-dc_motor/app/src/main/res/layout/activity_main.xml" value="0.20833333333333334" />
-        <entry key="..\:/HPT/AndroidStudio/Android-dc_motor/app/src/main/res/layout/setup.xml" value="0.3795289855072464" />
-        <entry key="..\:/HPT/AndroidStudio/Android-dc_motor/app/src/main/res/layout/setup_2.xml" value="0.3795289855072464" />
-        <entry key="..\:/HPT/AndroidStudio/Android-dc_motor/app/src/main/res/layout/setup_step.xml" value="0.3795289855072464" />
-        <entry key="..\:/HPT/AndroidStudio/Android-dc_motor/app/src/main/res/layout/setupdata.xml" value="0.3795289855072464" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.20104166666666667" />
+        <entry key="app/src/main/res/layout/list_device.xml" value="0.20208333333333334" />
+        <entry key="app/src/main/res/layout/setup_step.xml" value="0.20208333333333334" />
+        <entry key="app/src/main/res/layout/setupdata.xml" value="0.23645833333333333" />
       </map>
     </option>
   </component>

@@ -11,7 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:text="Name"
+            android:text="OPEN"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:gravity="left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TextView>
+        <TextView
+            android:text="Step 1"
             android:layout_weight="1"
             android:textColor="@color/white"
             android:gravity="center"
@@ -19,7 +27,7 @@
             android:layout_height="wrap_content">
         </TextView>
         <TextView
-            android:text="Open 1"
+            android:text="Step 2"
             android:layout_weight="1"
             android:textColor="@color/white"
             android:gravity="center"
@@ -27,15 +35,7 @@
             android:layout_height="wrap_content">
         </TextView>
         <TextView
-            android:text="Open 2"
-            android:layout_weight="1"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </TextView>
-        <TextView
-            android:text="Open 3"
+            android:text="Step 3"
             android:layout_weight="1"
             android:textColor="@color/white"
             android:gravity="center"
@@ -54,7 +54,7 @@
             android:text="Motor 1"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -90,7 +90,7 @@
             android:text="Motor 2"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -126,7 +126,7 @@
             android:text="Motor 3"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -162,7 +162,7 @@
             android:text="Motor 4"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -198,7 +198,7 @@
             android:text="Motor 5"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -234,7 +234,7 @@
             android:text="Motor 6"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -270,7 +270,7 @@
             android:text="Motor 7"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -306,7 +306,7 @@
             android:text="Motor 8"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -342,7 +342,7 @@
             android:text="Motor 9"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -375,7 +375,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:text="Name"
+            android:text="CLOSE"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:gravity="left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TextView>
+        <TextView
+            android:text="Step 1"
             android:layout_weight="1"
             android:textColor="@color/white"
             android:gravity="center"
@@ -383,7 +391,7 @@
             android:layout_height="wrap_content">
         </TextView>
         <TextView
-            android:text="Close 1"
+            android:text="Step 2"
             android:layout_weight="1"
             android:textColor="@color/white"
             android:gravity="center"
@@ -391,15 +399,7 @@
             android:layout_height="wrap_content">
         </TextView>
         <TextView
-            android:text="Close 2"
-            android:layout_weight="1"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </TextView>
-        <TextView
-            android:text="Close 3"
+            android:text="Step 3"
             android:layout_weight="1"
             android:textColor="@color/white"
             android:gravity="center"
@@ -417,7 +417,7 @@
             android:text="Motor 1"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -453,7 +453,7 @@
             android:text="Motor 2"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -489,7 +489,7 @@
             android:text="Motor 3"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -525,7 +525,7 @@
             android:text="Motor 4"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -561,7 +561,7 @@
             android:text="Motor 5"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -597,7 +597,7 @@
             android:text="Motor 6"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -633,7 +633,7 @@
             android:text="Motor 7"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -669,7 +669,7 @@
             android:text="Motor 8"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
@@ -705,7 +705,7 @@
             android:text="Motor 9"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </TextView>
