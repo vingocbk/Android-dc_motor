@@ -731,16 +731,25 @@
             android:layout_height="wrap_content">
         </Spinner>
     </LinearLayout>
-    <LinearLayout
-        android:gravity="center"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/btnSaveStep"
+            android:layout_centerInParent="true"
             android:text="Save"
             android:textSize="8sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </Button>
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/imgRefreshStep"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@mipmap/icons8_refresh_48"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </ImageView>
+    </RelativeLayout>
 </LinearLayout>

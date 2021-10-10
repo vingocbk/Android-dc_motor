@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
-        android:weightSum="7"
+        android:weightSum="6"
         android:background="#45020202"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -60,6 +60,7 @@
         </TextView>
         <TextView
             android:layout_weight="1"
+            android:visibility="gone"
             android:textColor="@color/white"
             android:gravity="center"
             android:layout_width="match_parent"
@@ -67,7 +68,7 @@
         </TextView>
     </LinearLayout>
     <LinearLayout
-        android:weightSum="7"
+        android:weightSum="6"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -114,16 +115,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </EditText>
-        <CheckBox
-            android:id="@+id/checkReverseMotor1"
+        <LinearLayout
             android:layout_weight="1"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </CheckBox>
+            <CheckBox
+                android:id="@+id/checkReverseMotor1"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </CheckBox>
+        </LinearLayout>
+
         <Button
             android:id="@+id/btnSaveDataMotor1"
             android:layout_weight="1"
+            android:visibility="gone"
             android:text="Save"
             android:textSize="8sp"
             android:layout_width="match_parent"
@@ -132,7 +140,7 @@
 
     </LinearLayout>
     <LinearLayout
-        android:weightSum="7"
+        android:weightSum="6"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -179,16 +187,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </EditText>
-        <CheckBox
-            android:id="@+id/checkReverseMotor2"
+        <LinearLayout
             android:layout_weight="1"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </CheckBox>
+            <CheckBox
+                android:id="@+id/checkReverseMotor2"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </CheckBox>
+        </LinearLayout>
         <Button
             android:id="@+id/btnSaveDataMotor2"
             android:layout_weight="1"
+            android:visibility="gone"
             android:text="Save"
             android:textSize="8sp"
             android:layout_width="match_parent"
@@ -197,7 +211,7 @@
 
     </LinearLayout>
     <LinearLayout
-        android:weightSum="7"
+        android:weightSum="6"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -244,16 +258,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </EditText>
-        <CheckBox
-            android:id="@+id/checkReverseMotor3"
+        <LinearLayout
             android:layout_weight="1"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </CheckBox>
+            <CheckBox
+                android:id="@+id/checkReverseMotor3"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </CheckBox>
+        </LinearLayout>
         <Button
             android:id="@+id/btnSaveDataMotor3"
             android:layout_weight="1"
+            android:visibility="gone"
             android:text="Save"
             android:textSize="8sp"
             android:layout_width="match_parent"
@@ -262,7 +282,7 @@
 
     </LinearLayout>
     <LinearLayout
-        android:weightSum="7"
+        android:weightSum="6"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -309,16 +329,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </EditText>
-        <CheckBox
-            android:id="@+id/checkReverseMotor4"
+        <LinearLayout
             android:layout_weight="1"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </CheckBox>
+            <CheckBox
+                android:id="@+id/checkReverseMotor4"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </CheckBox>
+        </LinearLayout>
         <Button
             android:id="@+id/btnSaveDataMotor4"
             android:layout_weight="1"
+            android:visibility="gone"
             android:text="Save"
             android:textSize="8sp"
             android:layout_width="match_parent"
@@ -326,7 +352,7 @@
         </Button>
     </LinearLayout>
     <LinearLayout
-        android:weightSum="7"
+        android:weightSum="6"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -373,16 +399,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </EditText>
-        <CheckBox
-            android:id="@+id/checkReverseMotor5"
+        <LinearLayout
             android:layout_weight="1"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </CheckBox>
+            <CheckBox
+                android:id="@+id/checkReverseMotor5"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </CheckBox>
+        </LinearLayout>
         <Button
             android:id="@+id/btnSaveDataMotor5"
             android:layout_weight="1"
+            android:visibility="gone"
             android:text="Save"
             android:textSize="8sp"
             android:layout_width="match_parent"
@@ -391,7 +423,7 @@
 
     </LinearLayout>
     <LinearLayout
-        android:weightSum="7"
+        android:weightSum="6"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -438,16 +470,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </EditText>
-        <CheckBox
-            android:id="@+id/checkReverseMotor6"
+        <LinearLayout
             android:layout_weight="1"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </CheckBox>
+            <CheckBox
+                android:id="@+id/checkReverseMotor6"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </CheckBox>
+        </LinearLayout>
         <Button
             android:id="@+id/btnSaveDataMotor6"
             android:layout_weight="1"
+            android:visibility="gone"
             android:text="Save"
             android:textSize="8sp"
             android:layout_width="match_parent"
@@ -455,7 +493,7 @@
         </Button>
     </LinearLayout>
     <LinearLayout
-        android:weightSum="7"
+        android:weightSum="6"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -502,16 +540,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </EditText>
-        <CheckBox
-            android:id="@+id/checkReverseMotor7"
+        <LinearLayout
             android:layout_weight="1"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </CheckBox>
+            <CheckBox
+                android:id="@+id/checkReverseMotor7"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </CheckBox>
+        </LinearLayout>
         <Button
             android:id="@+id/btnSaveDataMotor7"
             android:layout_weight="1"
+            android:visibility="gone"
             android:text="Save"
             android:textSize="8sp"
             android:layout_width="match_parent"
@@ -520,7 +564,7 @@
 
     </LinearLayout>
     <LinearLayout
-        android:weightSum="7"
+        android:weightSum="6"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -567,16 +611,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </EditText>
-        <CheckBox
-            android:id="@+id/checkReverseMotor8"
+        <LinearLayout
             android:layout_weight="1"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </CheckBox>
+            <CheckBox
+                android:id="@+id/checkReverseMotor8"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </CheckBox>
+        </LinearLayout>
         <Button
             android:id="@+id/btnSaveDataMotor8"
             android:layout_weight="1"
+            android:visibility="gone"
             android:text="Save"
             android:textSize="8sp"
             android:layout_width="match_parent"
@@ -585,7 +635,7 @@
 
     </LinearLayout>
     <LinearLayout
-        android:weightSum="7"
+        android:weightSum="6"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -632,16 +682,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </EditText>
-        <CheckBox
-            android:id="@+id/checkReverseMotor9"
+        <LinearLayout
             android:layout_weight="1"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </CheckBox>
+            <CheckBox
+                android:id="@+id/checkReverseMotor9"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </CheckBox>
+        </LinearLayout>
         <Button
             android:id="@+id/btnSaveDataMotor9"
             android:layout_weight="1"
+            android:visibility="gone"
             android:text="Save"
             android:textSize="8sp"
             android:layout_width="match_parent"
@@ -649,4 +705,27 @@
         </Button>
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btnSaveDataAllMotor"
+            android:layout_centerInParent="true"
+            android:text="Save"
+            android:textSize="8sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </Button>
+        <ImageView
+            android:id="@+id/imgRefreshData"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@mipmap/icons8_refresh_48"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </ImageView>
+    </RelativeLayout>
 </LinearLayout>

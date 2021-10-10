@@ -19,6 +19,7 @@ import android.graphics.Color;
 import android.media.ToneGenerator;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.ParcelUuid;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     TextView[] edtMaxMotor = new TextView[MAX_MOTOR];
     CheckBox[] checkReverseMotor = new CheckBox[MAX_MOTOR];
     Button[] btnSaveDataMotor = new Button[MAX_MOTOR];
+    Button btnSaveDataAllMotor;
 
     //---------------------------------------------
     TextView[] txtNameOpenMotor = new TextView[MAX_MOTOR];
@@ -112,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     EditText edtSetDistantMotor1,edtSetDistantMotor2,edtSetDistantMotor3,edtSetDistantMotor4,edtSetDistantMotor5,edtSetDistantMotor6;
     Button btnRunDistantMotor1,btnRunDistantMotor2,btnRunDistantMotor3,btnRunDistantMotor4,btnRunDistantMotor5,btnRunDistantMotor6;
     Button btnSetDistantMotor1,btnSetDistantMotor2,btnSetDistantMotor3,btnSetDistantMotor4,btnSetDistantMotor5,btnSetDistantMotor6;
-
+    ImageView imgRefreshData;
     //----------------setup 2-------------------------
     Spinner ST2spinerName;
     TextView ST2txtMotor1,ST2txtMotor2,ST2txtMotor3,ST2txtMotor4,ST2txtMotor5,ST2txtMotor6;
@@ -121,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
     TextView ST2txtReturn1,ST2txtReturn2,ST2txtReturn3,ST2txtReturn4,ST2txtReturn5,ST2txtReturn6;
     EditText ST2edtMinCurrent,ST2edtMaxCurrent,ST2timeReturn;
     Button ST2btnSave;
+    ImageView imgRefreshStep;
 
     ArrayAdapter<String> arrayAdapterListdevice;
 
@@ -294,6 +297,91 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        btnSaveDataAllMotor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mmDevice !=null && isConnected(mmDevice)) {
+//                    for(int i = 0; i < MAX_MOTOR; i++){
+//                        final Handler handler = new Handler();
+//                        int finalI = i;
+//                        handler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                // Do something after 50ms
+//                                String data = "{\"type\":\"save_data\",\"name\":\"" +
+//                                        Integer.toString(finalI) +
+//                                        "\",\"min_current\":\"" +
+//                                        edtMinMotor[finalI].getText().toString() +
+//                                        "\",\"max_current\":\"" +
+//                                        edtMaxMotor[finalI].getText().toString() +
+//                                        "\",\"reverse\":\"";
+//                                if(checkReverseMotor[finalI].isChecked()){
+//                                    data += "true";
+//                                }
+//                                else{
+//                                    data += "false";
+//                                }
+//                                data += "\"}";
+//                                byte[] bytes = data.getBytes(Charset.defaultCharset());
+//                                mConnectedThread.write(bytes);
+//                            }
+//                        }, 100);
+//                    }
+
+                    String data = "{\"type\":\"data\",\"1\":[";
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        if(!edtMinMotor[i].getText().toString().equals("")){
+                            data += edtMinMotor[i].getText().toString();
+                        }
+                        else{
+                            data += "0";
+                        }
+                        data += ",";
+                    }
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        if(!edtMaxMotor[i].getText().toString().equals("")){
+                            data += edtMaxMotor[i].getText().toString();
+                        }
+                        else{
+                            data += "0";
+                        }
+                        data += ",";
+                    }
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        if(checkReverseMotor[i].isChecked()){
+                            data += "1";
+                        }
+                        else{
+                            data += "0";
+                        }
+                        if(i == (MAX_MOTOR - 1)){
+                            break;
+                        }
+                        data += ",";
+                    }
+                    data += "]}";
+                    byte[] bytes = data.getBytes(Charset.defaultCharset());
+                    mConnectedThread.write(bytes);
+
+                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        //--------------------------------------------------------------------
+        imgRefreshData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mmDevice !=null && isConnected(mmDevice)) {
+                    String data = "{\"type\":\"request_data\"}";
+                    byte[] bytes = data.getBytes(Charset.defaultCharset());
+                    mConnectedThread.write(bytes);
+                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         //--------------------------------------------------------------------
         btnSaveStep.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -337,11 +425,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //--------------------------------------------------------------------
+        imgRefreshStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mmDevice !=null && isConnected(mmDevice)) {
+                    String data = "{\"type\":\"request_step\"}";
+                    byte[] bytes = data.getBytes(Charset.defaultCharset());
+                    mConnectedThread.write(bytes);
+                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         btnSaveNameMotor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 for(int i = 0; i < MAX_MOTOR; i++){
                     editor.putString(name[i], edtNameMotor[i].getText().toString());
+                    edtNameMotor[i].clearFocus();
+//                    edtNameMotor[i].setCursorVisible(false);
                 }
                 editor.commit();
 
@@ -353,6 +456,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
 
 
 
@@ -585,6 +690,8 @@ public class MainActivity extends AppCompatActivity {
         btnSaveDataMotor[6] = findViewById(R.id.btnSaveDataMotor7);
         btnSaveDataMotor[7] = findViewById(R.id.btnSaveDataMotor8);
         btnSaveDataMotor[8] = findViewById(R.id.btnSaveDataMotor9);
+        btnSaveDataAllMotor = findViewById(R.id.btnSaveDataAllMotor);
+
 
         txtNameOpenMotor[0] = findViewById(R.id.txtNameOpenMotor1);
         txtNameOpenMotor[1] = findViewById(R.id.txtNameOpenMotor2);
@@ -715,6 +822,7 @@ public class MainActivity extends AppCompatActivity {
         btnSetDistantMotor4 = findViewById(R.id.btnSetDistantMotor4);
         btnSetDistantMotor5 = findViewById(R.id.btnSetDistantMotor5);
         btnSetDistantMotor6 = findViewById(R.id.btnSetDistantMotor6);
+        imgRefreshData = findViewById(R.id.imgRefreshData);
 
         //----------------------Setup 2-------------------------------
         ST2spinerName = findViewById(R.id.ST2spinerName);
@@ -751,6 +859,8 @@ public class MainActivity extends AppCompatActivity {
         ST2edtMaxCurrent = findViewById(R.id.ST2edtMaxCurrent);
         ST2timeReturn = findViewById(R.id.ST2timeReturn);
         ST2btnSave = findViewById(R.id.ST2btnSave);
+        imgRefreshStep = findViewById(R.id.imgRefreshStep);
+
 
     }
 
@@ -922,19 +1032,17 @@ public class MainActivity extends AppCompatActivity {
 
             // Keep listening to the InputStream until an exception occurs
             while (true) {
-
                 // Read from the InputStream
                 try {
-
                     bytes = mmInStream.read(buffer);
-
                     incomingMessage += new String(buffer, 0, bytes);
+//                    Log.d(TAG, "InputStream---: " + incomingMessage);
                     if(incomingMessage.contains("}")){
                         Log.d(TAG, "InputStream: " + incomingMessage);
                         JSONObject reader = new JSONObject(incomingMessage);
-                        //current
+                        incomingMessage = "";
+                        //min max data current
                         if(reader.has("2")){
-                            incomingMessage = "";
                             JSONArray array= reader.getJSONArray("2");
                             runOnUiThread(new Runnable() {
                                 @SuppressLint("SetTextI18n")
@@ -955,13 +1063,27 @@ public class MainActivity extends AppCompatActivity {
                                             e.printStackTrace();
                                         }
                                     }
+                                    for(int i =0; i < MAX_MOTOR; i++){
+                                        try {
+//                                            txtMaxMotor[i].setText(String.valueOf(array.getInt(2*MAX_MOTOR+i)));
+                                            if(array.getInt(2*MAX_MOTOR+i) == 1){
+                                                checkReverseMotor[i].setChecked(true);
+                                            }
+                                            else{
+                                                checkReverseMotor[i].setChecked(false);
+                                            }
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
                                 }
                             });
 
                         }
                         //Step
                         else if(reader.has("3")){
-                            incomingMessage = "";
                             JSONArray array= reader.getJSONArray("3");
                             runOnUiThread(new Runnable() {
                                 @SuppressLint("SetTextI18n")
@@ -1017,11 +1139,10 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-
                         }
-                        else{
+                        //current
+                        else if(reader.has("1")){
                             double data[] = new double[9];
-                            incomingMessage = "";
 
                             JSONArray array= reader.getJSONArray("1");
                             for(int i = 0; i < array.length(); i++){
@@ -1041,12 +1162,11 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-
-
                 } catch (IOException | JSONException e) {
-                    Log.e(TAG, "write: Error reading Input Stream. " + e.getMessage());
+                    incomingMessage = "";
+                    Log.e("InputStream", "write: Error reading Input Stream. " + e.getMessage());
 //                    Toast.makeText(MainActivity.this, "Kết nối thất bại", Toast.LENGTH_SHORT).show();
-                    break;
+//                    break;
                 }
             }
         }
