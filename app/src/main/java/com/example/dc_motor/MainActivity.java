@@ -1146,7 +1146,13 @@ public class MainActivity extends AppCompatActivity {
 
                             JSONArray array= reader.getJSONArray("1");
                             for(int i = 0; i < array.length(); i++){
-                                data[i] = array.getDouble(i);
+                                try{
+                                    data[i] = array.getDouble(i);
+                                }
+                                catch (JSONException e) {
+                                    Log.e("InputStream", "write: Error reading Input Stream. " + e.getMessage());
+                                }
+
                             }
 //                            Log.d(TAG, "InputStream: " + data[0]);
                             runOnUiThread(new Runnable() {
