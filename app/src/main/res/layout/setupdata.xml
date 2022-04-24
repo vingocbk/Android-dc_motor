@@ -141,6 +141,7 @@
             </CheckBox>
         </LinearLayout>
 
+
         <Button
             android:id="@+id/btnSaveDataMotor1"
             android:layout_weight="1"
@@ -300,12 +301,12 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <CheckBox
                 android:id="@+id/checkDisableMotor3"
-                android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </CheckBox>
+                android:layout_height="wrap_content"
+                android:gravity="center"></CheckBox>
         </LinearLayout>
         <Button
             android:id="@+id/btnSaveDataMotor3"
@@ -538,10 +539,9 @@
             android:layout_height="wrap_content">
             <CheckBox
                 android:id="@+id/checkReverseMotor6"
-                android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </CheckBox>
+                android:layout_height="wrap_content"
+                android:gravity="center"></CheckBox>
         </LinearLayout>
         <LinearLayout
             android:layout_weight="1"
@@ -814,7 +814,6 @@
         </Button>
 
     </LinearLayout>
-
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -837,4 +836,6 @@
             android:layout_height="wrap_content">
         </ImageView>
     </RelativeLayout>
+
+
 </LinearLayout>

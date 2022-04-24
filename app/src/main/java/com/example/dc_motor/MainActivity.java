@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
     //---------------------------------------------
     TextView[] txtNameOpenMotor = new TextView[MAX_MOTOR];
     Spinner[] spnOpenStep1Motor = new Spinner[MAX_MOTOR];
+    Spinner[] spnVoltageMotor = new Spinner[MAX_MOTOR];
     Spinner[] spnOpenStep2Motor = new Spinner[MAX_MOTOR];
     Spinner[] spnOpenStep3Motor = new Spinner[MAX_MOTOR];
     TextView[] txtNameCloseMotor = new TextView[MAX_MOTOR];
@@ -661,6 +662,16 @@ public class MainActivity extends AppCompatActivity {
         edtMinMotor[7] = findViewById(R.id.edtMinMotor8);
         edtMinMotor[8] = findViewById(R.id.edtMinMotor9);
 
+        spnVoltageMotor[0] = findViewById(R.id.spnVoltageMotor1);
+        spnVoltageMotor[1] = findViewById(R.id.spnVoltageMotor2);
+        spnVoltageMotor[2] = findViewById(R.id.spnVoltageMotor3);
+        spnVoltageMotor[3] = findViewById(R.id.spnVoltageMotor4);
+        spnVoltageMotor[4] = findViewById(R.id.spnVoltageMotor5);
+        spnVoltageMotor[5] = findViewById(R.id.spnVoltageMotor6);
+        spnVoltageMotor[6] = findViewById(R.id.spnVoltageMotor7);
+        spnVoltageMotor[7] = findViewById(R.id.spnVoltageMotor8);
+        spnVoltageMotor[8] = findViewById(R.id.spnVoltageMotor9);
+
         edtMaxMotor[0] = findViewById(R.id.edtMaxMotor1);
         edtMaxMotor[1] = findViewById(R.id.edtMaxMotor2);
         edtMaxMotor[2] = findViewById(R.id.edtMaxMotor3);
@@ -875,20 +886,36 @@ public class MainActivity extends AppCompatActivity {
             txtNameCloseMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
         }
 
-        List<String> list = new ArrayList<>();
-        list.add("S");
-        list.add("O");
-        list.add("C");
-        //ArrayAdapter spinAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
-        ArrayAdapter spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_list, list);
-        spinnerAdapter.setDropDownViewResource(R.layout.spinner_list);
+        List<String> listStep = new ArrayList<>();
+        listStep.add("S");
+        listStep.add("O");
+        listStep.add("C");
+        //ArrayAdapter spinAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listStep);
+        ArrayAdapter spinnerAdapterStep = new ArrayAdapter<>(this, R.layout.spinner_list, listStep);
+        spinnerAdapterStep.setDropDownViewResource(R.layout.spinner_list);
         for(int i = 0; i < MAX_MOTOR; i++){
-            spnOpenStep1Motor[i].setAdapter(spinnerAdapter);
-            spnOpenStep2Motor[i].setAdapter(spinnerAdapter);
-            spnOpenStep3Motor[i].setAdapter(spinnerAdapter);
-            spnCloseStep1Motor[i].setAdapter(spinnerAdapter);
-            spnCloseStep2Motor[i].setAdapter(spinnerAdapter);
-            spnCloseStep3Motor[i].setAdapter(spinnerAdapter);
+            spnOpenStep1Motor[i].setAdapter(spinnerAdapterStep);
+            spnOpenStep2Motor[i].setAdapter(spinnerAdapterStep);
+            spnOpenStep3Motor[i].setAdapter(spinnerAdapterStep);
+            spnCloseStep1Motor[i].setAdapter(spinnerAdapterStep);
+            spnCloseStep2Motor[i].setAdapter(spinnerAdapterStep);
+            spnCloseStep3Motor[i].setAdapter(spinnerAdapterStep);
+        }
+
+        List<String> listVoltage = new ArrayList<>();
+        listVoltage.add("12V");
+        listVoltage.add("11V");
+        listVoltage.add("10V");
+        listVoltage.add("9V");
+        listVoltage.add("8V");
+        listVoltage.add("7V");
+        listVoltage.add("6V");
+        //ArrayAdapter spinAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listVoltage);
+        ArrayAdapter spinnerAdapterVoltage = new ArrayAdapter<>(this, R.layout.spinner_list, listVoltage);
+        spinnerAdapterVoltage.setDropDownViewResource(R.layout.spinner_list);
+//        spnVoltageMotor[0].setAdapter(spinnerAdapterVoltage);
+        for(int i = 0; i < MAX_MOTOR; i++){
+            spnVoltageMotor[i].setAdapter(spinnerAdapterVoltage);
         }
 
 
