@@ -4,9 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/su30_2"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/imgBackground"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@mipmap/su30_2"
+        android:scaleType="fitXY" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -16,7 +21,7 @@
         android:text="SETUP LANDING GEAR"
         android:textColor="#111312"
         android:textSize="25sp"
-        android:textStyle="bold"></TextView>
+        android:textStyle="bold"/>
 
     <ImageView
         android:layout_centerHorizontal="true"
@@ -26,17 +31,17 @@
         android:layout_height="80dp">
     </ImageView>
 
+
     <ImageView
-        android:id="@+id/imgSetup"
+        android:id="@+id/imgSelectBackground"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:background="@mipmap/ic_setup"
-        android:visibility="invisible"></ImageView>
+        android:background="@mipmap/ic_gallery"
+        android:visibility="visible"/>
 
     <RelativeLayout
         android:id="@+id/layoutConnect"

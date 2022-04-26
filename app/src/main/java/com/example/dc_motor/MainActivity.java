@@ -1,27 +1,39 @@
 package com.example.dc_motor;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothHeadset;
 import android.bluetooth.BluetoothSocket;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.ToneGenerator;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.ParcelUuid;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,6 +58,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -63,7 +80,7 @@ import static android.R.layout.simple_spinner_dropdown_item;
 
 public class MainActivity extends AppCompatActivity {
     int MAX_MOTOR = 9;
-    ImageView imgSetup, imgMenuListdivice, imgBluetoothConnection;
+    ImageView imgBackground, imgSelectBackground, imgMenuListdivice, imgBluetoothConnection;
     View layoutSetup, layoutListdevice, layoutSetup2, layoutSetupData, layoutSetupStep;
     TextView txtBackSetting, txtBackListdevice, txtNameBluetoothConnection, txtBackSetting2, txtNextSetting;
 
@@ -130,6 +147,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static int REQUEST_BLUETOOTH = 1;
     public static int REQUEST_DISCOVERABLE_BT = 1;
+    public static int REQUEST_CODE_STORAGE_PERMISSION = 1;
+    public static int REQUEST_CODE_SELECT_IMAGE = 2;
     private static final UUID MY_UUID_INSECURE =
             UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
@@ -150,8 +169,11 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     String nameMotor1,nameMotor2,nameMotor3,nameMotor4,nameMotor5,nameMotor6;
     String[] name = {"Motor1","Motor2","Motor3","Motor4","Motor5","Motor6","Motor7","Motor8","Motor9"};
-
-
+    String nameUri = "Uri";
+    String IMAGES_FOLDER_NAME = "Landing";
+    String nameImageBackGround = "background";
+    String strIndexName = "index";
+    int indexNameImageBackGround = 0;
 
     String OPEN = "1", CLOSE = "2", STOP = "0";
     @SuppressLint("ClickableViewAccessibility")
@@ -163,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 //                WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN); //enable full screen
         setContentView(R.layout.activity_main);
 
-        Anhxa();
+        InitLayout();
         LoadDataBegin();
 
 
@@ -188,6 +210,23 @@ public class MainActivity extends AppCompatActivity {
         }
         //------------------------------------------------------------------------------------------------------
 
+        //--------------------------------------change background--------------------------------------------------------
+        imgSelectBackground.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ContextCompat.checkSelfPermission(
+                        getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            REQUEST_CODE_STORAGE_PERMISSION);
+                } else {
+                    selectImage();
+                }
+            }
+        });
+
+        //------------------------------------------------------------------------------------------------------
         swTestDistantMotor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -557,9 +596,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public void Anhxa(){
-
-        imgSetup = findViewById(R.id.imgSetup);
+    public void InitLayout(){
+        imgBackground = findViewById(R.id.imgBackground);
+        imgSelectBackground = findViewById(R.id.imgSelectBackground);
         txtBackSetting = findViewById(R.id.txtBackSetting);
         txtBackSetting2 = findViewById(R.id.txtBackSetting2);
         txtNextSetting = findViewById(R.id.txtNextSetting);
@@ -885,6 +924,42 @@ public class MainActivity extends AppCompatActivity {
             txtNameOpenMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
             txtNameCloseMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
         }
+        //------get background---------
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if(!sharedPreferences.getString(nameUri, nameUri).equals(nameUri)){
+                try {
+//                Toast.makeText(MainActivity.this, sharedPreferences.getString(nameUri, nameUri), Toast.LENGTH_SHORT).show();
+                    indexNameImageBackGround = sharedPreferences.getInt(strIndexName, indexNameImageBackGround);
+                    String path = sharedPreferences.getString(nameUri, nameUri);
+                    Log.d("filename_path", path);
+//                    path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath()
+//                            + "/" + IMAGES_FOLDER_NAME + "/" + nameImageBackGround + "_"
+//                            + String.valueOf(sharedPreferences.getInt(strIndexName, indexNameImageBackGround)) + ".png";
+//                    Log.d("filename_path", path);
+                    InputStream inputStream = getContentResolver().openInputStream(Uri.parse(path));
+//                    Log.d("filename_path", path);
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//                    Log.d("filename_path", path);
+//                    Bitmap bitmap = BitmapFactory.decodeFile(path);
+                    imgBackground.setImageBitmap(bitmap);
+                } catch (Exception exception){
+                    Log.d("filename_path", "cant convert");
+                }
+            }
+        }
+
+//        String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/background.png";
+//        Log.d("filename_path", fileName);
+//        File imageFile = new File(fileName);
+//        FileInputStream fis = null;
+//        try {
+//            fis = new FileInputStream(imageFile);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        Bitmap bitmap = BitmapFactory.decodeStream(fis);
+//        imgBackground.setImageBitmap(bitmap);
+
 
         List<String> listStep = new ArrayList<>();
         listStep.add("S");
@@ -921,6 +996,110 @@ public class MainActivity extends AppCompatActivity {
 
 
         //------------------------------------------------------------------------------------------------------
+    }
+
+    public void selectImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.putExtra("crop", "true");
+        intent.putExtra("scale", true);
+        intent.putExtra("aspectX", 16);
+        intent.putExtra("aspectY", 9);
+        if(intent.resolveActivity(getPackageManager()) != null){
+            startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length >0){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                selectImage();
+            }
+            else{
+                Toast.makeText(MainActivity.this, "Permission denied!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK){
+            if(data != null){
+                Uri selectImageUri = data.getData();
+//                Toast.makeText(MainActivity.this, selectImageUri.toString(), Toast.LENGTH_SHORT).show();
+                if(selectImageUri != null){
+                    try {
+                        //content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F5286/ORIGINAL/NONE/image%2Fjpeg/600183246
+                        indexNameImageBackGround++;
+                        editor.putString(nameUri, selectImageUri.toString());
+                        editor.commit();
+                        editor.putInt(strIndexName, indexNameImageBackGround);
+                        editor.commit();
+                        InputStream inputStream = getContentResolver().openInputStream(selectImageUri);
+                        Log.d("filename_path", selectImageUri.toString());
+
+
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        imgBackground.setImageBitmap(bitmap);
+//                        saveBitmap(bitmap);
+//                        saveImage(bitmap, nameImageBackGround );
+//                        String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/background.png";
+//                        Log.d("filename_path", fileName);
+//                        File sd = Environment.getExternalStorageDirectory();
+//                        File dest = new File(sd, fileName);
+//
+////                        bitmap = (Bitmap)data.getExtras().get("data");
+//                        try {
+//                            FileOutputStream out = new FileOutputStream(dest);
+//                            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+//                            out.flush();
+//                            out.close();
+//                        } catch (Exception e) {
+//                            Log.d("filename_path", "Exception Write");
+//                            e.printStackTrace();
+//                        }
+
+                    } catch (Exception exception){
+
+                    }
+                }
+            }
+        }
+    }
+
+    private void saveImage(Bitmap bitmap, @NonNull String name) throws IOException {
+        boolean saved;
+        OutputStream fos;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Log.d("filename_path", "Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q");
+            ContentResolver resolver = this.getContentResolver();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/" + IMAGES_FOLDER_NAME);
+            Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+            fos = resolver.openOutputStream(imageUri);
+        } else {
+            String imagesDir = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DCIM).toString() + File.separator + IMAGES_FOLDER_NAME;
+
+            File file = new File(imagesDir);
+
+            if (!file.exists()) {
+                file.mkdir();
+            }
+
+            File image = new File(imagesDir, name + "_" + String.valueOf(sharedPreferences.getInt(strIndexName, indexNameImageBackGround)) + ".png");
+            fos = new FileOutputStream(image);
+
+        }
+
+        saved = bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        fos.flush();
+        fos.close();
     }
 
     public static boolean isBluetoothHeadsetConnected() {
