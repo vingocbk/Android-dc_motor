@@ -14,34 +14,54 @@
         android:scaleType="fitXY" />
 
     <TextView
+        android:id="@+id/txtNameApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:text="SETUP LANDING GEAR"
         android:textColor="#111312"
-        android:textSize="25sp"
-        android:textStyle="bold"/>
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_centerHorizontal="true"
         android:background="@mipmap/ic_logo_avy"
-        android:visibility="invisible"
-        android:layout_width="80dp"
-        android:layout_height="80dp">
-    </ImageView>
-
+        android:visibility="invisible"/>
 
     <ImageView
         android:id="@+id/imgSelectBackground"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/imgSaveDataSetting"
+        android:background="@mipmap/ic_gallery"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/imgSaveDataSetting"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/imgGetDataSetting"
+        android:background="@mipmap/save_setting"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/imgGetDataSetting"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@mipmap/ic_gallery"
-        android:visibility="visible"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@mipmap/get_setting"
+        android:visibility="visible" />
 
     <RelativeLayout
         android:id="@+id/layoutConnect"
@@ -58,14 +78,14 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
-            android:background="@mipmap/ic_menu_listdevice"></ImageView>
+            android:background="@mipmap/ic_menu_listdevice" />
 
         <ImageView
             android:id="@+id/imgBluetoothConnection"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerHorizontal="true"
-            android:background="@mipmap/ic_bluetooth_disconnected"></ImageView>
+            android:background="@mipmap/ic_bluetooth_disconnected" />
 
         <TextView
             android:id="@+id/txtNameBluetoothConnection"
@@ -75,7 +95,7 @@
             android:gravity="center"
             android:text="No Connected"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"></TextView>
+            android:textSize="20sp" />
     </RelativeLayout>
 
     <ScrollView
@@ -792,10 +812,19 @@
         </LinearLayout>
     </ScrollView>
 
+    <include
+        android:id="@+id/layoutGetDataSetting"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/get_setting" />
 
-
-
-
+    <include
+        android:id="@+id/layoutSaveDataSetting"
+        layout="@layout/save_setting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <include
         android:id="@+id/layoutSetup"
@@ -818,7 +847,12 @@
         android:layout_height="match_parent"
         layout="@layout/list_device" />
 
-
+    <ProgressBar
+        android:id="@+id/proBarLoading"
+        android:visibility="invisible"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 
 </RelativeLayout>

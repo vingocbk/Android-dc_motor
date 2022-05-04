@@ -1,0 +1,17 @@
+[33m8faaa53[m[33m ([m[1;36mHEAD -> [m[1;32mina219_ver2[m[33m, [m[1;31morigin/ina219_ver2[m[33m)[m update change background, test with active3
+[33mb173d5b[m update layout total mAh
+[33m4a9ad7a[m update new layout mode run, vol, disable
+[33m67297c5[m update
+[33mfb7d3a5[m fix crash get value current if not fload
+[33mf2be4f2[m update reverse and sync data
+[33m7c8dde1[m test ok with hardware ver1 9motor
+[33m2044cbb[m update send save data
+[33mb96403b[m change layout
+[33mea050fc[m[33m ([m[1;32mina219[m[33m)[m add branch ina219_ver2
+[33mab5bbc6[m[33m ([m[1;31morigin/ina219[m[33m)[m add min current
+[33m87d3b22[m change data send to device
+[33m7efc9f2[m fix ina219
+[33me6a0582[m change text vol and current
+[33m0042d3b[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m rm file gradle.xml
+[33mdb06ff7[m fix error gradle
+[33mcb7cc9a[m first commit

@@ -54,10 +54,16 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//import org.apache.http.HttpResponse;
+//import org.apache.http.client.ClientProtocolException;
+//import org.apache.http.client.HttpClient;
+//import org.apache.http.client.methods.HttpGet;
+//import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,22 +71,49 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static android.R.layout.simple_list_item_1;
 import static android.R.layout.simple_spinner_dropdown_item;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
+
+//import okhttp3.Authenticator;
+//import okhttp3.Call;
+//import okhttp3.Callback;
+//import okhttp3.Credentials;
+//import okhttp3.OkHttpClient;
+//import okhttp3.Request;
+//import okhttp3.Response;
+//import okhttp3.ResponseBody;
+//import okhttp3.Route;
 
 public class MainActivity extends AppCompatActivity {
     int MAX_MOTOR = 9;
-    ImageView imgBackground, imgSelectBackground, imgMenuListdivice, imgBluetoothConnection;
+    ImageView imgBackground, imgSelectBackground, imgMenuListdivice, imgBluetoothConnection, imgSaveDataSetting, imgGetDataSetting;
     View layoutSetup, layoutListdevice, layoutSetup2, layoutSetupData, layoutSetupStep;
     TextView txtBackSetting, txtBackListdevice, txtNameBluetoothConnection, txtBackSetting2, txtNextSetting;
 
@@ -187,7 +220,12 @@ public class MainActivity extends AppCompatActivity {
 
         InitLayout();
         LoadDataBegin();
-
+        try {
+            getDataFromUrl("http://api.thingspeak.com/channels/1723005/feeds.json?results=2");
+//            getDataFromUrl("https://raw.github.com/square/okhttp/master/README.md");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //--------------------------------------for bluetooth--------------------------------------------------------
         BluetoothAdapter BTAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -594,11 +632,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
     public void InitLayout(){
         imgBackground = findViewById(R.id.imgBackground);
         imgSelectBackground = findViewById(R.id.imgSelectBackground);
+        imgSaveDataSetting = findViewById(R.id.imgSaveDataSetting);
+        imgGetDataSetting = findViewById(R.id.imgGetDataSetting);
+
         txtBackSetting = findViewById(R.id.txtBackSetting);
         txtBackSetting2 = findViewById(R.id.txtBackSetting2);
         txtNextSetting = findViewById(R.id.txtNextSetting);
@@ -994,8 +1033,108 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
         //------------------------------------------------------------------------------------------------------
+    }
+
+
+//    String error = ""; // string field
+//    private String getDataFromUrl(String demoIdUrl) {
+//
+//        String result = null;
+//        int resCode;
+//        InputStream in;
+//        try {
+//            URL url = new URL(demoIdUrl);
+//            URLConnection urlConn = url.openConnection();
+//
+//            HttpsURLConnection httpsConn = (HttpsURLConnection) urlConn;
+//            httpsConn.setAllowUserInteraction(false);
+//            httpsConn.setInstanceFollowRedirects(true);
+//            httpsConn.setRequestMethod("GET");
+//            httpsConn.connect();
+//            resCode = httpsConn.getResponseCode();
+//
+//            if (resCode == HttpURLConnection.HTTP_OK) {
+//                in = httpsConn.getInputStream();
+//
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(
+//                        in, "iso-8859-1"), 8);
+//                StringBuilder sb = new StringBuilder();
+//                String line;
+//                while ((line = reader.readLine()) != null) {
+//                    sb.append(line).append("\n");
+//                }
+//                in.close();
+//                result = sb.toString();
+//            } else {
+//                error += resCode;
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Log.d("http_request", result);
+//        return result;
+//    }
+
+    void getDataFromUrl(String url) throws IOException {
+//        OkHttpClient client;
+//        client = new OkHttpClient.Builder()
+//                .connectTimeout(10, TimeUnit.SECONDS)
+//                .writeTimeout(10, TimeUnit.SECONDS)
+//                .readTimeout(30, TimeUnit.SECONDS)
+//                .build();
+//
+//        Request get = new Request.Builder()
+//                .url("https://reqres.in/api/users?page=2")
+//                .build();
+//
+//        client.newCall(get).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Log.d("http_request", "Call Cancel");
+//                e.printStackTrace();
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) {
+//                try {
+//                    ResponseBody responseBody = response.body();
+//                    Log.d("http_request", responseBody.toString());
+//                    if (!response.isSuccessful()) {
+//                        throw new IOException("Unexpected code " + response);
+//                    }
+//
+//                    Log.i("data", responseBody.string());
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+//        url = "https://www.google.com";
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+//                        textView.setText("Response is: " + response.substring(0,500));
+                        Log.d("http_request", response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+//                textView.setText("That didn't work!");
+                Log.d("http_request", "That didn't work!");
+            }
+        });
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+
     }
 
     public void selectImage() {
