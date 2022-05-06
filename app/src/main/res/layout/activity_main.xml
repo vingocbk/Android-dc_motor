@@ -841,18 +841,11 @@
         layout="@layout/setup_2" />
 
     <include
-        android:id="@+id/layoutListdevice"
+        android:id="@+id/layoutListDevice"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         layout="@layout/list_device" />
-
-    <ProgressBar
-        android:id="@+id/proBarLoading"
-        android:visibility="invisible"
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 
 
 </RelativeLayout>

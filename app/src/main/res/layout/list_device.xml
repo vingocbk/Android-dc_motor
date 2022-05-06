@@ -45,7 +45,7 @@
         <!--        </ImageView>-->
 
         <ProgressBar
-            android:id="@+id/pgbListdevice"
+            android:id="@+id/pgbListDevice"
             android:visibility="invisible"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
@@ -56,7 +56,7 @@
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/lvListdevice"
+        android:id="@+id/lvListDevice"
         android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

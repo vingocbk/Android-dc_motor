@@ -48,6 +48,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -86,48 +87,44 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static android.R.layout.simple_list_item_1;
 import static android.R.layout.simple_spinner_dropdown_item;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSocketFactory;
-
-//import okhttp3.Authenticator;
-//import okhttp3.Call;
-//import okhttp3.Callback;
-//import okhttp3.Credentials;
-//import okhttp3.OkHttpClient;
-//import okhttp3.Request;
-//import okhttp3.Response;
-//import okhttp3.ResponseBody;
-//import okhttp3.Route;
+//import com.android.volley.Request;
+//import com.android.volley.RequestQueue;
+//import com.android.volley.Response;
+//import com.android.volley.VolleyError;
+//import com.android.volley.toolbox.StringRequest;
+//import com.android.volley.toolbox.Volley;
 
 public class MainActivity extends AppCompatActivity {
     int MAX_MOTOR = 9;
-    ImageView imgBackground, imgSelectBackground, imgMenuListdivice, imgBluetoothConnection, imgSaveDataSetting, imgGetDataSetting;
-    View layoutSetup, layoutListdevice, layoutSetup2, layoutSetupData, layoutSetupStep;
-    TextView txtBackSetting, txtBackListdevice, txtNameBluetoothConnection, txtBackSetting2, txtNextSetting;
+    ImageView imgBackground, imgSelectBackground, imgMenuListDevice, imgBluetoothConnection, imgSaveDataSetting, imgGetDataSetting, imgBackGetSetting;
+    View layoutSetup, layoutListDevice, layoutSetup2, layoutSetupData, layoutSetupStep, layoutSaveDataSetting, layoutGetDataSetting;
+    TextView txtBackSetting, txtBackListDevice, txtNameBluetoothConnection, txtBackSetting2, txtNextSetting;
+    TextView[] txtNameGetSetting = new TextView[3];
+    Button btnCancelSaveSetting, btnOkSaveSetting;
+    EditText edtSaveNameSetting;
+    Spinner spnSelectNumberSetting;
 
-    ProgressBar pgbRefeshListdevice;
-    ListView lvListdevice;
+    RelativeLayout[] rlGetDataSetting = new RelativeLayout[3];
+
+    ProgressBar pgbRefreshListDevice, proBarLoadingSaveDataSetting, proBarLoadingGetDataSetting;
+    ListView lvListDevice;
     //------------------ main menu---------------------
     EditText[] edtNameMotor = new EditText[MAX_MOTOR];
     Button[] btnOpenMotor = new Button[MAX_MOTOR];
     Button[] btnStopMotor = new Button[MAX_MOTOR];
     Button[] btnCloseMotor = new Button[MAX_MOTOR];
-//    EditText edtNameMotor1,edtNameMotor2,edtNameMotor3,edtNameMotor4,edtNameMotor5,edtNameMotor6,edtNameMotor7,edtNameMotor8,edtNameMotor9;
-//    Button btnOpenMotor1,btnOpenMotor2,btnOpenMotor3,btnOpenMotor4,btnOpenMotor5,btnOpenMotor6,btnOpenMotor7,btnOpenMotor8,btnOpenMotor9;
-//    Button btnStopMotor1,btnStopMotor2,btnStopMotor3,btnStopMotor4,btnStopMotor5,btnStopMotor6,btnStopMotor7,btnStopMotor8,btnStopMotor9;
-//    Button btnCloseMotor1,btnCloseMotor2,btnCloseMotor3,btnCloseMotor4,btnCloseMotor5,btnCloseMotor6,btnCloseMotor7,btnCloseMotor8,btnCloseMotor9;
     Button btnSaveNameMotor;
     SwitchCompat swStepCheckDistant, swTestDistantMotor;
     EditText edtStepCheckDistant;
@@ -139,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
     TextView[] edtMinMotor = new TextView[MAX_MOTOR];
     TextView[] edtMaxMotor = new TextView[MAX_MOTOR];
     CheckBox[] checkReverseMotor = new CheckBox[MAX_MOTOR];
+    CheckBox[] checkDisableMotor = new CheckBox[MAX_MOTOR];
     Button[] btnSaveDataMotor = new Button[MAX_MOTOR];
     Button btnSaveDataAllMotor;
 
@@ -154,9 +152,6 @@ public class MainActivity extends AppCompatActivity {
     Spinner[] spnCloseStep3Motor = new Spinner[MAX_MOTOR];
     Button btnSaveStep;
 
-
-
-
     //------------------setup-------------------------
     TextView txtMotor1,txtMotor2,txtMotor3,txtMotor4,txtMotor5,txtMotor6;
     TextView txtVoltage1,txtVoltage2,txtVoltage3,txtVoltage4,txtVoltage5,txtVoltage6;
@@ -167,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnSetDistantMotor1,btnSetDistantMotor2,btnSetDistantMotor3,btnSetDistantMotor4,btnSetDistantMotor5,btnSetDistantMotor6;
     ImageView imgRefreshData;
     //----------------setup 2-------------------------
-    Spinner ST2spinerName;
+    Spinner ST2SpinnerName;
     TextView ST2txtMotor1,ST2txtMotor2,ST2txtMotor3,ST2txtMotor4,ST2txtMotor5,ST2txtMotor6;
     TextView ST2txtMaxCurrent1,ST2txtMaxCurrent2,ST2txtMaxCurrent3,ST2txtMaxCurrent4,ST2txtMaxCurrent5,ST2txtMaxCurrent6;
     TextView ST2txtMinCurrent1,ST2txtMinCurrent2,ST2txtMinCurrent3,ST2txtMinCurrent4,ST2txtMinCurrent5,ST2txtMinCurrent6;
@@ -176,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     Button ST2btnSave;
     ImageView imgRefreshStep;
 
-    ArrayAdapter<String> arrayAdapterListdevice;
+    ArrayAdapter<String> arrayAdapterListDevice;
 
     public static int REQUEST_BLUETOOTH = 1;
     public static int REQUEST_DISCOVERABLE_BT = 1;
@@ -195,20 +190,33 @@ public class MainActivity extends AppCompatActivity {
     ParcelUuid[] mDeviceUUIDs;
     ConnectedThread mConnectedThread;
     //    private Handler handler;
-    Object[] OjectBluetooth;
+    Object[] ObjectBluetooth;
 
-    //varialble for save name motor
+//    CountDownLatch cdStartHttpRequest;
+
+    //variable for save name motor
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-    String nameMotor1,nameMotor2,nameMotor3,nameMotor4,nameMotor5,nameMotor6;
     String[] name = {"Motor1","Motor2","Motor3","Motor4","Motor5","Motor6","Motor7","Motor8","Motor9"};
+    String[] nameSetting = {"Setting 1", "Setting 2", "Setting 3"};
     String nameUri = "Uri";
     String IMAGES_FOLDER_NAME = "Landing";
-    String nameImageBackGround = "background";
     String strIndexName = "index";
     int indexNameImageBackGround = 0;
 
     String OPEN = "1", CLOSE = "2", STOP = "0";
+
+    Boolean flagSelectGetSettingLayout = false;
+    Boolean flagSelectSaveOkSettingLayout = false;
+    Boolean flagSelectGetNumberDataSetting = false;
+    String urlGetNameSetting = "https://api.thingspeak.com/channels/1725474/fields/1.json?api_key=L3JZMZPK5FYFA9PP&results=1";
+    String urlGetSetting1 = "https://api.thingspeak.com/channels/1723005/feeds.json?api_key=2B92OPPGGLLJ9FQW&results=1";
+    String urlGetSetting2 = "https://api.thingspeak.com/channels/1725472/feeds.json?api_key=7T86FTOU1J8YPUOV&results=1";
+    String urlGetSetting3 = "https://api.thingspeak.com/channels/1725473/feeds.json?api_key=6JY2NDB81JL8XSZT&results=1";
+    String urlPreSendNameSetting = "https://api.thingspeak.com/update?api_key=N16UL08THD3ZCIUF&";
+    String urlPreSendSetting1 = "https://api.thingspeak.com/update?api_key=Z40R2BCIBSSAOJCT&";
+    String urlPreSendSetting2 = "https://api.thingspeak.com/update?api_key=FCFICTT66HDEYY29&";
+    String urlPreSendSetting3 = "https://api.thingspeak.com/update?api_key=UXI5VZ9KEM8S8OPF&";
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,12 +228,6 @@ public class MainActivity extends AppCompatActivity {
 
         InitLayout();
         LoadDataBegin();
-        try {
-            getDataFromUrl("http://api.thingspeak.com/channels/1723005/feeds.json?results=2");
-//            getDataFromUrl("https://raw.github.com/square/okhttp/master/README.md");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         //--------------------------------------for bluetooth--------------------------------------------------------
         BluetoothAdapter BTAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -263,6 +265,172 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //--------------------------------------save data setting--------------------------------------------------------
+        imgSaveDataSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutSaveDataSetting.setVisibility(View.VISIBLE);
+                layoutGetDataSetting.setVisibility(View.INVISIBLE);
+            }
+        });
+        btnOkSaveSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutSaveDataSetting.setVisibility(View.INVISIBLE);
+                layoutGetDataSetting.setVisibility(View.INVISIBLE);
+                proBarLoadingSaveDataSetting.setVisibility(View.VISIBLE);
+                flagSelectSaveOkSettingLayout = true;
+                String param = "field1=[";
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    param += "\"";
+                    param += edtNameMotor[i].getText().toString();
+                    param += "\"";
+                    if(i == MAX_MOTOR - 1)break;
+                    param += ",";
+                }
+                param += "]&field2=[";
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    param += edtMinMotor[i].getText().toString();
+                    if(i == MAX_MOTOR - 1)break;
+                    param += ",";
+                }
+                param += "]&field3=[";
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    param += edtMaxMotor[i].getText().toString();
+                    if(i == MAX_MOTOR - 1)break;
+                    param += ",";
+                }
+                param += "]&field4=[";
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    if(checkReverseMotor[i].isChecked()){
+                        param += "1";
+                    }else
+                        param += "0";
+                    if(i == MAX_MOTOR - 1)break;
+                    param += ",";
+                }
+                param += "]&field5=[";
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    if(checkDisableMotor[i].isChecked()){
+                        param += "1";
+                    }else
+                        param += "0";
+                    if(i == MAX_MOTOR - 1)break;
+                    param += ",";
+                }
+                param += "]&field6={\"1\":[";
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    param += String.valueOf(spnOpenStep1Motor[i].getSelectedItemPosition());
+                    if(i == MAX_MOTOR - 1)break;
+                    param += ",";
+                }
+                param += "],\"2\":[";
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    param += String.valueOf(spnOpenStep2Motor[i].getSelectedItemPosition());
+                    if(i == MAX_MOTOR - 1)break;
+                    param += ",";
+                }
+                param += "],\"3\":[";
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    param += String.valueOf(spnOpenStep3Motor[i].getSelectedItemPosition());
+                    if(i == MAX_MOTOR - 1)break;
+                    param += ",";
+                }
+                param += "]}&field7={\"1\":[";
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    param += String.valueOf(spnCloseStep1Motor[i].getSelectedItemPosition());
+                    if(i == MAX_MOTOR - 1)break;
+                    param += ",";
+                }
+                param += "],\"2\":[";
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    param += String.valueOf(spnCloseStep2Motor[i].getSelectedItemPosition());
+                    if(i == MAX_MOTOR - 1)break;
+                    param += ",";
+                }
+                param += "],\"3\":[";
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    param += String.valueOf(spnCloseStep3Motor[i].getSelectedItemPosition());
+                    if(i == MAX_MOTOR - 1)break;
+                    param += ",";
+                }
+                param += "]}";
+//                Log.d("http_request", param);
+
+            }
+        });
+        btnCancelSaveSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutSaveDataSetting.setVisibility(View.INVISIBLE);
+                layoutGetDataSetting.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        //--------------------------------------get data setting--------------------------------------------------------
+        imgGetDataSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutSaveDataSetting.setVisibility(View.INVISIBLE);
+                layoutGetDataSetting.setVisibility(View.VISIBLE);
+                proBarLoadingGetDataSetting.setVisibility(View.VISIBLE);
+                flagSelectGetSettingLayout = true;
+                try {
+                    getDataFromUrl(urlGetNameSetting);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.d("http_request", e.toString());
+                }
+//                proBarLoadingGetDataSetting.setVisibility(View.INVISIBLE);
+            }
+        });
+        imgBackGetSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutSaveDataSetting.setVisibility(View.INVISIBLE);
+                layoutGetDataSetting.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        for(int i = 0; i < 3; i++){
+            int finalI = i;
+            rlGetDataSetting[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    flagSelectGetNumberDataSetting = true;
+                    proBarLoadingGetDataSetting.setVisibility(View.VISIBLE);
+                    switch (finalI){
+                    case 0:
+                        try {
+                            getDataFromUrl(urlGetSetting1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Log.d("http_request", e.toString());
+                        }
+                        break;
+                    case 1:
+                        try {
+                            getDataFromUrl(urlGetSetting2);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Log.d("http_request", e.toString());
+                        }
+                        break;
+                    case 2:
+                        try {
+                            getDataFromUrl(urlGetSetting3);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Log.d("http_request", e.toString());
+                        }
+                        break;
+                    }
+                }
+            });
+        }
+
 
         //------------------------------------------------------------------------------------------------------
         swTestDistantMotor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -525,7 +693,6 @@ public class MainActivity extends AppCompatActivity {
 //                    edtNameMotor[i].setCursorVisible(false);
                 }
                 editor.commit();
-
                 for(int i = 0; i < MAX_MOTOR; i++){
                     edtNameMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
                     txtNameMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
@@ -536,10 +703,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
         //-----------------------SETUP UP 2 SEND BUTTON--------------------------------
         ST2btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -547,7 +710,7 @@ public class MainActivity extends AppCompatActivity {
                 if (mmDevice !=null && isConnected(mmDevice)) {
 
                     String data = "{\"type\":\"save_data\",\"name\":\"";
-                    data += ST2spinerName.getSelectedItemPosition();
+                    data += ST2SpinnerName.getSelectedItemPosition();
                     data += "\",\"max_current\":\"";
                     data += ST2edtMaxCurrent.getText().toString();
                     data += "\",\"time_return\":\"";
@@ -563,12 +726,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        imgMenuListdivice.setOnClickListener(new View.OnClickListener() {
+        imgMenuListDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                layoutListdevice.setVisibility(View.VISIBLE);
-//                imgRefeshListdevice.setVisibility(View.VISIBLE);
+                layoutListDevice.setVisibility(View.VISIBLE);
+//                imgRefreshListDevice.setVisibility(View.VISIBLE);
                 BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
                 List<String> s = new ArrayList<String>();
@@ -576,41 +739,41 @@ public class MainActivity extends AppCompatActivity {
                 for(BluetoothDevice bt : pairedDevices){
                     s.add(bt.getName() + "\n" + bt.getAddress());
                 }
-                OjectBluetooth = pairedDevices.toArray();
+                ObjectBluetooth = pairedDevices.toArray();
 //                s.add("---Thiết bị hiện có---");
-                arrayAdapterListdevice = new ArrayAdapter<String>(
+                arrayAdapterListDevice = new ArrayAdapter<String>(
                         MainActivity.this,
                         simple_list_item_1,
                         s );
-                lvListdevice.setAdapter(arrayAdapterListdevice);
+                lvListDevice.setAdapter(arrayAdapterListDevice);
             }
         });
-        txtBackListdevice.setOnClickListener(new View.OnClickListener() {
+        txtBackListDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                layoutListdevice.setVisibility(View.INVISIBLE);
-                pgbRefeshListdevice.setVisibility(View.INVISIBLE);
+                layoutListDevice.setVisibility(View.INVISIBLE);
+                pgbRefreshListDevice.setVisibility(View.INVISIBLE);
             }
         });
-        lvListdevice.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvListDevice.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Log.i(TAG, arrayAdapterListdevice.getItem(i));
+//                Log.i(TAG, arrayAdapterListDevice.getItem(i));
 
-                pgbRefeshListdevice.setVisibility(View.VISIBLE);
-                BluetoothDevice bluetoothDeviceconnect = (BluetoothDevice)OjectBluetooth[i];
+                pgbRefreshListDevice.setVisibility(View.VISIBLE);
+                BluetoothDevice bluetoothDeviceConnect = (BluetoothDevice)ObjectBluetooth[i];
 
-                deviceName = bluetoothDeviceconnect.getName();
-                String deviceAdress = bluetoothDeviceconnect.getAddress();
+                deviceName = bluetoothDeviceConnect.getName();
+                String deviceAddress = bluetoothDeviceConnect.getAddress();
 
                 Log.d(TAG, "onItemClick: deviceName = " + deviceName);
-                Log.d(TAG, "onItemClick: deviceAdress = " + deviceAdress);
+                Log.d(TAG, "onItemClick: deviceAddress = " + deviceAddress);
                 Log.d(TAG, "Trying to Pair with " + deviceName);
-                bluetoothDeviceconnect.createBond();
+                bluetoothDeviceConnect.createBond();
 
-                mDeviceUUIDs = bluetoothDeviceconnect.getUuids();
+                mDeviceUUIDs = bluetoothDeviceConnect.getUuids();
 
 
                 Log.d(TAG, "Trying to create UUID: " + deviceName);
@@ -619,13 +782,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "UUID: " + uuid.getUuid().toString());
                 }
 
-
 //                ParcelUuid uuidExtra Intent intent = null;
 //                intent.getParcelableExtra("android.bluetooth.device.extra.UUID");
 //                UUID uuid = mDeviceUUIDs.getUuid();
 
-
-                ConnectThread connect = new ConnectThread(bluetoothDeviceconnect,MY_UUID_INSECURE);
+                ConnectThread connect = new ConnectThread(bluetoothDeviceConnect,MY_UUID_INSECURE);
                 connect.start();
             }
         });
@@ -637,21 +798,38 @@ public class MainActivity extends AppCompatActivity {
         imgSelectBackground = findViewById(R.id.imgSelectBackground);
         imgSaveDataSetting = findViewById(R.id.imgSaveDataSetting);
         imgGetDataSetting = findViewById(R.id.imgGetDataSetting);
+        imgBackGetSetting = findViewById(R.id.imgBackGetSetting);
+        edtSaveNameSetting = findViewById(R.id.edtSaveNameSetting);
+        spnSelectNumberSetting = findViewById(R.id.spnSelectNumberSetting);
+        proBarLoadingSaveDataSetting = findViewById(R.id.proBarLoadingSaveDataSetting);
+        proBarLoadingGetDataSetting = findViewById(R.id.proBarLoadingGetDataSetting);
+
+        rlGetDataSetting[0] = findViewById(R.id.rlGetDataSetting1);
+        rlGetDataSetting[1] = findViewById(R.id.rlGetDataSetting2);
+        rlGetDataSetting[2] = findViewById(R.id.rlGetDataSetting3);
 
         txtBackSetting = findViewById(R.id.txtBackSetting);
         txtBackSetting2 = findViewById(R.id.txtBackSetting2);
         txtNextSetting = findViewById(R.id.txtNextSetting);
+        txtNameGetSetting[0] = findViewById(R.id.txtNameGetSetting1);
+        txtNameGetSetting[1] = findViewById(R.id.txtNameGetSetting2);
+        txtNameGetSetting[2] = findViewById(R.id.txtNameGetSetting3);
 
         layoutSetup = findViewById(R.id.layoutSetup);
         layoutSetup2 = findViewById(R.id.layoutSetup2);
-        layoutListdevice = findViewById(R.id.layoutListdevice);
+        layoutListDevice = findViewById(R.id.layoutListDevice);
         layoutSetupStep = findViewById(R.id.layoutSetupStep);
+        layoutGetDataSetting = findViewById(R.id.layoutGetDataSetting);
+        layoutSaveDataSetting = findViewById(R.id.layoutSaveDataSetting);
 
-        txtBackListdevice = findViewById(R.id.txtBackListDevice);
-        pgbRefeshListdevice = findViewById(R.id.pgbListdevice);
-        imgMenuListdivice = findViewById(R.id.imgMenuListDevice);
-        txtBackListdevice = findViewById(R.id.txtBackListDevice);
-        lvListdevice = findViewById(R.id.lvListdevice);
+        btnCancelSaveSetting = findViewById(R.id.btnCancelSaveSetting);
+        btnOkSaveSetting = findViewById(R.id.btnOkSaveSetting);
+
+        txtBackListDevice = findViewById(R.id.txtBackListDevice);
+        pgbRefreshListDevice = findViewById(R.id.pgbListDevice);
+        imgMenuListDevice = findViewById(R.id.imgMenuListDevice);
+        txtBackListDevice = findViewById(R.id.txtBackListDevice);
+        lvListDevice = findViewById(R.id.lvListDevice);
         imgBluetoothConnection = findViewById(R.id.imgBluetoothConnection);
         txtNameBluetoothConnection = findViewById(R.id.txtNameBluetoothConnection);
 
@@ -769,6 +947,16 @@ public class MainActivity extends AppCompatActivity {
         checkReverseMotor[6] = findViewById(R.id.checkReverseMotor7);
         checkReverseMotor[7] = findViewById(R.id.checkReverseMotor8);
         checkReverseMotor[8] = findViewById(R.id.checkReverseMotor9);
+
+        checkDisableMotor[0] = findViewById(R.id.checkDisableMotor1);
+        checkDisableMotor[1] = findViewById(R.id.checkDisableMotor2);
+        checkDisableMotor[2] = findViewById(R.id.checkDisableMotor3);
+        checkDisableMotor[3] = findViewById(R.id.checkDisableMotor4);
+        checkDisableMotor[4] = findViewById(R.id.checkDisableMotor5);
+        checkDisableMotor[5] = findViewById(R.id.checkDisableMotor6);
+        checkDisableMotor[6] = findViewById(R.id.checkDisableMotor7);
+        checkDisableMotor[7] = findViewById(R.id.checkDisableMotor8);
+        checkDisableMotor[8] = findViewById(R.id.checkDisableMotor9);
 
         btnSaveDataMotor[0] = findViewById(R.id.btnSaveDataMotor1);
         btnSaveDataMotor[1] = findViewById(R.id.btnSaveDataMotor2);
@@ -914,7 +1102,7 @@ public class MainActivity extends AppCompatActivity {
         imgRefreshData = findViewById(R.id.imgRefreshData);
 
         //----------------------Setup 2-------------------------------
-        ST2spinerName = findViewById(R.id.ST2spinerName);
+        ST2SpinnerName = findViewById(R.id.ST2SpinnerName);
 
         ST2txtMotor1 = findViewById(R.id.ST2txtMotor1);
         ST2txtMotor2 = findViewById(R.id.ST2txtMotor2);
@@ -949,7 +1137,6 @@ public class MainActivity extends AppCompatActivity {
         ST2timeReturn = findViewById(R.id.ST2timeReturn);
         ST2btnSave = findViewById(R.id.ST2btnSave);
         imgRefreshStep = findViewById(R.id.imgRefreshStep);
-
 
     }
 
@@ -987,19 +1174,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-//        String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/background.png";
-//        Log.d("filename_path", fileName);
-//        File imageFile = new File(fileName);
-//        FileInputStream fis = null;
-//        try {
-//            fis = new FileInputStream(imageFile);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        Bitmap bitmap = BitmapFactory.decodeStream(fis);
-//        imgBackground.setImageBitmap(bitmap);
-
-
         List<String> listStep = new ArrayList<>();
         listStep.add("S");
         listStep.add("O");
@@ -1032,110 +1206,255 @@ public class MainActivity extends AppCompatActivity {
             spnVoltageMotor[i].setAdapter(spinnerAdapterVoltage);
         }
 
+        List<String> listSetting = new ArrayList<>();
+        listSetting.add("Setting 1");
+        listSetting.add("Setting 2");
+        listSetting.add("Setting 3");
+        //ArrayAdapter spinAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listSetting);
+        ArrayAdapter spinnerAdapterSetting = new ArrayAdapter<>(this, R.layout.spinner_list, listSetting);
+        spinnerAdapterSetting.setDropDownViewResource(R.layout.spinner_list);
+//        spnSettingMotor[0].setAdapter(spinnerAdapterSetting);
+        spnSelectNumberSetting.setAdapter(spinnerAdapterSetting);
 
         //------------------------------------------------------------------------------------------------------
+        flagSelectGetSettingLayout = true;
+        try {
+            getDataFromUrl(urlGetNameSetting);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("http_request", e.toString());
+        }
     }
-
-
-//    String error = ""; // string field
-//    private String getDataFromUrl(String demoIdUrl) {
-//
-//        String result = null;
-//        int resCode;
-//        InputStream in;
-//        try {
-//            URL url = new URL(demoIdUrl);
-//            URLConnection urlConn = url.openConnection();
-//
-//            HttpsURLConnection httpsConn = (HttpsURLConnection) urlConn;
-//            httpsConn.setAllowUserInteraction(false);
-//            httpsConn.setInstanceFollowRedirects(true);
-//            httpsConn.setRequestMethod("GET");
-//            httpsConn.connect();
-//            resCode = httpsConn.getResponseCode();
-//
-//            if (resCode == HttpURLConnection.HTTP_OK) {
-//                in = httpsConn.getInputStream();
-//
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(
-//                        in, "iso-8859-1"), 8);
-//                StringBuilder sb = new StringBuilder();
-//                String line;
-//                while ((line = reader.readLine()) != null) {
-//                    sb.append(line).append("\n");
-//                }
-//                in.close();
-//                result = sb.toString();
-//            } else {
-//                error += resCode;
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Log.d("http_request", result);
-//        return result;
-//    }
 
     void getDataFromUrl(String url) throws IOException {
-//        OkHttpClient client;
-//        client = new OkHttpClient.Builder()
-//                .connectTimeout(10, TimeUnit.SECONDS)
-//                .writeTimeout(10, TimeUnit.SECONDS)
-//                .readTimeout(30, TimeUnit.SECONDS)
-//                .build();
-//
-//        Request get = new Request.Builder()
-//                .url("https://reqres.in/api/users?page=2")
-//                .build();
-//
-//        client.newCall(get).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                Log.d("http_request", "Call Cancel");
-//                e.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) {
-//                try {
-//                    ResponseBody responseBody = response.body();
-//                    Log.d("http_request", responseBody.toString());
-//                    if (!response.isSuccessful()) {
-//                        throw new IOException("Unexpected code " + response);
-//                    }
-//
-//                    Log.i("data", responseBody.string());
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-//        url = "https://www.google.com";
-
-// Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-//                        textView.setText("Response is: " + response.substring(0,500));
-                        Log.d("http_request", response);
-                    }
-                }, new Response.ErrorListener() {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-//                textView.setText("That didn't work!");
-                Log.d("http_request", "That didn't work!");
+            public void onFailure(Call call, IOException e) {
+                call.cancel();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, "Can't Connect To Network!",Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String myResponse = response.body().string();
+                Log.d("http_request", myResponse);
+//                countDownLatch.countDown();
+                proBarLoadingGetDataSetting.setVisibility(View.INVISIBLE);
+                if(flagSelectGetSettingLayout){
+                    flagSelectGetSettingLayout = false;
+                    try {
+                        JSONObject reader = new JSONObject(myResponse);
+                        String field4 = reader.getJSONArray("feeds").getJSONObject(0).getString("field1");
+                        JSONArray arrayField4 = new JSONArray(field4);
+                        nameSetting[0] = arrayField4.getString(0);
+                        nameSetting[1] = arrayField4.getString(1);
+                        nameSetting[2] = arrayField4.getString(2);
+//                        Log.d("http_request", name1);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                txtNameGetSetting[0].setText(nameSetting[0]);
+                                txtNameGetSetting[1].setText(nameSetting[1]);
+                                txtNameGetSetting[2].setText(nameSetting[2]);
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.d("http_request", e.toString());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MainActivity.this, "Không thể lấy dữ liệu!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+                else if(flagSelectGetNumberDataSetting){
+                    flagSelectGetNumberDataSetting = false;
+
+                    try {
+                        JSONObject reader = new JSONObject(myResponse);
+                        String field1 = reader.getJSONArray("feeds").getJSONObject(0).getString("field1");
+                        JSONArray arrayField1 = new JSONArray(field1);
+                        String[] NameMotor = new String[MAX_MOTOR];
+                        for(int i = 0; i < MAX_MOTOR; i++){
+                            NameMotor[i] = arrayField1.getString(i);
+                        }
+                        String field2 = reader.getJSONArray("feeds").getJSONObject(0).getString("field2");
+                        JSONArray arrayField2 = new JSONArray(field2);
+                        int[] MinCurrent = new int[9];
+                        for(int i = 0; i < MAX_MOTOR; i++){
+                            MinCurrent[i] = arrayField2.getInt(i);
+                        }
+                        String field3 = reader.getJSONArray("feeds").getJSONObject(0).getString("field3");
+                        JSONArray arrayField3 = new JSONArray(field3);
+                        int[] MaxCurrent = new int[9];
+                        for(int i = 0; i < MAX_MOTOR; i++){
+                            MaxCurrent[i] = arrayField3.getInt(i);
+                        }
+                        String field4 = reader.getJSONArray("feeds").getJSONObject(0).getString("field4");
+                        JSONArray arrayField4 = new JSONArray(field4);
+                        int[] Reverse = new int[9];
+                        for(int i = 0; i < MAX_MOTOR; i++){
+                            Reverse[i] = arrayField4.getInt(i);
+                        }
+                        String field5 = reader.getJSONArray("feeds").getJSONObject(0).getString("field5");
+                        JSONArray arrayField5 = new JSONArray(field5);
+                        int[] Disable = new int[9];
+                        for(int i = 0; i < MAX_MOTOR; i++){
+                            Disable[i] = arrayField5.getInt(i);
+                        }
+                        String strFieldOpenStep1 = reader.getJSONArray("feeds").getJSONObject(0).getString("field6");
+                        JSONObject objectOpenStep1 = new JSONObject(strFieldOpenStep1);
+                        String strOpenStep1 = objectOpenStep1.getString("1");
+                        JSONArray arrayOpenStep1= new JSONArray(strOpenStep1);
+                        int[] intOpenStep1 = new int[9];
+                        String strFieldOpenStep2 = reader.getJSONArray("feeds").getJSONObject(0).getString("field6");
+                        JSONObject objectOpenStep2 = new JSONObject(strFieldOpenStep2);
+                        String strOpenStep2 = objectOpenStep2.getString("2");
+                        JSONArray arrayOpenStep2= new JSONArray(strOpenStep2);
+                        int[] intOpenStep2 = new int[9];
+                        String strFieldOpenStep3 = reader.getJSONArray("feeds").getJSONObject(0).getString("field6");
+                        JSONObject objectOpenStep3 = new JSONObject(strFieldOpenStep3);
+                        String strOpenStep3 = objectOpenStep3.getString("3");
+                        JSONArray arrayOpenStep3= new JSONArray(strOpenStep3);
+                        int[] intOpenStep3 = new int[9];
+                        String strFieldCloseStep1 = reader.getJSONArray("feeds").getJSONObject(0).getString("field7");
+                        JSONObject objectCloseStep1 = new JSONObject(strFieldCloseStep1);
+                        String strCloseStep1 = objectCloseStep1.getString("1");
+                        JSONArray arrayCloseStep1= new JSONArray(strCloseStep1);
+                        int[] intCloseStep1 = new int[9];
+                        String strFieldCloseStep2 = reader.getJSONArray("feeds").getJSONObject(0).getString("field7");
+                        JSONObject objectCloseStep2 = new JSONObject(strFieldCloseStep2);
+                        String strCloseStep2 = objectCloseStep2.getString("2");
+                        JSONArray arrayCloseStep2= new JSONArray(strCloseStep2);
+                        int[] intCloseStep2 = new int[9];
+                        String strFieldCloseStep3 = reader.getJSONArray("feeds").getJSONObject(0).getString("field7");
+                        JSONObject objectCloseStep3 = new JSONObject(strFieldCloseStep3);
+                        String strCloseStep3 = objectCloseStep3.getString("3");
+                        JSONArray arrayCloseStep3= new JSONArray(strCloseStep3);
+                        int[] intCloseStep3 = new int[9];
+
+                        for(int i = 0; i < MAX_MOTOR; i++){
+                            intOpenStep1[i] = arrayOpenStep1.getInt(i);
+                            intOpenStep2[i] = arrayOpenStep2.getInt(i);
+                            intOpenStep3[i] = arrayOpenStep3.getInt(i);
+                            intCloseStep1[i] = arrayCloseStep1.getInt(i);
+                            intCloseStep2[i] = arrayCloseStep2.getInt(i);
+                            intCloseStep3[i] = arrayCloseStep3.getInt(i);
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                layoutGetDataSetting.setVisibility(View.INVISIBLE);
+                                //set Name
+                                for(int i = 0; i < MAX_MOTOR; i++){
+                                    editor.putString(name[i], NameMotor[i]);
+                                    edtNameMotor[i].clearFocus();
+//                                    edtNameMotor[i].setCursorVisible(false);
+                                }
+                                editor.commit();
+                                for(int i = 0; i < MAX_MOTOR; i++){
+                                    edtNameMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
+                                    txtNameMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
+                                    txtNameOpenMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
+                                    txtNameCloseMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
+                                }
+                                //Set Min Current
+                                for(int i = 0; i < MAX_MOTOR; i++){
+                                    edtMinMotor[i].setText(String.valueOf(MinCurrent[i]));
+                                }
+                                //Set Max Current
+                                for(int i = 0; i < MAX_MOTOR; i++){
+                                    edtMaxMotor[i].setText(String.valueOf(MaxCurrent[i]));
+                                }
+                                //Set Reverse
+                                for(int i = 0; i < MAX_MOTOR; i++){
+                                    if(Reverse[i] == 1){
+                                        checkReverseMotor[i].setChecked(true);
+                                    }
+                                    else{
+                                        checkReverseMotor[i].setChecked(false);
+                                    }
+                                }
+                                //Set Disable
+                                for(int i = 0; i < MAX_MOTOR; i++){
+                                    if(Disable[i] == 1){
+                                        checkDisableMotor[i].setChecked(true);
+                                    }
+                                    else{
+                                        checkDisableMotor[i].setChecked(false);
+                                    }
+                                }
+                                //set Step Open Close
+                                for(int i = 0; i < MAX_MOTOR; i++){
+                                    spnOpenStep1Motor[i].setSelection(intOpenStep1[i]);
+                                    spnOpenStep2Motor[i].setSelection(intOpenStep2[i]);
+                                    spnOpenStep3Motor[i].setSelection(intOpenStep3[i]);
+                                    spnCloseStep1Motor[i].setSelection(intCloseStep1[i]);
+                                    spnCloseStep2Motor[i].setSelection(intCloseStep2[i]);
+                                    spnCloseStep3Motor[i].setSelection(intCloseStep3[i]);
+                                }
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.d("http_request", e.toString());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                layoutGetDataSetting.setVisibility(View.INVISIBLE);
+                                Toast.makeText(MainActivity.this, "Không thể lấy dữ liệu!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+                else if(flagSelectSaveOkSettingLayout){
+                    flagSelectSaveOkSettingLayout = false;
+                    proBarLoadingSaveDataSetting.setVisibility(View.INVISIBLE);
+                }
             }
         });
-
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
-
     }
+
+//    String getDataFromUrl(String url) throws IOException {
+//        cdStartHttpRequest = new CountDownLatch(1);
+//        final String[] data = {""};
+//        // Instantiate the RequestQueue.
+//        RequestQueue queue = Volley.newRequestQueue(this);
+////        url = "https://www.google.com";
+//
+////        Request a string response from the provided URL.
+//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        // Display the first 500 characters of the response string.
+//                        data[0] = response;
+//                        Log.d("http_request", response);
+//                        cdStartHttpRequest.countDown();
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.d("http_request", error.toString());
+//            }
+//        });
+//
+////        Add the request to the RequestQueue.
+//        queue.add(stringRequest);
+////        cdStartHttpRequest.countDown();
+//        return data[0];
+//    }
 
     public void selectImage() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -1306,13 +1625,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "cancel: Closing Client Socket.");
                 mmSocket.close();
             } catch (IOException e) {
-                Log.e(TAG, "cancel: close() of mmSocket in Connectthread failed. " + e.getMessage());
+                Log.e(TAG, "cancel: close() of mmSocket in ConnectThread failed. " + e.getMessage());
             }
         }
     }
     private void connected(BluetoothSocket mmSocket) {
         Log.d(TAG, "connected: Starting.");
-        pgbRefeshListdevice.setVisibility(View.INVISIBLE);
+        pgbRefreshListDevice.setVisibility(View.INVISIBLE);
 
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(mmSocket);
@@ -1327,8 +1646,8 @@ public class MainActivity extends AppCompatActivity {
 
                 // Stuff that updates the UI
 
-                layoutListdevice.setVisibility(View.INVISIBLE);
-                pgbRefeshListdevice.setVisibility(View.INVISIBLE);
+                layoutListDevice.setVisibility(View.INVISIBLE);
+                pgbRefreshListDevice.setVisibility(View.INVISIBLE);
 
                 imgBluetoothConnection.setBackgroundResource(R.mipmap.ic_bluetooth_connected);
                 txtNameBluetoothConnection.setText(deviceName);
