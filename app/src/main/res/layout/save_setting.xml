@@ -64,13 +64,14 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
+
     <RelativeLayout
-        android:layout_alignBottom="@+id/llSaveDataSetting"
-        android:layout_alignRight="@+id/llSaveDataSetting"
-        android:layout_alignTop="@+id/llSaveDataSetting"
-        android:layout_alignLeft="@+id/llSaveDataSetting"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/llSaveDataSetting"
+        android:layout_alignTop="@+id/llSaveDataSetting"
+        android:layout_alignRight="@+id/llSaveDataSetting"
+        android:layout_alignBottom="@+id/llSaveDataSetting">
 
         <ProgressBar
             android:id="@+id/proBarLoadingSaveDataSetting"

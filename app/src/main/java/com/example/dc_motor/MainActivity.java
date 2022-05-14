@@ -125,9 +125,9 @@ public class MainActivity extends AppCompatActivity {
     Button[] btnOpenMotor = new Button[MAX_MOTOR];
     Button[] btnStopMotor = new Button[MAX_MOTOR];
     Button[] btnCloseMotor = new Button[MAX_MOTOR];
-    Button btnSaveNameMotor;
-    SwitchCompat swStepCheckDistant, swTestDistantMotor;
-    EditText edtStepCheckDistant;
+    Button btnSaveNameMotor, btnResetTotalPower;
+    ImageView imgRefreshVoltage;
+    TextView txtPinVoltage;
 
     //---------------------------------------------------
     TextView[] txtNameMotor = new TextView[MAX_MOTOR];
@@ -277,92 +277,140 @@ public class MainActivity extends AppCompatActivity {
         btnOkSaveSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layoutSaveDataSetting.setVisibility(View.INVISIBLE);
-                layoutGetDataSetting.setVisibility(View.INVISIBLE);
+                boolean isInvalidData = true;
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    if(edtNameMotor[i].getText().toString().equals("")
+                            || edtMinMotor[i].getText().toString().equals("")
+                            || edtMaxMotor[i].getText().toString().equals("")){
+                        isInvalidData = false;
+                    }
+                }
+                if(!isInvalidData){
+                    edtSaveNameSetting.getText().clear();
+                    layoutSaveDataSetting.setVisibility(View.INVISIBLE);
+                    Toast.makeText(MainActivity.this, "Chưa nhập đủ thông số!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 proBarLoadingSaveDataSetting.setVisibility(View.VISIBLE);
                 flagSelectSaveOkSettingLayout = true;
-                String param = "field1=[";
+                String paramField = "field1=[";
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    param += "\"";
-                    param += edtNameMotor[i].getText().toString();
-                    param += "\"";
+                    paramField += "\"";
+                    paramField += edtNameMotor[i].getText().toString();
+                    paramField += "\"";
                     if(i == MAX_MOTOR - 1)break;
-                    param += ",";
+                    paramField += ",";
                 }
-                param += "]&field2=[";
+                paramField += "]&field2=[";
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    param += edtMinMotor[i].getText().toString();
+                    paramField += edtMinMotor[i].getText().toString();
                     if(i == MAX_MOTOR - 1)break;
-                    param += ",";
+                    paramField += ",";
                 }
-                param += "]&field3=[";
+                paramField += "]&field3=[";
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    param += edtMaxMotor[i].getText().toString();
+                    paramField += edtMaxMotor[i].getText().toString();
                     if(i == MAX_MOTOR - 1)break;
-                    param += ",";
+                    paramField += ",";
                 }
-                param += "]&field4=[";
+                paramField += "]&field4=[";
                 for(int i = 0; i < MAX_MOTOR; i++){
                     if(checkReverseMotor[i].isChecked()){
-                        param += "1";
+                        paramField += "1";
                     }else
-                        param += "0";
+                        paramField += "0";
                     if(i == MAX_MOTOR - 1)break;
-                    param += ",";
+                    paramField += ",";
                 }
-                param += "]&field5=[";
+                paramField += "]&field5=[";
                 for(int i = 0; i < MAX_MOTOR; i++){
                     if(checkDisableMotor[i].isChecked()){
-                        param += "1";
+                        paramField += "1";
                     }else
-                        param += "0";
+                        paramField += "0";
                     if(i == MAX_MOTOR - 1)break;
-                    param += ",";
+                    paramField += ",";
                 }
-                param += "]&field6={\"1\":[";
+                paramField += "]&field6={\"1\":[";
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    param += String.valueOf(spnOpenStep1Motor[i].getSelectedItemPosition());
+                    paramField += String.valueOf(spnOpenStep1Motor[i].getSelectedItemPosition());
                     if(i == MAX_MOTOR - 1)break;
-                    param += ",";
+                    paramField += ",";
                 }
-                param += "],\"2\":[";
+                paramField += "],\"2\":[";
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    param += String.valueOf(spnOpenStep2Motor[i].getSelectedItemPosition());
+                    paramField += String.valueOf(spnOpenStep2Motor[i].getSelectedItemPosition());
                     if(i == MAX_MOTOR - 1)break;
-                    param += ",";
+                    paramField += ",";
                 }
-                param += "],\"3\":[";
+                paramField += "],\"3\":[";
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    param += String.valueOf(spnOpenStep3Motor[i].getSelectedItemPosition());
+                    paramField += String.valueOf(spnOpenStep3Motor[i].getSelectedItemPosition());
                     if(i == MAX_MOTOR - 1)break;
-                    param += ",";
+                    paramField += ",";
                 }
-                param += "]}&field7={\"1\":[";
+                paramField += "]}&field7={\"1\":[";
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    param += String.valueOf(spnCloseStep1Motor[i].getSelectedItemPosition());
+                    paramField += String.valueOf(spnCloseStep1Motor[i].getSelectedItemPosition());
                     if(i == MAX_MOTOR - 1)break;
-                    param += ",";
+                    paramField += ",";
                 }
-                param += "],\"2\":[";
+                paramField += "],\"2\":[";
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    param += String.valueOf(spnCloseStep2Motor[i].getSelectedItemPosition());
+                    paramField += String.valueOf(spnCloseStep2Motor[i].getSelectedItemPosition());
                     if(i == MAX_MOTOR - 1)break;
-                    param += ",";
+                    paramField += ",";
                 }
-                param += "],\"3\":[";
+                paramField += "],\"3\":[";
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    param += String.valueOf(spnCloseStep3Motor[i].getSelectedItemPosition());
+                    paramField += String.valueOf(spnCloseStep3Motor[i].getSelectedItemPosition());
                     if(i == MAX_MOTOR - 1)break;
-                    param += ",";
+                    paramField += ",";
                 }
-                param += "]}";
+                paramField += "]}&field8=[";
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    paramField += String.valueOf(spnVoltageMotor[i].getSelectedItemPosition());
+                    if(i == MAX_MOTOR - 1)break;
+                    paramField += ",";
+                }
+                paramField += "]";
 //                Log.d("http_request", param);
-
+                String dataSendValue = "";
+                if(spnSelectNumberSetting.getSelectedItemPosition() == 0){
+                    nameSetting[0] = edtSaveNameSetting.getText().toString();
+                    dataSendValue = urlPreSendSetting1 + paramField;
+                }
+                else if(spnSelectNumberSetting.getSelectedItemPosition() == 1){
+                    nameSetting[1] = edtSaveNameSetting.getText().toString();
+                    dataSendValue = urlPreSendSetting2 + paramField;
+                }
+                else if(spnSelectNumberSetting.getSelectedItemPosition() == 2){
+                    nameSetting[2] = edtSaveNameSetting.getText().toString();
+                    dataSendValue = urlPreSendSetting3 + paramField;
+                }
+                String paramName = "field1=[\"";
+                paramName += nameSetting[0];
+                paramName += "\",\"";
+                paramName += nameSetting[1];
+                paramName += "\",\"";
+                paramName += nameSetting[2];
+                paramName += "\"]";
+                String dataSendName = urlPreSendNameSetting + paramName;
+                Log.d("http_request", "dataSendName: " + dataSendName);
+                Log.d("http_request", "dataSendValue: " + dataSendValue);
+                try {
+                    getDataFromUrl(dataSendName);
+                    getDataFromUrl(dataSendValue);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this, "Không kết nối được Server!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         btnCancelSaveSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                edtSaveNameSetting.getText().clear();
                 layoutSaveDataSetting.setVisibility(View.INVISIBLE);
                 layoutGetDataSetting.setVisibility(View.INVISIBLE);
             }
@@ -431,32 +479,6 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-
-        //------------------------------------------------------------------------------------------------------
-        swTestDistantMotor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    swStepCheckDistant.setChecked(false);
-                    swStepCheckDistant.setVisibility(View.INVISIBLE);
-                }
-                else{
-                    swStepCheckDistant.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        swStepCheckDistant.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    edtStepCheckDistant.setVisibility(View.VISIBLE);
-                }
-                else{
-                    edtStepCheckDistant.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
         //-------------------Main button OPEN------------------------------
         for(int i = 0; i < MAX_MOTOR; i++){
             int finalI = i;
@@ -610,6 +632,30 @@ public class MainActivity extends AppCompatActivity {
                     byte[] bytes = data.getBytes(Charset.defaultCharset());
                     mConnectedThread.write(bytes);
 
+                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btnResetTotalPower.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mmDevice !=null && isConnected(mmDevice)) {
+                    String data = "{\"type\":\"reset_power\"}";
+                    byte[] bytes = data.getBytes(Charset.defaultCharset());
+                    mConnectedThread.write(bytes);
+                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        imgRefreshVoltage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mmDevice !=null && isConnected(mmDevice)) {
+                    String data = "{\"type\":\"request_voltage\"}";
+                    byte[] bytes = data.getBytes(Charset.defaultCharset());
+                    mConnectedThread.write(bytes);
                     Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -873,10 +919,10 @@ public class MainActivity extends AppCompatActivity {
         btnStopMotor[7] = findViewById(R.id.btnStopMotor8);
         btnStopMotor[8] = findViewById(R.id.btnStopMotor9);
 
+        btnResetTotalPower = findViewById(R.id.btnResetTotalPower);
+        txtPinVoltage = findViewById(R.id.txtPinVoltage);
+        imgRefreshVoltage = findViewById(R.id.imgRefreshVoltage);
         btnSaveNameMotor = findViewById(R.id.btnSaveNameMotor);
-        swStepCheckDistant = findViewById(R.id.swStepCheckDistant);
-        swTestDistantMotor = findViewById(R.id.swTestDistantMotor);
-        edtStepCheckDistant = findViewById(R.id.edtStepCheckDistant);
 
         txtNameMotor[0] = findViewById(R.id.txtNameMotor1);
         txtNameMotor[1] = findViewById(R.id.txtNameMotor2);
@@ -1352,6 +1398,13 @@ public class MainActivity extends AppCompatActivity {
                             intCloseStep2[i] = arrayCloseStep2.getInt(i);
                             intCloseStep3[i] = arrayCloseStep3.getInt(i);
                         }
+
+                        String field8 = reader.getJSONArray("feeds").getJSONObject(0).getString("field8");
+                        JSONArray arrayField8 = new JSONArray(field8);
+                        int[] Voltage = new int[9];
+                        for(int i = 0; i < MAX_MOTOR; i++){
+                            Voltage[i] = arrayField8.getInt(i);
+                        }
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -1404,6 +1457,10 @@ public class MainActivity extends AppCompatActivity {
                                     spnCloseStep2Motor[i].setSelection(intCloseStep2[i]);
                                     spnCloseStep3Motor[i].setSelection(intCloseStep3[i]);
                                 }
+                                //Voltage
+                                for(int i = 0; i < MAX_MOTOR; i++){
+                                    spnVoltageMotor[i].setSelection(Voltage[i]);
+                                }
                             }
                         });
                     } catch (JSONException e) {
@@ -1420,7 +1477,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(flagSelectSaveOkSettingLayout){
                     flagSelectSaveOkSettingLayout = false;
-                    proBarLoadingSaveDataSetting.setVisibility(View.INVISIBLE);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            layoutSaveDataSetting.setVisibility(View.INVISIBLE);
+                            layoutGetDataSetting.setVisibility(View.INVISIBLE);
+                            proBarLoadingSaveDataSetting.setVisibility(View.INVISIBLE);
+                        }
+                    });
                 }
             }
         });
@@ -1654,11 +1718,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-
-
     }
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;

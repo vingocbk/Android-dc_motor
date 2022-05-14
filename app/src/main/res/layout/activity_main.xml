@@ -732,70 +732,28 @@
                         </Spinner>
                     </LinearLayout>
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center">
+                        android:layout_height="wrap_content">
 
                         <Button
                             android:id="@+id/btnSaveNameMotor"
+                            android:layout_centerInParent="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Save"
-                            android:textSize="8sp"></Button>
+                            android:textSize="8sp"/>
 
-                        <TextView
+                        <ImageView
+                            android:id="@+id/imgRefreshVoltage"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="No test"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
-                            android:visibility="gone"></TextView>
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20dp"
+                            android:background="@mipmap/icons8_refresh_48" />
 
-                        <androidx.appcompat.widget.SwitchCompat
-                            android:id="@+id/swTestDistantMotor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0"
-                            android:gravity="center"
-                            android:visibility="gone"></androidx.appcompat.widget.SwitchCompat>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Test"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
-                            android:visibility="gone"></TextView>
-
-                        <EditText
-                            android:id="@+id/edtStepCheckDistant"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="right"
-                            android:inputType="number"
-                            android:text="10"
-                            android:textColor="#FFFFFF"
-                            android:visibility="gone"></EditText>
-
-                        <androidx.appcompat.widget.SwitchCompat
-                            android:id="@+id/swStepCheckDistant"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0"
-                            android:gravity="center"
-                            android:visibility="gone"></androidx.appcompat.widget.SwitchCompat>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Step"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
-                            android:visibility="gone"></TextView>
-
-                    </LinearLayout>
+                    </RelativeLayout>
                 </LinearLayout>
             </HorizontalScrollView>
 
