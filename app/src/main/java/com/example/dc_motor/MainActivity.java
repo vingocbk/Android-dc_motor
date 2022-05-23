@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     Button[] btnCloseMotor = new Button[MAX_MOTOR];
     Button btnSaveNameMotor, btnResetTotalPower;
     ImageView imgRefreshVoltage;
-    TextView txtPinVoltage;
+    TextView txtPinVoltage, txtTotalPower, txtModeRunBoard;
 
     //---------------------------------------------------
     TextView[] txtNameMotor = new TextView[MAX_MOTOR];
@@ -628,6 +628,18 @@ public class MainActivity extends AppCompatActivity {
                         }
                         data += ",";
                     }
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        if(checkDisableMotor[i].isChecked()){
+                            data += "1";
+                        }
+                        else{
+                            data += "0";
+                        }
+                        if(i == (MAX_MOTOR - 1)){
+                            break;
+                        }
+                        data += ",";
+                    }
                     data += "]}";
                     byte[] bytes = data.getBytes(Charset.defaultCharset());
                     mConnectedThread.write(bytes);
@@ -744,6 +756,17 @@ public class MainActivity extends AppCompatActivity {
                     txtNameMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
                     txtNameOpenMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
                     txtNameCloseMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
+                }
+                if (mmDevice !=null && isConnected(mmDevice)) {
+                    String data = "{\"type\":\"voltage\",\"1\":[";
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        data += String.valueOf(spnVoltageMotor[i].getSelectedItemPosition());
+                        data += ",";
+                    }
+                    data += "]}";
+                    byte[] bytes = data.getBytes(Charset.defaultCharset());
+                    mConnectedThread.write(bytes);
+                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -921,6 +944,8 @@ public class MainActivity extends AppCompatActivity {
 
         btnResetTotalPower = findViewById(R.id.btnResetTotalPower);
         txtPinVoltage = findViewById(R.id.txtPinVoltage);
+        txtTotalPower = findViewById(R.id.txtTotalPower);
+        txtModeRunBoard = findViewById(R.id.txtModeRunBoard);
         imgRefreshVoltage = findViewById(R.id.imgRefreshVoltage);
         btnSaveNameMotor = findViewById(R.id.btnSaveNameMotor);
 
@@ -1799,8 +1824,22 @@ public class MainActivity extends AppCompatActivity {
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
-
                                     }
+                                    for(int i =0; i < MAX_MOTOR; i++){
+                                        try {
+//                                            txtMaxMotor[i].setText(String.valueOf(array.getInt(2*MAX_MOTOR+i)));
+                                            if(array.getInt(3*MAX_MOTOR+i) == 1){
+                                                checkDisableMotor[i].setChecked(true);
+                                            }
+                                            else{
+                                                checkDisableMotor[i].setChecked(false);
+                                            }
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
                                 }
                             });
 
@@ -1863,9 +1902,13 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                        //current
+                        //current very 0.5s
                         else if(reader.has("1")){
-                            double data[] = new double[9];
+                            //1 - 9: current
+                            //10 : battery voltage
+                            //11 : total power
+                            //12 : mode run board
+                            double data[] = new double[15];
 
                             JSONArray array= reader.getJSONArray("1");
                             for(int i = 0; i < array.length(); i++){
@@ -1885,6 +1928,34 @@ public class MainActivity extends AppCompatActivity {
                                     //-------
                                     for(int i =0; i < MAX_MOTOR; i++){
                                         txtCurrent[i].setText(String.valueOf(data[i]) + " mA");
+                                    }
+                                    if(array.length() >= MAX_MOTOR){
+                                        txtPinVoltage.setText(String.valueOf(data[9]) + "V");
+                                        txtTotalPower.setText("Total: " + String.valueOf(data[10]) + "mAh");
+                                        if(data[11] == 1){
+                                            txtModeRunBoard.setText("Mode: Auto");
+                                        }else{
+                                            txtModeRunBoard.setText("Mode: Manual");
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        //set voltage
+                        else if(reader.has("4")){
+                            JSONArray array= reader.getJSONArray("4");
+//                            Log.d(TAG, "InputStream: " + data[0]);
+                            runOnUiThread(new Runnable() {
+                                @SuppressLint("SetTextI18n")
+                                @Override
+                                public void run() {
+                                    //-------
+                                    for(int i =0; i < MAX_MOTOR; i++){
+                                        try {
+                                            spnVoltageMotor[i].setSelection(array.getInt(i));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 }
                             });
