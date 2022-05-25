@@ -137,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
     TextView[] edtMaxMotor = new TextView[MAX_MOTOR];
     CheckBox[] checkReverseMotor = new CheckBox[MAX_MOTOR];
     CheckBox[] checkDisableMotor = new CheckBox[MAX_MOTOR];
-    Button[] btnSaveDataMotor = new Button[MAX_MOTOR];
     Button btnSaveDataAllMotor;
 
     //---------------------------------------------
@@ -485,7 +484,7 @@ public class MainActivity extends AppCompatActivity {
             btnOpenMotor[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mmDevice !=null && isConnected(mmDevice)) {
+                    if (mmDevice !=null && isConnected(mmDevice) && txtModeRunBoard.getText().toString().contains("Manual")) {
                         String data = "{\"type\":\"run_no_step\",\"name\":\"" +
                                 Integer.toString(finalI) +
                                 "\",\"command\":\"open\"}";
@@ -494,6 +493,10 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
                         //Log.d(TAG,data);
                     }
+                    else{
+                        Toast.makeText(MainActivity.this, "Kết nối thiết bị, chuyển Manual!", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             });
         }
@@ -503,7 +506,7 @@ public class MainActivity extends AppCompatActivity {
             btnStopMotor[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mmDevice !=null && isConnected(mmDevice)) {
+                    if (mmDevice !=null && isConnected(mmDevice) && txtModeRunBoard.getText().toString().contains("Manual")) {
                         String data = "{\"type\":\"run_no_step\",\"name\":\"" +
                                 Integer.toString(finalI) +
                                 "\",\"command\":\"stop\"}";
@@ -512,6 +515,10 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
                         //Log.d(TAG,data);
                     }
+                    else{
+                        Toast.makeText(MainActivity.this, "Kết nối thiết bị, chuyển Manual!", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             });
         }
@@ -521,7 +528,7 @@ public class MainActivity extends AppCompatActivity {
             btnCloseMotor[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mmDevice !=null && isConnected(mmDevice)) {
+                    if (mmDevice !=null && isConnected(mmDevice) && txtModeRunBoard.getText().toString().contains("Manual")) {
                         String data = "{\"type\":\"run_no_step\",\"name\":\"" +
                                 Integer.toString(finalI) +
                                 "\",\"command\":\"close\"}";
@@ -530,73 +537,19 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
                         //Log.d(TAG,data);
                     }
+                    else{
+                        Toast.makeText(MainActivity.this, "Kết nối thiết bị, chuyển Manual!", Toast.LENGTH_SHORT).show();
+                    }
                 }
+
             });
         }
         //--------------------------------------------------------------------
 
-        //-------------------Setup button Save data------------------------------
-        for(int i = 0; i < MAX_MOTOR; i++){
-            int finalI = i;
-            btnSaveDataMotor[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mmDevice !=null && isConnected(mmDevice)) {
-                        String data = "{\"type\":\"save_data\",\"name\":\"" +
-                                Integer.toString(finalI) +
-                                "\",\"min_current\":\"" +
-                                edtMinMotor[finalI].getText().toString() +
-                                "\",\"max_current\":\"" +
-                                edtMaxMotor[finalI].getText().toString() +
-                                "\",\"reverse\":\"";
-                        if(checkReverseMotor[finalI].isChecked()){
-                            data += "true";
-                        }
-                        else{
-                            data += "false";
-                        }
-
-                        data += "\"}";
-                        byte[] bytes = data.getBytes(Charset.defaultCharset());
-                        mConnectedThread.write(bytes);
-                        Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG,data);
-                    }
-                }
-            });
-        }
-
         btnSaveDataAllMotor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
-//                    for(int i = 0; i < MAX_MOTOR; i++){
-//                        final Handler handler = new Handler();
-//                        int finalI = i;
-//                        handler.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                // Do something after 50ms
-//                                String data = "{\"type\":\"save_data\",\"name\":\"" +
-//                                        Integer.toString(finalI) +
-//                                        "\",\"min_current\":\"" +
-//                                        edtMinMotor[finalI].getText().toString() +
-//                                        "\",\"max_current\":\"" +
-//                                        edtMaxMotor[finalI].getText().toString() +
-//                                        "\",\"reverse\":\"";
-//                                if(checkReverseMotor[finalI].isChecked()){
-//                                    data += "true";
-//                                }
-//                                else{
-//                                    data += "false";
-//                                }
-//                                data += "\"}";
-//                                byte[] bytes = data.getBytes(Charset.defaultCharset());
-//                                mConnectedThread.write(bytes);
-//                            }
-//                        }, 100);
-//                    }
-
+                if (mmDevice !=null && isConnected(mmDevice) && txtModeRunBoard.getText().toString().contains("Manual")) {
                     String data = "{\"type\":\"data\",\"1\":[";
                     for(int i = 0; i < MAX_MOTOR; i++){
                         if(!edtMinMotor[i].getText().toString().equals("")){
@@ -623,9 +576,6 @@ public class MainActivity extends AppCompatActivity {
                         else{
                             data += "0";
                         }
-                        if(i == (MAX_MOTOR - 1)){
-                            break;
-                        }
                         data += ",";
                     }
                     for(int i = 0; i < MAX_MOTOR; i++){
@@ -645,6 +595,9 @@ public class MainActivity extends AppCompatActivity {
                     mConnectedThread.write(bytes);
 
                     Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Kết nối thiết bị, chuyển Manual!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -690,7 +643,7 @@ public class MainActivity extends AppCompatActivity {
         btnSaveStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mmDevice !=null && isConnected(mmDevice)) {
+                if (mmDevice !=null && isConnected(mmDevice) && txtModeRunBoard.getText().toString().contains("Manual")) {
                     String data = "{\"type\":\"step\",\"1\":[";
 
                     for(int i = 0; i < MAX_MOTOR; i++){
@@ -726,6 +679,9 @@ public class MainActivity extends AppCompatActivity {
                     mConnectedThread.write(bytes);
                     Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
                 }
+                else{
+                    Toast.makeText(MainActivity.this, "Kết nối thiết bị, chuyển Manual!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -757,16 +713,22 @@ public class MainActivity extends AppCompatActivity {
                     txtNameOpenMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
                     txtNameCloseMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
                 }
-                if (mmDevice !=null && isConnected(mmDevice)) {
+                if (mmDevice !=null && isConnected(mmDevice) && txtModeRunBoard.getText().toString().contains("Manual")) {
                     String data = "{\"type\":\"voltage\",\"1\":[";
                     for(int i = 0; i < MAX_MOTOR; i++){
                         data += String.valueOf(spnVoltageMotor[i].getSelectedItemPosition());
+                        if(i == (MAX_MOTOR - 1)){
+                            break;
+                        }
                         data += ",";
                     }
                     data += "]}";
                     byte[] bytes = data.getBytes(Charset.defaultCharset());
                     mConnectedThread.write(bytes);
                     Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Kết nối thiết bị, chuyển Manual!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1029,15 +991,6 @@ public class MainActivity extends AppCompatActivity {
         checkDisableMotor[7] = findViewById(R.id.checkDisableMotor8);
         checkDisableMotor[8] = findViewById(R.id.checkDisableMotor9);
 
-        btnSaveDataMotor[0] = findViewById(R.id.btnSaveDataMotor1);
-        btnSaveDataMotor[1] = findViewById(R.id.btnSaveDataMotor2);
-        btnSaveDataMotor[2] = findViewById(R.id.btnSaveDataMotor3);
-        btnSaveDataMotor[3] = findViewById(R.id.btnSaveDataMotor4);
-        btnSaveDataMotor[4] = findViewById(R.id.btnSaveDataMotor5);
-        btnSaveDataMotor[5] = findViewById(R.id.btnSaveDataMotor6);
-        btnSaveDataMotor[6] = findViewById(R.id.btnSaveDataMotor7);
-        btnSaveDataMotor[7] = findViewById(R.id.btnSaveDataMotor8);
-        btnSaveDataMotor[8] = findViewById(R.id.btnSaveDataMotor9);
         btnSaveDataAllMotor = findViewById(R.id.btnSaveDataAllMotor);
 
 
@@ -1930,7 +1883,7 @@ public class MainActivity extends AppCompatActivity {
                                         txtCurrent[i].setText(String.valueOf(data[i]) + " mA");
                                     }
                                     if(array.length() >= MAX_MOTOR){
-                                        txtPinVoltage.setText(String.valueOf(data[9]) + "V");
+                                        txtPinVoltage.setText("Pin: " + String.valueOf(data[9]) + "V");
                                         txtTotalPower.setText("Total: " + String.valueOf(data[10]) + "mAh");
                                         if(data[11] == 1){
                                             txtModeRunBoard.setText("Mode: Auto");
