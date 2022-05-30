@@ -277,19 +277,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 boolean isInvalidData = true;
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    if(edtNameMotor[i].getText().toString().equals("")
-                            || edtMinMotor[i].getText().toString().equals("")
-                            || edtMaxMotor[i].getText().toString().equals("")){
-                        isInvalidData = false;
-                    }
-                }
-                if(!isInvalidData){
-                    edtSaveNameSetting.getText().clear();
-                    layoutSaveDataSetting.setVisibility(View.INVISIBLE);
-                    Toast.makeText(MainActivity.this, "Chưa nhập đủ thông số!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                for(int i = 0; i < MAX_MOTOR; i++){
+//                    if(edtNameMotor[i].getText().toString().equals("")
+//                            || edtMinMotor[i].getText().toString().equals("")
+//                            || edtMaxMotor[i].getText().toString().equals("")){
+//                        isInvalidData = false;
+//                    }
+//                }
+//                if(!isInvalidData){
+//                    edtSaveNameSetting.getText().clear();
+//                    layoutSaveDataSetting.setVisibility(View.INVISIBLE);
+//                    Toast.makeText(MainActivity.this, "Chưa nhập đủ thông số!", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 proBarLoadingSaveDataSetting.setVisibility(View.VISIBLE);
                 flagSelectSaveOkSettingLayout = true;
                 String paramField = "field1=[";
@@ -302,13 +302,21 @@ public class MainActivity extends AppCompatActivity {
                 }
                 paramField += "]&field2=[";
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField += edtMinMotor[i].getText().toString();
+                    if(edtMinMotor[i].getText().toString().equals("")){
+                        paramField += "-1";
+                    }else{
+                        paramField += edtMinMotor[i].getText().toString();
+                    }
                     if(i == MAX_MOTOR - 1)break;
                     paramField += ",";
                 }
                 paramField += "]&field3=[";
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField += edtMaxMotor[i].getText().toString();
+                    if(edtMaxMotor[i].getText().toString().equals("")){
+                        paramField += "-1";
+                    }else{
+                        paramField += edtMaxMotor[i].getText().toString();
+                    }
                     if(i == MAX_MOTOR - 1)break;
                     paramField += ",";
                 }
@@ -739,7 +747,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mmDevice !=null && isConnected(mmDevice)) {
-
                     String data = "{\"type\":\"save_data\",\"name\":\"";
                     data += ST2SpinnerName.getSelectedItemPosition();
                     data += "\",\"max_current\":\"";
@@ -1231,9 +1238,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         List<String> listSetting = new ArrayList<>();
-        listSetting.add("Setting 1");
-        listSetting.add("Setting 2");
-        listSetting.add("Setting 3");
+        listSetting.add("Modal 1");
+        listSetting.add("Modal 2");
+        listSetting.add("Modal 3");
         //ArrayAdapter spinAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listSetting);
         ArrayAdapter spinnerAdapterSetting = new ArrayAdapter<>(this, R.layout.spinner_list, listSetting);
         spinnerAdapterSetting.setDropDownViewResource(R.layout.spinner_list);
@@ -1402,11 +1409,15 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 //Set Min Current
                                 for(int i = 0; i < MAX_MOTOR; i++){
-                                    edtMinMotor[i].setText(String.valueOf(MinCurrent[i]));
+                                    if(MinCurrent[i] != -1){
+                                        edtMinMotor[i].setText(String.valueOf(MinCurrent[i]));
+                                    }
                                 }
                                 //Set Max Current
                                 for(int i = 0; i < MAX_MOTOR; i++){
-                                    edtMaxMotor[i].setText(String.valueOf(MaxCurrent[i]));
+                                    if(MaxCurrent[i] != -1){
+                                        edtMaxMotor[i].setText(String.valueOf(MaxCurrent[i]));
+                                    }
                                 }
                                 //Set Reverse
                                 for(int i = 0; i < MAX_MOTOR; i++){

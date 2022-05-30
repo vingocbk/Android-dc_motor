@@ -4,7 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/HPT/AndroidStudio/Android-dc_motor/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/HPT/AndroidStudio/Android-dc_motor/app/src/main/res/layout/get_setting.xml" value="0.18342391304347827" />
         <entry key="..\:/HPT/AndroidStudio/Android-dc_motor/app/src/main/res/layout/list_device.xml" value="0.2484375" />
+        <entry key="..\:/HPT/AndroidStudio/Android-dc_motor/app/src/main/res/layout/save_setting.xml" value="0.18342391304347827" />
         <entry key="..\:/HPT/AndroidStudio/Android-dc_motor/app/src/main/res/layout/setup.xml" value="0.2484375" />
         <entry key="..\:/HPT/AndroidStudio/Android-dc_motor/app/src/main/res/layout/setup_2.xml" value="0.2484375" />
         <entry key="..\:/HPT/AndroidStudio/Android-dc_motor/app/src/main/res/layout/setup_step.xml" value="0.2484375" />
