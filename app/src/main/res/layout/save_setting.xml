@@ -8,7 +8,7 @@
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginTop="100dp"
-        android:background="#FFFFFF"
+        android:background="#E6E3E3"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -17,22 +17,27 @@
             android:background="#51020202"
             android:gravity="center"
             android:textSize="25sp"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="50dp"/>
         <TextView
             android:text="Save Name"
             android:layout_marginTop="20dp"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <EditText
             android:id="@+id/edtSaveNameSetting"
             android:layout_marginTop="20dp"
+            android:hint="Name"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <TextView
             android:text="Save To Setting"
             android:layout_marginTop="20dp"
             android:spinnerMode="dropdown"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <Spinner

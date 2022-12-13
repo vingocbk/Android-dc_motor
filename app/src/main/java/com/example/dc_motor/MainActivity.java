@@ -86,6 +86,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -131,12 +133,14 @@ public class MainActivity extends AppCompatActivity {
 
     //---------------------------------------------------
     TextView[] txtNameMotor = new TextView[MAX_MOTOR];
-    TextView[] txtMinMotor = new TextView[MAX_MOTOR];
-    TextView[] txtMaxMotor = new TextView[MAX_MOTOR];
-    TextView[] edtMinMotor = new TextView[MAX_MOTOR];
-    TextView[] edtMaxMotor = new TextView[MAX_MOTOR];
-    CheckBox[] checkReverseMotor = new CheckBox[MAX_MOTOR];
-    CheckBox[] checkDisableMotor = new CheckBox[MAX_MOTOR];
+    EditText[] edtMinCurrentMotor = new EditText[MAX_MOTOR];
+    EditText[] edtMaxCurrentMotor = new EditText[MAX_MOTOR];
+    CheckBox[] cbSelectMotor = new CheckBox[MAX_MOTOR];
+    CheckBox[] cbSelectServo = new CheckBox[MAX_MOTOR];
+    CheckBox[] cbReverseMotor = new CheckBox[MAX_MOTOR];
+    EditText[] edtMinAngleServo = new EditText[MAX_MOTOR];
+    EditText[] edtMaxAngleServo = new EditText[MAX_MOTOR];
+    EditText[] edtRunTimeServo = new EditText[MAX_MOTOR];
     Button btnSaveDataAllMotor;
 
     //---------------------------------------------
@@ -156,9 +160,6 @@ public class MainActivity extends AppCompatActivity {
     TextView txtVoltage1,txtVoltage2,txtVoltage3,txtVoltage4,txtVoltage5,txtVoltage6;
     TextView[] txtCurrent = new TextView[MAX_MOTOR];
 //    TextView txtCurrent1,txtCurrent2,txtCurrent3,txtCurrent4,txtCurrent5,txtCurrent6;
-    EditText edtSetDistantMotor1,edtSetDistantMotor2,edtSetDistantMotor3,edtSetDistantMotor4,edtSetDistantMotor5,edtSetDistantMotor6;
-    Button btnRunDistantMotor1,btnRunDistantMotor2,btnRunDistantMotor3,btnRunDistantMotor4,btnRunDistantMotor5,btnRunDistantMotor6;
-    Button btnSetDistantMotor1,btnSetDistantMotor2,btnSetDistantMotor3,btnSetDistantMotor4,btnSetDistantMotor5,btnSetDistantMotor6;
     ImageView imgRefreshData;
     //----------------setup 2-------------------------
     Spinner ST2SpinnerName;
@@ -203,19 +204,17 @@ public class MainActivity extends AppCompatActivity {
     String strIndexName = "index";
     int indexNameImageBackGround = 0;
 
-    String OPEN = "1", CLOSE = "2", STOP = "0";
-
     Boolean flagSelectGetSettingLayout = false;
     Boolean flagSelectSaveOkSettingLayout = false;
     Boolean flagSelectGetNumberDataSetting = false;
-    String urlGetNameSetting = "https://api.thingspeak.com/channels/1725474/fields/1.json?api_key=L3JZMZPK5FYFA9PP&results=1";
-    String urlGetSetting1 = "https://api.thingspeak.com/channels/1723005/feeds.json?api_key=2B92OPPGGLLJ9FQW&results=1";
-    String urlGetSetting2 = "https://api.thingspeak.com/channels/1725472/feeds.json?api_key=7T86FTOU1J8YPUOV&results=1";
-    String urlGetSetting3 = "https://api.thingspeak.com/channels/1725473/feeds.json?api_key=6JY2NDB81JL8XSZT&results=1";
-    String urlPreSendNameSetting = "https://api.thingspeak.com/update?api_key=N16UL08THD3ZCIUF&";
-    String urlPreSendSetting1 = "https://api.thingspeak.com/update?api_key=Z40R2BCIBSSAOJCT&";
-    String urlPreSendSetting2 = "https://api.thingspeak.com/update?api_key=FCFICTT66HDEYY29&";
-    String urlPreSendSetting3 = "https://api.thingspeak.com/update?api_key=UXI5VZ9KEM8S8OPF&";
+    String urlGetNameSetting = "https://api.thingspeak.com/channels/1969737/fields/1.json?api_key=ZI2MYDWIG7Y674KN&results=1";
+    String urlGetSetting1 = "https://api.thingspeak.com/channels/1969538/feeds.json?api_key=MMUTBRCJKWS1L8TN&results=1";
+    String urlGetSetting2 = "https://api.thingspeak.com/channels/1969897/feeds.json?api_key=1DHSPY6TXVSPB5Q4&results=1";
+    String urlGetSetting3 = "https://api.thingspeak.com/channels/1969899/feeds.json?api_key=LGS28Z5RN15O2R91&results=1";
+    String urlPreSendNameSetting = "https://api.thingspeak.com/update?api_key=EPA2OD7UXCTK3X8G&";
+    String urlPreSendSetting1 = "https://api.thingspeak.com/update?api_key=JGLCM0HF57JB8YBZ&";
+    String urlPreSendSetting2 = "https://api.thingspeak.com/update?api_key=MGF81HYNBX9QZQ2I&";
+    String urlPreSendSetting3 = "https://api.thingspeak.com/update?api_key=10MX1ZD6VJCN806E&";
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -279,8 +278,8 @@ public class MainActivity extends AppCompatActivity {
                 boolean isInvalidData = true;
 //                for(int i = 0; i < MAX_MOTOR; i++){
 //                    if(edtNameMotor[i].getText().toString().equals("")
-//                            || edtMinMotor[i].getText().toString().equals("")
-//                            || edtMaxMotor[i].getText().toString().equals("")){
+//                            || edtMinCurrentMotor[i].getText().toString().equals("")
+//                            || edtMaxCurrentMotor[i].getText().toString().equals("")){
 //                        isInvalidData = false;
 //                    }
 //                }
@@ -292,95 +291,126 @@ public class MainActivity extends AppCompatActivity {
 //                }
                 proBarLoadingSaveDataSetting.setVisibility(View.VISIBLE);
                 flagSelectSaveOkSettingLayout = true;
-                String paramField = "field1=[";
+                StringBuilder paramField = new StringBuilder("field1=[");
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField += "\"";
-                    paramField += edtNameMotor[i].getText().toString();
-                    paramField += "\"";
+                    paramField.append("\"");
+                    paramField.append(edtNameMotor[i].getText().toString());
+                    paramField.append("\"");
                     if(i == MAX_MOTOR - 1)break;
-                    paramField += ",";
+                    paramField.append(",");
                 }
-                paramField += "]&field2=[";
+                paramField.append("]&field2=[");
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    if(edtMinMotor[i].getText().toString().equals("")){
-                        paramField += "-1";
+                    if(edtMinCurrentMotor[i].getText().toString().equals("")){
+                        paramField.append("-1");
                     }else{
-                        paramField += edtMinMotor[i].getText().toString();
+                        paramField.append(edtMinCurrentMotor[i].getText().toString());
+                    }
+                    paramField.append(",");
+                }
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    if(edtMaxCurrentMotor[i].getText().toString().equals("")){
+                        paramField.append("-1");
+                    }else{
+                        paramField.append(edtMaxCurrentMotor[i].getText().toString());
                     }
                     if(i == MAX_MOTOR - 1)break;
-                    paramField += ",";
+                    paramField.append(",");
                 }
-                paramField += "]&field3=[";
+                paramField.append("]&field3=[");
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    if(edtMaxMotor[i].getText().toString().equals("")){
-                        paramField += "-1";
+                    if(cbSelectMotor[i].isChecked()){
+                        paramField.append("1");
+                    }else
+                        paramField.append("0");
+                    paramField.append(",");
+                }
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    if(cbSelectServo[i].isChecked()){
+                        paramField.append("1");
+                    }else
+                        paramField.append("0");
+                    paramField.append(",");
+                }
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    if(cbReverseMotor[i].isChecked()){
+                        paramField.append("1");
+                    }else
+                        paramField.append("0");
+                    if(i == MAX_MOTOR - 1)break;
+                    paramField.append(",");
+                }
+                paramField.append("]&field4=[");
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    if(edtMinAngleServo[i].getText().toString().equals("")){
+                        paramField.append("-1");
                     }else{
-                        paramField += edtMaxMotor[i].getText().toString();
+                        paramField.append(edtMinAngleServo[i].getText().toString());
+                    }
+                    paramField.append(",");
+                }
+                for(int i = 0; i < MAX_MOTOR; i++){
+                    if(edtMaxAngleServo[i].getText().toString().equals("")){
+                        paramField.append("-1");
+                    }else{
+                        paramField.append(edtMaxAngleServo[i].getText().toString());
                     }
                     if(i == MAX_MOTOR - 1)break;
-                    paramField += ",";
+                    paramField.append(",");
                 }
-                paramField += "]&field4=[";
+                paramField.append("]&field5=[");
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    if(checkReverseMotor[i].isChecked()){
-                        paramField += "1";
-                    }else
-                        paramField += "0";
+                    if(edtRunTimeServo[i].getText().toString().equals("")){
+                        paramField.append("-1");
+                    }else{
+                        paramField.append(edtRunTimeServo[i].getText().toString());
+                    }
                     if(i == MAX_MOTOR - 1)break;
-                    paramField += ",";
+                    paramField.append(",");
                 }
-                paramField += "]&field5=[";
+                paramField.append("]&field6={\"1\":[");
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    if(checkDisableMotor[i].isChecked()){
-                        paramField += "1";
-                    }else
-                        paramField += "0";
+                    paramField.append(String.valueOf(spnOpenStep1Motor[i].getSelectedItemPosition()));
                     if(i == MAX_MOTOR - 1)break;
-                    paramField += ",";
+                    paramField.append(",");
                 }
-                paramField += "]&field6={\"1\":[";
+                paramField.append("],\"2\":[");
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField += String.valueOf(spnOpenStep1Motor[i].getSelectedItemPosition());
+                    paramField.append(String.valueOf(spnOpenStep2Motor[i].getSelectedItemPosition()));
                     if(i == MAX_MOTOR - 1)break;
-                    paramField += ",";
+                    paramField.append(",");
                 }
-                paramField += "],\"2\":[";
+                paramField.append("],\"3\":[");
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField += String.valueOf(spnOpenStep2Motor[i].getSelectedItemPosition());
+                    paramField.append(String.valueOf(spnOpenStep3Motor[i].getSelectedItemPosition()));
                     if(i == MAX_MOTOR - 1)break;
-                    paramField += ",";
+                    paramField.append(",");
                 }
-                paramField += "],\"3\":[";
+                paramField.append("]}&field7={\"1\":[");
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField += String.valueOf(spnOpenStep3Motor[i].getSelectedItemPosition());
+                    paramField.append(String.valueOf(spnCloseStep1Motor[i].getSelectedItemPosition()));
                     if(i == MAX_MOTOR - 1)break;
-                    paramField += ",";
+                    paramField.append(",");
                 }
-                paramField += "]}&field7={\"1\":[";
+                paramField.append("],\"2\":[");
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField += String.valueOf(spnCloseStep1Motor[i].getSelectedItemPosition());
+                    paramField.append(String.valueOf(spnCloseStep2Motor[i].getSelectedItemPosition()));
                     if(i == MAX_MOTOR - 1)break;
-                    paramField += ",";
+                    paramField.append(",");
                 }
-                paramField += "],\"2\":[";
+                paramField.append("],\"3\":[");
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField += String.valueOf(spnCloseStep2Motor[i].getSelectedItemPosition());
+                    paramField.append(String.valueOf(spnCloseStep3Motor[i].getSelectedItemPosition()));
                     if(i == MAX_MOTOR - 1)break;
-                    paramField += ",";
+                    paramField.append(",");
                 }
-                paramField += "],\"3\":[";
+                paramField.append("]}&field8=[");
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField += String.valueOf(spnCloseStep3Motor[i].getSelectedItemPosition());
+                    paramField.append(String.valueOf(spnVoltageMotor[i].getSelectedItemPosition()));
                     if(i == MAX_MOTOR - 1)break;
-                    paramField += ",";
+                    paramField.append(",");
                 }
-                paramField += "]}&field8=[";
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField += String.valueOf(spnVoltageMotor[i].getSelectedItemPosition());
-                    if(i == MAX_MOTOR - 1)break;
-                    paramField += ",";
-                }
-                paramField += "]";
+                paramField.append("]");
 //                Log.d("http_request", param);
                 String dataSendValue = "";
                 if(spnSelectNumberSetting.getSelectedItemPosition() == 0){
@@ -492,7 +522,7 @@ public class MainActivity extends AppCompatActivity {
             btnOpenMotor[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mmDevice !=null && isConnected(mmDevice) && txtModeRunBoard.getText().toString().contains("Manual")) {
+                    if (mmDevice != null && isConnected(mmDevice) && txtModeRunBoard.getText().toString().contains("Manual")) {
                         String data = "{\"type\":\"run_no_step\",\"name\":\"" +
                                 Integer.toString(finalI) +
                                 "\",\"command\":\"open\"}";
@@ -558,48 +588,84 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (mmDevice !=null && isConnected(mmDevice) && txtModeRunBoard.getText().toString().contains("Manual")) {
-                    String data = "{\"type\":\"data\",\"1\":[";
+                    StringBuilder data = new StringBuilder("{\"type\":\"data\",\"1\":[");
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        if(!edtMinMotor[i].getText().toString().equals("")){
-                            data += edtMinMotor[i].getText().toString();
+                        if(!edtMinCurrentMotor[i].getText().toString().equals("")){
+                            data.append(edtMinCurrentMotor[i].getText().toString());
                         }
                         else{
-                            data += "0";
+                            data.append("0");
                         }
-                        data += ",";
+                        data.append(",");
                     }
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        if(!edtMaxMotor[i].getText().toString().equals("")){
-                            data += edtMaxMotor[i].getText().toString();
+                        if(!edtMaxCurrentMotor[i].getText().toString().equals("")){
+                            data.append(edtMaxCurrentMotor[i].getText().toString());
                         }
                         else{
-                            data += "0";
+                            data.append("0");
                         }
-                        data += ",";
+                        data.append(",");
                     }
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        if(checkReverseMotor[i].isChecked()){
-                            data += "1";
+                        if(cbSelectMotor[i].isChecked()){
+                            data.append("1");
                         }
                         else{
-                            data += "0";
+                            data.append("0");
                         }
-                        data += ",";
+                        data.append(",");
                     }
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        if(checkDisableMotor[i].isChecked()){
-                            data += "1";
+                        if(cbSelectServo[i].isChecked()){
+                            data.append("1");
                         }
                         else{
-                            data += "0";
+                            data.append("0");
+                        }
+                        data.append(",");
+                    }
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        if(cbReverseMotor[i].isChecked()){
+                            data.append("1");
+                        }
+                        else{
+                            data.append("0");
+                        }
+                        data.append(",");
+                    }
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        if(!edtMinAngleServo[i].getText().toString().equals("")){
+                            data.append(edtMinAngleServo[i].getText().toString());
+                        }
+                        else{
+                            data.append("0");
+                        }
+                        data.append(",");
+                    }
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        if(!edtMaxAngleServo[i].getText().toString().equals("")){
+                            data.append(edtMaxAngleServo[i].getText().toString());
+                        }
+                        else{
+                            data.append("1800");
+                        }
+                        data.append(",");
+                    }
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        if(!edtRunTimeServo[i].getText().toString().equals("")){
+                            data.append(edtRunTimeServo[i].getText().toString());
+                        }
+                        else{
+                            data.append("1000");
                         }
                         if(i == (MAX_MOTOR - 1)){
                             break;
                         }
-                        data += ",";
+                        data.append(",");
                     }
-                    data += "]}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
+                    data.append("]}");
+                    byte[] bytes = data.toString().getBytes(Charset.defaultCharset());
                     mConnectedThread.write(bytes);
 
                     Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
@@ -634,7 +700,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         //--------------------------------------------------------------------
         imgRefreshData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -652,38 +717,38 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (mmDevice !=null && isConnected(mmDevice) && txtModeRunBoard.getText().toString().contains("Manual")) {
-                    String data = "{\"type\":\"step\",\"1\":[";
+                    StringBuilder data = new StringBuilder("{\"type\":\"step\",\"1\":[");
 
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        data += String.valueOf(spnOpenStep1Motor[i].getSelectedItemPosition());
-                        data += ",";
+                        data.append(String.valueOf(spnOpenStep1Motor[i].getSelectedItemPosition()));
+                        data.append(",");
                     }
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        data += String.valueOf(spnOpenStep2Motor[i].getSelectedItemPosition());
-                        data += ",";
+                        data.append(String.valueOf(spnOpenStep2Motor[i].getSelectedItemPosition()));
+                        data.append(",");
                     }
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        data += String.valueOf(spnOpenStep3Motor[i].getSelectedItemPosition());
-                        data += ",";
+                        data.append(String.valueOf(spnOpenStep3Motor[i].getSelectedItemPosition()));
+                        data.append(",");
                     }
                     //---------Close------------------
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        data += String.valueOf(spnCloseStep1Motor[i].getSelectedItemPosition());
-                        data += ",";
+                        data.append(String.valueOf(spnCloseStep1Motor[i].getSelectedItemPosition()));
+                        data.append(",");
                     }
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        data += String.valueOf(spnCloseStep2Motor[i].getSelectedItemPosition());
-                        data += ",";
+                        data.append(String.valueOf(spnCloseStep2Motor[i].getSelectedItemPosition()));
+                        data.append(",");
                     }
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        data += String.valueOf(spnCloseStep3Motor[i].getSelectedItemPosition());
+                        data.append(String.valueOf(spnCloseStep3Motor[i].getSelectedItemPosition()));
                         if(i == (MAX_MOTOR - 1)){
                             break;
                         }
-                        data += ",";
+                        data.append(",");
                     }
-                    data += "]}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
+                    data.append("]}");
+                    byte[] bytes = data.toString().getBytes(Charset.defaultCharset());
                     mConnectedThread.write(bytes);
                     Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
                 }
@@ -722,16 +787,16 @@ public class MainActivity extends AppCompatActivity {
                     txtNameCloseMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
                 }
                 if (mmDevice !=null && isConnected(mmDevice) && txtModeRunBoard.getText().toString().contains("Manual")) {
-                    String data = "{\"type\":\"voltage\",\"1\":[";
+                    StringBuilder data = new StringBuilder("{\"type\":\"voltage\",\"1\":[");
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        data += String.valueOf(spnVoltageMotor[i].getSelectedItemPosition());
+                        data.append(String.valueOf(spnVoltageMotor[i].getSelectedItemPosition()));
                         if(i == (MAX_MOTOR - 1)){
                             break;
                         }
-                        data += ",";
+                        data.append(",");
                     }
-                    data += "]}";
-                    byte[] bytes = data.getBytes(Charset.defaultCharset());
+                    data.append("]}");
+                    byte[] bytes = data.toString().getBytes(Charset.defaultCharset());
                     mConnectedThread.write(bytes);
                     Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
                 }
@@ -828,6 +893,61 @@ public class MainActivity extends AppCompatActivity {
                 connect.start();
             }
         });
+
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                while (true){
+                    CountDownLatch latch = new CountDownLatch(1);
+                    new Timer().schedule(
+                        new TimerTask(){
+                            @Override
+                            public void run(){
+                                //if you need some code to run when the delay expires
+                                if (mmDevice == null || !isConnected(mmDevice)) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Log.d(TAG, "checkBluetoothStatus");
+                                            imgBluetoothConnection.setBackgroundResource(R.mipmap.ic_bluetooth_disconnected);
+                                            txtNameBluetoothConnection.setText("No Connected");
+                                            latch.countDown();
+                                        }
+                                    });
+                                }
+                            }
+                        }, 500);
+                    try {
+                        latch.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        thread.start();
+//        checkBluetoothStatus();
+    }
+    public void checkBluetoothStatus(){
+//        while (true){
+//            final Handler handler = new Handler();
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (mmDevice == null || !isConnected(mmDevice)) {
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Log.d(TAG, "checkBluetoothStatus");
+//                                imgBluetoothConnection.setBackgroundResource(R.mipmap.ic_bluetooth_disconnected);
+//                                txtNameBluetoothConnection.setText("No Connected");
+//                            }
+//                        });
+//                    }
+//                }
+//            }, 500);
+//        }
+
 
     }
 
@@ -928,35 +1048,15 @@ public class MainActivity extends AppCompatActivity {
         txtNameMotor[7] = findViewById(R.id.txtNameMotor8);
         txtNameMotor[8] = findViewById(R.id.txtNameMotor9);
 
-        txtMinMotor[0] = findViewById(R.id.txtMinMotor1);
-        txtMinMotor[1] = findViewById(R.id.txtMinMotor2);
-        txtMinMotor[2] = findViewById(R.id.txtMinMotor3);
-        txtMinMotor[3] = findViewById(R.id.txtMinMotor4);
-        txtMinMotor[4] = findViewById(R.id.txtMinMotor5);
-        txtMinMotor[5] = findViewById(R.id.txtMinMotor6);
-        txtMinMotor[6] = findViewById(R.id.txtMinMotor7);
-        txtMinMotor[7] = findViewById(R.id.txtMinMotor8);
-        txtMinMotor[8] = findViewById(R.id.txtMinMotor9);
-
-        txtMaxMotor[0] = findViewById(R.id.txtMaxMotor1);
-        txtMaxMotor[1] = findViewById(R.id.txtMaxMotor2);
-        txtMaxMotor[2] = findViewById(R.id.txtMaxMotor3);
-        txtMaxMotor[3] = findViewById(R.id.txtMaxMotor4);
-        txtMaxMotor[4] = findViewById(R.id.txtMaxMotor5);
-        txtMaxMotor[5] = findViewById(R.id.txtMaxMotor6);
-        txtMaxMotor[6] = findViewById(R.id.txtMaxMotor7);
-        txtMaxMotor[7] = findViewById(R.id.txtMaxMotor8);
-        txtMaxMotor[8] = findViewById(R.id.txtMaxMotor9);
-
-        edtMinMotor[0] = findViewById(R.id.edtMinMotor1);
-        edtMinMotor[1] = findViewById(R.id.edtMinMotor2);
-        edtMinMotor[2] = findViewById(R.id.edtMinMotor3);
-        edtMinMotor[3] = findViewById(R.id.edtMinMotor4);
-        edtMinMotor[4] = findViewById(R.id.edtMinMotor5);
-        edtMinMotor[5] = findViewById(R.id.edtMinMotor6);
-        edtMinMotor[6] = findViewById(R.id.edtMinMotor7);
-        edtMinMotor[7] = findViewById(R.id.edtMinMotor8);
-        edtMinMotor[8] = findViewById(R.id.edtMinMotor9);
+        edtMinCurrentMotor[0] = findViewById(R.id.edtMinCurrentMotor1);
+        edtMinCurrentMotor[1] = findViewById(R.id.edtMinCurrentMotor2);
+        edtMinCurrentMotor[2] = findViewById(R.id.edtMinCurrentMotor3);
+        edtMinCurrentMotor[3] = findViewById(R.id.edtMinCurrentMotor4);
+        edtMinCurrentMotor[4] = findViewById(R.id.edtMinCurrentMotor5);
+        edtMinCurrentMotor[5] = findViewById(R.id.edtMinCurrentMotor6);
+        edtMinCurrentMotor[6] = findViewById(R.id.edtMinCurrentMotor7);
+        edtMinCurrentMotor[7] = findViewById(R.id.edtMinCurrentMotor8);
+        edtMinCurrentMotor[8] = findViewById(R.id.edtMinCurrentMotor9);
 
         spnVoltageMotor[0] = findViewById(R.id.spnVoltageMotor1);
         spnVoltageMotor[1] = findViewById(R.id.spnVoltageMotor2);
@@ -968,35 +1068,75 @@ public class MainActivity extends AppCompatActivity {
         spnVoltageMotor[7] = findViewById(R.id.spnVoltageMotor8);
         spnVoltageMotor[8] = findViewById(R.id.spnVoltageMotor9);
 
-        edtMaxMotor[0] = findViewById(R.id.edtMaxMotor1);
-        edtMaxMotor[1] = findViewById(R.id.edtMaxMotor2);
-        edtMaxMotor[2] = findViewById(R.id.edtMaxMotor3);
-        edtMaxMotor[3] = findViewById(R.id.edtMaxMotor4);
-        edtMaxMotor[4] = findViewById(R.id.edtMaxMotor5);
-        edtMaxMotor[5] = findViewById(R.id.edtMaxMotor6);
-        edtMaxMotor[6] = findViewById(R.id.edtMaxMotor7);
-        edtMaxMotor[7] = findViewById(R.id.edtMaxMotor8);
-        edtMaxMotor[8] = findViewById(R.id.edtMaxMotor9);
+        edtMaxCurrentMotor[0] = findViewById(R.id.edtMaxCurrentMotor1);
+        edtMaxCurrentMotor[1] = findViewById(R.id.edtMaxCurrentMotor2);
+        edtMaxCurrentMotor[2] = findViewById(R.id.edtMaxCurrentMotor3);
+        edtMaxCurrentMotor[3] = findViewById(R.id.edtMaxCurrentMotor4);
+        edtMaxCurrentMotor[4] = findViewById(R.id.edtMaxCurrentMotor5);
+        edtMaxCurrentMotor[5] = findViewById(R.id.edtMaxCurrentMotor6);
+        edtMaxCurrentMotor[6] = findViewById(R.id.edtMaxCurrentMotor7);
+        edtMaxCurrentMotor[7] = findViewById(R.id.edtMaxCurrentMotor8);
+        edtMaxCurrentMotor[8] = findViewById(R.id.edtMaxCurrentMotor9);
 
-        checkReverseMotor[0] = findViewById(R.id.checkReverseMotor1);
-        checkReverseMotor[1] = findViewById(R.id.checkReverseMotor2);
-        checkReverseMotor[2] = findViewById(R.id.checkReverseMotor3);
-        checkReverseMotor[3] = findViewById(R.id.checkReverseMotor4);
-        checkReverseMotor[4] = findViewById(R.id.checkReverseMotor5);
-        checkReverseMotor[5] = findViewById(R.id.checkReverseMotor6);
-        checkReverseMotor[6] = findViewById(R.id.checkReverseMotor7);
-        checkReverseMotor[7] = findViewById(R.id.checkReverseMotor8);
-        checkReverseMotor[8] = findViewById(R.id.checkReverseMotor9);
+        cbSelectMotor[0] = findViewById(R.id.cbSelectMotor1);
+        cbSelectMotor[1] = findViewById(R.id.cbSelectMotor2);
+        cbSelectMotor[2] = findViewById(R.id.cbSelectMotor3);
+        cbSelectMotor[3] = findViewById(R.id.cbSelectMotor4);
+        cbSelectMotor[4] = findViewById(R.id.cbSelectMotor5);
+        cbSelectMotor[5] = findViewById(R.id.cbSelectMotor6);
+        cbSelectMotor[6] = findViewById(R.id.cbSelectMotor7);
+        cbSelectMotor[7] = findViewById(R.id.cbSelectMotor8);
+        cbSelectMotor[8] = findViewById(R.id.cbSelectMotor9);
 
-        checkDisableMotor[0] = findViewById(R.id.checkDisableMotor1);
-        checkDisableMotor[1] = findViewById(R.id.checkDisableMotor2);
-        checkDisableMotor[2] = findViewById(R.id.checkDisableMotor3);
-        checkDisableMotor[3] = findViewById(R.id.checkDisableMotor4);
-        checkDisableMotor[4] = findViewById(R.id.checkDisableMotor5);
-        checkDisableMotor[5] = findViewById(R.id.checkDisableMotor6);
-        checkDisableMotor[6] = findViewById(R.id.checkDisableMotor7);
-        checkDisableMotor[7] = findViewById(R.id.checkDisableMotor8);
-        checkDisableMotor[8] = findViewById(R.id.checkDisableMotor9);
+        cbSelectServo[0] = findViewById(R.id.cbSelectServo1);
+        cbSelectServo[1] = findViewById(R.id.cbSelectServo2);
+        cbSelectServo[2] = findViewById(R.id.cbSelectServo3);
+        cbSelectServo[3] = findViewById(R.id.cbSelectServo4);
+        cbSelectServo[4] = findViewById(R.id.cbSelectServo5);
+        cbSelectServo[5] = findViewById(R.id.cbSelectServo6);
+        cbSelectServo[6] = findViewById(R.id.cbSelectServo7);
+        cbSelectServo[7] = findViewById(R.id.cbSelectServo8);
+        cbSelectServo[8] = findViewById(R.id.cbSelectServo9);
+
+        cbReverseMotor[0] = findViewById(R.id.cbReverseMotor1);
+        cbReverseMotor[1] = findViewById(R.id.cbReverseMotor2);
+        cbReverseMotor[2] = findViewById(R.id.cbReverseMotor3);
+        cbReverseMotor[3] = findViewById(R.id.cbReverseMotor4);
+        cbReverseMotor[4] = findViewById(R.id.cbReverseMotor5);
+        cbReverseMotor[5] = findViewById(R.id.cbReverseMotor6);
+        cbReverseMotor[6] = findViewById(R.id.cbReverseMotor7);
+        cbReverseMotor[7] = findViewById(R.id.cbReverseMotor8);
+        cbReverseMotor[8] = findViewById(R.id.cbReverseMotor9);
+
+        edtMinAngleServo[0] = findViewById(R.id.edtMinAngleServo1);
+        edtMinAngleServo[1] = findViewById(R.id.edtMinAngleServo2);
+        edtMinAngleServo[2] = findViewById(R.id.edtMinAngleServo3);
+        edtMinAngleServo[3] = findViewById(R.id.edtMinAngleServo4);
+        edtMinAngleServo[4] = findViewById(R.id.edtMinAngleServo5);
+        edtMinAngleServo[5] = findViewById(R.id.edtMinAngleServo6);
+        edtMinAngleServo[6] = findViewById(R.id.edtMinAngleServo7);
+        edtMinAngleServo[7] = findViewById(R.id.edtMinAngleServo8);
+        edtMinAngleServo[8] = findViewById(R.id.edtMinAngleServo9);
+
+        edtMaxAngleServo[0] = findViewById(R.id.edtMaxAngleServo1);
+        edtMaxAngleServo[1] = findViewById(R.id.edtMaxAngleServo2);
+        edtMaxAngleServo[2] = findViewById(R.id.edtMaxAngleServo3);
+        edtMaxAngleServo[3] = findViewById(R.id.edtMaxAngleServo4);
+        edtMaxAngleServo[4] = findViewById(R.id.edtMaxAngleServo5);
+        edtMaxAngleServo[5] = findViewById(R.id.edtMaxAngleServo6);
+        edtMaxAngleServo[6] = findViewById(R.id.edtMaxAngleServo7);
+        edtMaxAngleServo[7] = findViewById(R.id.edtMaxAngleServo8);
+        edtMaxAngleServo[8] = findViewById(R.id.edtMaxAngleServo9);
+
+        edtRunTimeServo[0] = findViewById(R.id.edtRunTimeServo1);
+        edtRunTimeServo[1] = findViewById(R.id.edtRunTimeServo2);
+        edtRunTimeServo[2] = findViewById(R.id.edtRunTimeServo3);
+        edtRunTimeServo[3] = findViewById(R.id.edtRunTimeServo4);
+        edtRunTimeServo[4] = findViewById(R.id.edtRunTimeServo5);
+        edtRunTimeServo[5] = findViewById(R.id.edtRunTimeServo6);
+        edtRunTimeServo[6] = findViewById(R.id.edtRunTimeServo7);
+        edtRunTimeServo[7] = findViewById(R.id.edtRunTimeServo8);
+        edtRunTimeServo[8] = findViewById(R.id.edtRunTimeServo9);
 
         btnSaveDataAllMotor = findViewById(R.id.btnSaveDataAllMotor);
 
@@ -1110,26 +1250,6 @@ public class MainActivity extends AppCompatActivity {
         txtCurrent[7] = findViewById(R.id.txtCurrent8);
         txtCurrent[8] = findViewById(R.id.txtCurrent9);
 
-        edtSetDistantMotor1 = findViewById(R.id.edtSetDistantMotor1);
-        edtSetDistantMotor2 = findViewById(R.id.edtSetDistantMotor2);
-        edtSetDistantMotor3 = findViewById(R.id.edtSetDistantMotor3);
-        edtSetDistantMotor4 = findViewById(R.id.edtSetDistantMotor4);
-        edtSetDistantMotor5 = findViewById(R.id.edtSetDistantMotor5);
-        edtSetDistantMotor6 = findViewById(R.id.edtSetDistantMotor6);
-
-        btnRunDistantMotor1 = findViewById(R.id.btnRunDistantMotor1);
-        btnRunDistantMotor2 = findViewById(R.id.btnRunDistantMotor2);
-        btnRunDistantMotor3 = findViewById(R.id.btnRunDistantMotor3);
-        btnRunDistantMotor4 = findViewById(R.id.btnRunDistantMotor4);
-        btnRunDistantMotor5 = findViewById(R.id.btnRunDistantMotor5);
-        btnRunDistantMotor6 = findViewById(R.id.btnRunDistantMotor6);
-
-        btnSetDistantMotor1 = findViewById(R.id.btnSetDistantMotor1);
-        btnSetDistantMotor2 = findViewById(R.id.btnSetDistantMotor2);
-        btnSetDistantMotor3 = findViewById(R.id.btnSetDistantMotor3);
-        btnSetDistantMotor4 = findViewById(R.id.btnSetDistantMotor4);
-        btnSetDistantMotor5 = findViewById(R.id.btnSetDistantMotor5);
-        btnSetDistantMotor6 = findViewById(R.id.btnSetDistantMotor6);
         imgRefreshData = findViewById(R.id.imgRefreshData);
 
         //----------------------Setup 2-------------------------------
@@ -1322,27 +1442,43 @@ public class MainActivity extends AppCompatActivity {
                         }
                         String field2 = reader.getJSONArray("feeds").getJSONObject(0).getString("field2");
                         JSONArray arrayField2 = new JSONArray(field2);
-                        int[] MinCurrent = new int[9];
+                        int[] MinCurrent = new int[MAX_MOTOR];
                         for(int i = 0; i < MAX_MOTOR; i++){
                             MinCurrent[i] = arrayField2.getInt(i);
                         }
+                        int[] MaxCurrent = new int[MAX_MOTOR];
+                        for(int i = 0; i < MAX_MOTOR; i++){
+                            MaxCurrent[i] = arrayField2.getInt(MAX_MOTOR+i);
+                        }
                         String field3 = reader.getJSONArray("feeds").getJSONObject(0).getString("field3");
                         JSONArray arrayField3 = new JSONArray(field3);
-                        int[] MaxCurrent = new int[9];
+                        int[] selectMotor = new int[MAX_MOTOR];
                         for(int i = 0; i < MAX_MOTOR; i++){
-                            MaxCurrent[i] = arrayField3.getInt(i);
+                            selectMotor[i] = arrayField3.getInt(i);
+                        }
+                        int[] selectServo = new int[MAX_MOTOR];
+                        for(int i = 0; i < MAX_MOTOR; i++){
+                            selectServo[i] = arrayField3.getInt(MAX_MOTOR+i);
+                        }
+                        int[] Reverse = new int[MAX_MOTOR];
+                        for(int i = 0; i < MAX_MOTOR; i++){
+                            Reverse[i] = arrayField3.getInt(2*MAX_MOTOR+i);
                         }
                         String field4 = reader.getJSONArray("feeds").getJSONObject(0).getString("field4");
                         JSONArray arrayField4 = new JSONArray(field4);
-                        int[] Reverse = new int[9];
+                        int[] MinAngle = new int[MAX_MOTOR];
                         for(int i = 0; i < MAX_MOTOR; i++){
-                            Reverse[i] = arrayField4.getInt(i);
+                            MinAngle[i] = arrayField4.getInt(i);
+                        }
+                        int[] MaxAngle = new int[MAX_MOTOR];
+                        for(int i = 0; i < MAX_MOTOR; i++){
+                            MaxAngle[i] = arrayField4.getInt(MAX_MOTOR+i);
                         }
                         String field5 = reader.getJSONArray("feeds").getJSONObject(0).getString("field5");
                         JSONArray arrayField5 = new JSONArray(field5);
-                        int[] Disable = new int[9];
+                        int[] TimeServo = new int[MAX_MOTOR];
                         for(int i = 0; i < MAX_MOTOR; i++){
-                            Disable[i] = arrayField5.getInt(i);
+                            TimeServo[i] = arrayField5.getInt(i);
                         }
                         String strFieldOpenStep1 = reader.getJSONArray("feeds").getJSONObject(0).getString("field6");
                         JSONObject objectOpenStep1 = new JSONObject(strFieldOpenStep1);
@@ -1386,7 +1522,7 @@ public class MainActivity extends AppCompatActivity {
 
                         String field8 = reader.getJSONArray("feeds").getJSONObject(0).getString("field8");
                         JSONArray arrayField8 = new JSONArray(field8);
-                        int[] Voltage = new int[9];
+                        int[] Voltage = new int[MAX_MOTOR];
                         for(int i = 0; i < MAX_MOTOR; i++){
                             Voltage[i] = arrayField8.getInt(i);
                         }
@@ -1407,34 +1543,49 @@ public class MainActivity extends AppCompatActivity {
                                     txtNameOpenMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
                                     txtNameCloseMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
                                 }
-                                //Set Min Current
+                                //Set Min Max Current
                                 for(int i = 0; i < MAX_MOTOR; i++){
                                     if(MinCurrent[i] != -1){
-                                        edtMinMotor[i].setText(String.valueOf(MinCurrent[i]));
+                                        edtMinCurrentMotor[i].setText(String.valueOf(MinCurrent[i]));
                                     }
-                                }
-                                //Set Max Current
-                                for(int i = 0; i < MAX_MOTOR; i++){
                                     if(MaxCurrent[i] != -1){
-                                        edtMaxMotor[i].setText(String.valueOf(MaxCurrent[i]));
+                                        edtMaxCurrentMotor[i].setText(String.valueOf(MaxCurrent[i]));
                                     }
                                 }
-                                //Set Reverse
+                                //Set Motor_servo_reverse
                                 for(int i = 0; i < MAX_MOTOR; i++){
+                                    if(selectMotor[i] == 1){
+                                        cbSelectMotor[i].setChecked(true);
+                                    }
+                                    else{
+                                        cbSelectMotor[i].setChecked(false);
+                                    }
+                                    if(selectServo[i] == 1){
+                                        cbSelectServo[i].setChecked(true);
+                                    }
+                                    else{
+                                        cbSelectServo[i].setChecked(false);
+                                    }
                                     if(Reverse[i] == 1){
-                                        checkReverseMotor[i].setChecked(true);
+                                        cbReverseMotor[i].setChecked(true);
                                     }
                                     else{
-                                        checkReverseMotor[i].setChecked(false);
+                                        cbReverseMotor[i].setChecked(false);
                                     }
                                 }
-                                //Set Disable
+                                //set Min Max Angle
                                 for(int i = 0; i < MAX_MOTOR; i++){
-                                    if(Disable[i] == 1){
-                                        checkDisableMotor[i].setChecked(true);
+                                    if(MinAngle[i] != -1){
+                                        edtMinAngleServo[i].setText(String.valueOf(MinAngle[i]));
                                     }
-                                    else{
-                                        checkDisableMotor[i].setChecked(false);
+                                    if(MaxAngle[i] != -1){
+                                        edtMaxAngleServo[i].setText(String.valueOf(MaxAngle[i]));
+                                    }
+                                }
+                                //set Time Servo
+                                for(int i = 0; i < MAX_MOTOR; i++){
+                                    if(TimeServo[i] != -1){
+                                        edtRunTimeServo[i].setText(String.valueOf(TimeServo[i]));
                                     }
                                 }
                                 //set Step Open Close
@@ -1479,35 +1630,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    String getDataFromUrl(String url) throws IOException {
-//        cdStartHttpRequest = new CountDownLatch(1);
-//        final String[] data = {""};
-//        // Instantiate the RequestQueue.
-//        RequestQueue queue = Volley.newRequestQueue(this);
-////        url = "https://www.google.com";
-//
-////        Request a string response from the provided URL.
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        // Display the first 500 characters of the response string.
-//                        data[0] = response;
-//                        Log.d("http_request", response);
-//                        cdStartHttpRequest.countDown();
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.d("http_request", error.toString());
-//            }
-//        });
-//
-////        Add the request to the RequestQueue.
-//        queue.add(stringRequest);
-////        cdStartHttpRequest.countDown();
-//        return data[0];
-//    }
 
     public void selectImage() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -1683,30 +1805,38 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void connected(BluetoothSocket mmSocket) {
-        Log.d(TAG, "connected: Starting.");
-        pgbRefreshListDevice.setVisibility(View.INVISIBLE);
+        if(mmSocket.isConnected()){
+            Log.d(TAG, "connected: Starting.");
+            pgbRefreshListDevice.setVisibility(View.INVISIBLE);
+            // Start the thread to manage the connection and perform transmissions
+            mConnectedThread = new ConnectedThread(mmSocket);
+            mConnectedThread.start();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // Stuff that updates the UI
+                    layoutListDevice.setVisibility(View.INVISIBLE);
+                    pgbRefreshListDevice.setVisibility(View.INVISIBLE);
+                    imgBluetoothConnection.setBackgroundResource(R.mipmap.ic_bluetooth_connected);
+                    txtNameBluetoothConnection.setText(deviceName);
+                    Toast.makeText(MainActivity.this, "Connected!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // Stuff that updates the UI
+                    layoutListDevice.setVisibility(View.INVISIBLE);
+                    pgbRefreshListDevice.setVisibility(View.INVISIBLE);
+                    imgBluetoothConnection.setBackgroundResource(R.mipmap.ic_bluetooth_disconnected);
+                    txtNameBluetoothConnection.setText("No Connected");
+                    Toast.makeText(MainActivity.this, "Can't connect to device!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
-        // Start the thread to manage the connection and perform transmissions
-        mConnectedThread = new ConnectedThread(mmSocket);
-        mConnectedThread.start();
-
-//        byte[] bytes = "abcd".getBytes(Charset.defaultCharset());
-//        mConnectedThread.write(bytes);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                // Stuff that updates the UI
-
-                layoutListDevice.setVisibility(View.INVISIBLE);
-                pgbRefreshListDevice.setVisibility(View.INVISIBLE);
-
-                imgBluetoothConnection.setBackgroundResource(R.mipmap.ic_bluetooth_connected);
-                txtNameBluetoothConnection.setText(deviceName);
-
-            }
-        });
     }
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
@@ -1763,47 +1893,18 @@ public class MainActivity extends AppCompatActivity {
                                     //-------
                                     for(int i =0; i < MAX_MOTOR; i++){
                                         try {
-                                            txtMinMotor[i].setText(String.valueOf(array.getInt(i)));
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                    for(int i =0; i < MAX_MOTOR; i++){
-                                        try {
-                                            txtMaxMotor[i].setText(String.valueOf(array.getInt(MAX_MOTOR+i)));
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                    for(int i =0; i < MAX_MOTOR; i++){
-                                        try {
-//                                            txtMaxMotor[i].setText(String.valueOf(array.getInt(2*MAX_MOTOR+i)));
+//                                            txtMaxCurrentMotor[i].setText(String.valueOf(array.getInt(2*MAX_MOTOR+i)));
                                             if(array.getInt(2*MAX_MOTOR+i) == 1){
-                                                checkReverseMotor[i].setChecked(true);
+                                                cbReverseMotor[i].setChecked(true);
                                             }
                                             else{
-                                                checkReverseMotor[i].setChecked(false);
+                                                cbReverseMotor[i].setChecked(false);
                                             }
 
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
                                     }
-                                    for(int i =0; i < MAX_MOTOR; i++){
-                                        try {
-//                                            txtMaxMotor[i].setText(String.valueOf(array.getInt(2*MAX_MOTOR+i)));
-                                            if(array.getInt(3*MAX_MOTOR+i) == 1){
-                                                checkDisableMotor[i].setChecked(true);
-                                            }
-                                            else{
-                                                checkDisableMotor[i].setChecked(false);
-                                            }
-
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-
                                 }
                             });
 
