@@ -594,7 +594,7 @@ public class MainActivity extends AppCompatActivity {
                             data.append(edtMinCurrentMotor[i].getText().toString());
                         }
                         else{
-                            data.append("0");
+                            data.append("-1");
                         }
                         data.append(",");
                     }
@@ -603,7 +603,7 @@ public class MainActivity extends AppCompatActivity {
                             data.append(edtMaxCurrentMotor[i].getText().toString());
                         }
                         else{
-                            data.append("0");
+                            data.append("-1");
                         }
                         data.append(",");
                     }
@@ -639,7 +639,7 @@ public class MainActivity extends AppCompatActivity {
                             data.append(edtMinAngleServo[i].getText().toString());
                         }
                         else{
-                            data.append("0");
+                            data.append("-1");
                         }
                         data.append(",");
                     }
@@ -648,7 +648,7 @@ public class MainActivity extends AppCompatActivity {
                             data.append(edtMaxAngleServo[i].getText().toString());
                         }
                         else{
-                            data.append("1800");
+                            data.append("-1");
                         }
                         data.append(",");
                     }
@@ -657,7 +657,7 @@ public class MainActivity extends AppCompatActivity {
                             data.append(edtRunTimeServo[i].getText().toString());
                         }
                         else{
-                            data.append("1000");
+                            data.append("-1");
                         }
                         if(i == (MAX_MOTOR - 1)){
                             break;
@@ -1893,13 +1893,29 @@ public class MainActivity extends AppCompatActivity {
                                     //-------
                                     for(int i =0; i < MAX_MOTOR; i++){
                                         try {
-//                                            txtMaxCurrentMotor[i].setText(String.valueOf(array.getInt(2*MAX_MOTOR+i)));
+                                            edtMinCurrentMotor[i].setText(String.valueOf(array.getInt(i)));
+                                            edtMaxCurrentMotor[i].setText(String.valueOf(array.getInt(MAX_MOTOR+i)));
                                             if(array.getInt(2*MAX_MOTOR+i) == 1){
+                                                cbSelectMotor[i].setChecked(true);
+                                            }
+                                            else{
+                                                cbSelectMotor[i].setChecked(false);
+                                            }
+                                            if(array.getInt(3*MAX_MOTOR+i) == 1){
+                                                cbSelectServo[i].setChecked(true);
+                                            }
+                                            else{
+                                                cbSelectServo[i].setChecked(false);
+                                            }
+                                            if(array.getInt(4*MAX_MOTOR+i) == 1){
                                                 cbReverseMotor[i].setChecked(true);
                                             }
                                             else{
                                                 cbReverseMotor[i].setChecked(false);
                                             }
+                                            edtMinAngleServo[i].setText(String.valueOf(array.getInt(5*MAX_MOTOR+i)));
+                                            edtMaxAngleServo[i].setText(String.valueOf(array.getInt(6*MAX_MOTOR+i)));
+                                            edtRunTimeServo[i].setText(String.valueOf(array.getInt(7*MAX_MOTOR+i)));
 
                                         } catch (JSONException e) {
                                             e.printStackTrace();
