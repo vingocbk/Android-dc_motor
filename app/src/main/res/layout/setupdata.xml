@@ -53,14 +53,14 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"/>
                 <TextView
-                    android:text="Set Min Angle"
+                    android:text="Set Start Angle"
                     android:textColor="@color/white"
                     android:gravity="center"
                     android:layout_width="60dp"
                     android:layout_height="wrap_content">
                 </TextView>
                 <TextView
-                    android:text="Set Max Angle"
+                    android:text="Set End Angle"
                     android:textColor="@color/white"
                     android:gravity="center"
                     android:layout_width="60dp"
@@ -138,7 +138,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <EditText
-                    android:id="@+id/edtMinAngleServo1"
+                    android:id="@+id/edtStartAngleServo1"
                     android:layout_weight="1"
                     android:hint="50"
                     android:inputType="number"
@@ -147,7 +147,7 @@
                     android:layout_height="wrap_content">
                 </EditText>
                 <EditText
-                    android:id="@+id/edtMaxAngleServo1"
+                    android:id="@+id/edtEndAngleServo1"
                     android:layout_weight="1"
                     android:hint="500"
                     android:inputType="number"
@@ -229,7 +229,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <EditText
-                    android:id="@+id/edtMinAngleServo2"
+                    android:id="@+id/edtStartAngleServo2"
                     android:layout_weight="1"
                     android:hint="50"
                     android:inputType="number"
@@ -238,7 +238,7 @@
                     android:layout_height="wrap_content">
                 </EditText>
                 <EditText
-                    android:id="@+id/edtMaxAngleServo2"
+                    android:id="@+id/edtEndAngleServo2"
                     android:layout_weight="1"
                     android:hint="500"
                     android:inputType="number"
@@ -320,7 +320,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <EditText
-                    android:id="@+id/edtMinAngleServo3"
+                    android:id="@+id/edtStartAngleServo3"
                     android:layout_weight="1"
                     android:hint="50"
                     android:inputType="number"
@@ -329,7 +329,7 @@
                     android:layout_height="wrap_content">
                 </EditText>
                 <EditText
-                    android:id="@+id/edtMaxAngleServo3"
+                    android:id="@+id/edtEndAngleServo3"
                     android:layout_weight="1"
                     android:hint="500"
                     android:inputType="number"
@@ -411,7 +411,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <EditText
-                    android:id="@+id/edtMinAngleServo4"
+                    android:id="@+id/edtStartAngleServo4"
                     android:layout_weight="1"
                     android:hint="50"
                     android:inputType="number"
@@ -420,7 +420,7 @@
                     android:layout_height="wrap_content">
                 </EditText>
                 <EditText
-                    android:id="@+id/edtMaxAngleServo4"
+                    android:id="@+id/edtEndAngleServo4"
                     android:layout_weight="1"
                     android:hint="500"
                     android:inputType="number"
@@ -502,7 +502,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <EditText
-                    android:id="@+id/edtMinAngleServo5"
+                    android:id="@+id/edtStartAngleServo5"
                     android:layout_weight="1"
                     android:hint="50"
                     android:inputType="number"
@@ -511,7 +511,7 @@
                     android:layout_height="wrap_content">
                 </EditText>
                 <EditText
-                    android:id="@+id/edtMaxAngleServo5"
+                    android:id="@+id/edtEndAngleServo5"
                     android:layout_weight="1"
                     android:hint="500"
                     android:inputType="number"
@@ -593,7 +593,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <EditText
-                    android:id="@+id/edtMinAngleServo6"
+                    android:id="@+id/edtStartAngleServo6"
                     android:layout_weight="1"
                     android:hint="50"
                     android:inputType="number"
@@ -602,7 +602,7 @@
                     android:layout_height="wrap_content">
                 </EditText>
                 <EditText
-                    android:id="@+id/edtMaxAngleServo6"
+                    android:id="@+id/edtEndAngleServo6"
                     android:layout_weight="1"
                     android:hint="500"
                     android:inputType="number"
@@ -684,7 +684,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <EditText
-                    android:id="@+id/edtMinAngleServo7"
+                    android:id="@+id/edtStartAngleServo7"
                     android:layout_weight="1"
                     android:hint="50"
                     android:inputType="number"
@@ -693,7 +693,7 @@
                     android:layout_height="wrap_content">
                 </EditText>
                 <EditText
-                    android:id="@+id/edtMaxAngleServo7"
+                    android:id="@+id/edtEndAngleServo7"
                     android:layout_weight="1"
                     android:hint="500"
                     android:inputType="number"
@@ -775,7 +775,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <EditText
-                    android:id="@+id/edtMinAngleServo8"
+                    android:id="@+id/edtStartAngleServo8"
                     android:layout_weight="1"
                     android:hint="50"
                     android:inputType="number"
@@ -784,7 +784,7 @@
                     android:layout_height="wrap_content">
                 </EditText>
                 <EditText
-                    android:id="@+id/edtMaxAngleServo8"
+                    android:id="@+id/edtEndAngleServo8"
                     android:layout_weight="1"
                     android:hint="500"
                     android:inputType="number"
@@ -866,7 +866,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <EditText
-                    android:id="@+id/edtMinAngleServo9"
+                    android:id="@+id/edtStartAngleServo9"
                     android:layout_weight="1"
                     android:hint="50"
                     android:inputType="number"
@@ -875,7 +875,7 @@
                     android:layout_height="wrap_content">
                 </EditText>
                 <EditText
-                    android:id="@+id/edtMaxAngleServo9"
+                    android:id="@+id/edtEndAngleServo9"
                     android:layout_weight="1"
                     android:hint="500"
                     android:inputType="number"

@@ -138,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
     CheckBox[] cbSelectMotor = new CheckBox[MAX_MOTOR];
     CheckBox[] cbSelectServo = new CheckBox[MAX_MOTOR];
     CheckBox[] cbReverseMotor = new CheckBox[MAX_MOTOR];
-    EditText[] edtMinAngleServo = new EditText[MAX_MOTOR];
-    EditText[] edtMaxAngleServo = new EditText[MAX_MOTOR];
+    EditText[] edtStartAngleServo = new EditText[MAX_MOTOR];
+    EditText[] edtEndAngleServo = new EditText[MAX_MOTOR];
     EditText[] edtRunTimeServo = new EditText[MAX_MOTOR];
     Button btnSaveDataAllMotor;
 
@@ -342,18 +342,18 @@ public class MainActivity extends AppCompatActivity {
                 }
                 paramField.append("]&field4=[");
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    if(edtMinAngleServo[i].getText().toString().equals("")){
+                    if(edtStartAngleServo[i].getText().toString().equals("")){
                         paramField.append("-1");
                     }else{
-                        paramField.append(edtMinAngleServo[i].getText().toString());
+                        paramField.append(edtStartAngleServo[i].getText().toString());
                     }
                     paramField.append(",");
                 }
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    if(edtMaxAngleServo[i].getText().toString().equals("")){
+                    if(edtEndAngleServo[i].getText().toString().equals("")){
                         paramField.append("-1");
                     }else{
-                        paramField.append(edtMaxAngleServo[i].getText().toString());
+                        paramField.append(edtEndAngleServo[i].getText().toString());
                     }
                     if(i == MAX_MOTOR - 1)break;
                     paramField.append(",");
@@ -635,8 +635,8 @@ public class MainActivity extends AppCompatActivity {
                         data.append(",");
                     }
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        if(!edtMinAngleServo[i].getText().toString().equals("")){
-                            data.append(edtMinAngleServo[i].getText().toString());
+                        if(!edtStartAngleServo[i].getText().toString().equals("")){
+                            data.append(edtStartAngleServo[i].getText().toString());
                         }
                         else{
                             data.append("-1");
@@ -644,8 +644,8 @@ public class MainActivity extends AppCompatActivity {
                         data.append(",");
                     }
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        if(!edtMaxAngleServo[i].getText().toString().equals("")){
-                            data.append(edtMaxAngleServo[i].getText().toString());
+                        if(!edtEndAngleServo[i].getText().toString().equals("")){
+                            data.append(edtEndAngleServo[i].getText().toString());
                         }
                         else{
                             data.append("-1");
@@ -1108,25 +1108,25 @@ public class MainActivity extends AppCompatActivity {
         cbReverseMotor[7] = findViewById(R.id.cbReverseMotor8);
         cbReverseMotor[8] = findViewById(R.id.cbReverseMotor9);
 
-        edtMinAngleServo[0] = findViewById(R.id.edtMinAngleServo1);
-        edtMinAngleServo[1] = findViewById(R.id.edtMinAngleServo2);
-        edtMinAngleServo[2] = findViewById(R.id.edtMinAngleServo3);
-        edtMinAngleServo[3] = findViewById(R.id.edtMinAngleServo4);
-        edtMinAngleServo[4] = findViewById(R.id.edtMinAngleServo5);
-        edtMinAngleServo[5] = findViewById(R.id.edtMinAngleServo6);
-        edtMinAngleServo[6] = findViewById(R.id.edtMinAngleServo7);
-        edtMinAngleServo[7] = findViewById(R.id.edtMinAngleServo8);
-        edtMinAngleServo[8] = findViewById(R.id.edtMinAngleServo9);
+        edtStartAngleServo[0] = findViewById(R.id.edtStartAngleServo1);
+        edtStartAngleServo[1] = findViewById(R.id.edtStartAngleServo2);
+        edtStartAngleServo[2] = findViewById(R.id.edtStartAngleServo3);
+        edtStartAngleServo[3] = findViewById(R.id.edtStartAngleServo4);
+        edtStartAngleServo[4] = findViewById(R.id.edtStartAngleServo5);
+        edtStartAngleServo[5] = findViewById(R.id.edtStartAngleServo6);
+        edtStartAngleServo[6] = findViewById(R.id.edtStartAngleServo7);
+        edtStartAngleServo[7] = findViewById(R.id.edtStartAngleServo8);
+        edtStartAngleServo[8] = findViewById(R.id.edtStartAngleServo9);
 
-        edtMaxAngleServo[0] = findViewById(R.id.edtMaxAngleServo1);
-        edtMaxAngleServo[1] = findViewById(R.id.edtMaxAngleServo2);
-        edtMaxAngleServo[2] = findViewById(R.id.edtMaxAngleServo3);
-        edtMaxAngleServo[3] = findViewById(R.id.edtMaxAngleServo4);
-        edtMaxAngleServo[4] = findViewById(R.id.edtMaxAngleServo5);
-        edtMaxAngleServo[5] = findViewById(R.id.edtMaxAngleServo6);
-        edtMaxAngleServo[6] = findViewById(R.id.edtMaxAngleServo7);
-        edtMaxAngleServo[7] = findViewById(R.id.edtMaxAngleServo8);
-        edtMaxAngleServo[8] = findViewById(R.id.edtMaxAngleServo9);
+        edtEndAngleServo[0] = findViewById(R.id.edtEndAngleServo1);
+        edtEndAngleServo[1] = findViewById(R.id.edtEndAngleServo2);
+        edtEndAngleServo[2] = findViewById(R.id.edtEndAngleServo3);
+        edtEndAngleServo[3] = findViewById(R.id.edtEndAngleServo4);
+        edtEndAngleServo[4] = findViewById(R.id.edtEndAngleServo5);
+        edtEndAngleServo[5] = findViewById(R.id.edtEndAngleServo6);
+        edtEndAngleServo[6] = findViewById(R.id.edtEndAngleServo7);
+        edtEndAngleServo[7] = findViewById(R.id.edtEndAngleServo8);
+        edtEndAngleServo[8] = findViewById(R.id.edtEndAngleServo9);
 
         edtRunTimeServo[0] = findViewById(R.id.edtRunTimeServo1);
         edtRunTimeServo[1] = findViewById(R.id.edtRunTimeServo2);
@@ -1466,9 +1466,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                         String field4 = reader.getJSONArray("feeds").getJSONObject(0).getString("field4");
                         JSONArray arrayField4 = new JSONArray(field4);
-                        int[] MinAngle = new int[MAX_MOTOR];
+                        int[] StartAngle = new int[MAX_MOTOR];
                         for(int i = 0; i < MAX_MOTOR; i++){
-                            MinAngle[i] = arrayField4.getInt(i);
+                            StartAngle[i] = arrayField4.getInt(i);
                         }
                         int[] MaxAngle = new int[MAX_MOTOR];
                         for(int i = 0; i < MAX_MOTOR; i++){
@@ -1575,11 +1575,11 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 //set Min Max Angle
                                 for(int i = 0; i < MAX_MOTOR; i++){
-                                    if(MinAngle[i] != -1){
-                                        edtMinAngleServo[i].setText(String.valueOf(MinAngle[i]));
+                                    if(StartAngle[i] != -1){
+                                        edtStartAngleServo[i].setText(String.valueOf(StartAngle[i]));
                                     }
                                     if(MaxAngle[i] != -1){
-                                        edtMaxAngleServo[i].setText(String.valueOf(MaxAngle[i]));
+                                        edtEndAngleServo[i].setText(String.valueOf(MaxAngle[i]));
                                     }
                                 }
                                 //set Time Servo
@@ -1880,7 +1880,7 @@ public class MainActivity extends AppCompatActivity {
                     incomingMessage += new String(buffer, 0, bytes);
 //                    Log.d(TAG, "InputStream---: " + incomingMessage);
                     if(incomingMessage.contains("}")){
-                        Log.d(TAG, "InputStream: " + incomingMessage);
+                        Log.d("InputStream", "InputStream: " + incomingMessage);
                         JSONObject reader = new JSONObject(incomingMessage);
                         incomingMessage = "";
                         //min max data current
@@ -1913,11 +1913,12 @@ public class MainActivity extends AppCompatActivity {
                                             else{
                                                 cbReverseMotor[i].setChecked(false);
                                             }
-                                            edtMinAngleServo[i].setText(String.valueOf(array.getInt(5*MAX_MOTOR+i)));
-                                            edtMaxAngleServo[i].setText(String.valueOf(array.getInt(6*MAX_MOTOR+i)));
+                                            edtStartAngleServo[i].setText(String.valueOf(array.getInt(5*MAX_MOTOR+i)));
+                                            edtEndAngleServo[i].setText(String.valueOf(array.getInt(6*MAX_MOTOR+i)));
                                             edtRunTimeServo[i].setText(String.valueOf(array.getInt(7*MAX_MOTOR+i)));
 
                                         } catch (JSONException e) {
+//                                            Log.d(TAG, "InputStream: " + e.toString());
                                             e.printStackTrace();
                                         }
                                     }
@@ -1997,7 +1998,7 @@ public class MainActivity extends AppCompatActivity {
                                     data[i] = array.getDouble(i);
                                 }
                                 catch (JSONException e) {
-                                    Log.e("InputStream", "write: Error reading Input Stream. " + e.getMessage());
+//                                    Log.e("InputStream", "write: Error reading Input Stream. " + e.getMessage());
                                 }
 
                             }
@@ -2045,7 +2046,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } catch (IOException | JSONException e) {
                     incomingMessage = "";
-                    Log.e("InputStream", "write: Error reading Input Stream. " + e.getMessage());
+//                    Log.e("InputStream", "write: Error reading Input Stream. " + e.getMessage());
 //                    Toast.makeText(MainActivity.this, "Kết nối thất bại", Toast.LENGTH_SHORT).show();
 //                    break;
                 }
