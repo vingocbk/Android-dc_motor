@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     Button[] btnCloseMotor = new Button[MAX_MOTOR];
     Button btnSaveNameMotor, btnResetTotalPower;
     ImageView imgRefreshVoltage;
-    TextView txtPinVoltage, txtTotalPower, txtModeRunBoard;
+    TextView txtPinVoltage, txtTotalPower, txtModeRunBoard, txtModalLoading;
 
     //---------------------------------------------------
     TextView[] txtNameMotor = new TextView[MAX_MOTOR];
@@ -207,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
     Boolean flagSelectGetSettingLayout = false;
     Boolean flagSelectSaveOkSettingLayout = false;
     Boolean flagSelectGetNumberDataSetting = false;
+    int flagSelectModalLoading = 0;
     String urlGetNameSetting = "https://api.thingspeak.com/channels/1969737/fields/1.json?api_key=ZI2MYDWIG7Y674KN&results=1";
     String urlGetSetting1 = "https://api.thingspeak.com/channels/1969538/feeds.json?api_key=MMUTBRCJKWS1L8TN&results=1";
     String urlGetSetting2 = "https://api.thingspeak.com/channels/1969897/feeds.json?api_key=1DHSPY6TXVSPB5Q4&results=1";
@@ -406,7 +407,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 paramField.append("]}&field8=[");
                 for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField.append(String.valueOf(spnVoltageMotor[i].getSelectedItemPosition()));
+//                    paramField.append(String.valueOf(spnVoltageMotor[i].getSelectedItemPosition()));
+                    paramField.append("0");
                     if(i == MAX_MOTOR - 1)break;
                     paramField.append(",");
                 }
@@ -489,6 +491,7 @@ public class MainActivity extends AppCompatActivity {
                     switch (finalI){
                     case 0:
                         try {
+                            flagSelectModalLoading = 1;
                             getDataFromUrl(urlGetSetting1);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -497,6 +500,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 1:
                         try {
+                            flagSelectModalLoading = 2;
                             getDataFromUrl(urlGetSetting2);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -505,6 +509,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 2:
                         try {
+                            flagSelectModalLoading = 3;
                             getDataFromUrl(urlGetSetting3);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -1035,6 +1040,7 @@ public class MainActivity extends AppCompatActivity {
         txtPinVoltage = findViewById(R.id.txtPinVoltage);
         txtTotalPower = findViewById(R.id.txtTotalPower);
         txtModeRunBoard = findViewById(R.id.txtModeRunBoard);
+        txtModalLoading = findViewById(R.id.txtModalLoading);
         imgRefreshVoltage = findViewById(R.id.imgRefreshVoltage);
         btnSaveNameMotor = findViewById(R.id.btnSaveNameMotor);
 
@@ -1530,6 +1536,19 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 layoutGetDataSetting.setVisibility(View.INVISIBLE);
+                                switch (flagSelectModalLoading){
+                                    case 1:
+                                        txtModalLoading.setText("Model 1: " + nameSetting[0]);
+                                        break;
+                                    case 2:
+                                        txtModalLoading.setText("Model 2: " + nameSetting[1]);
+                                        break;
+                                    case 3:
+                                        txtModalLoading.setText("Model 3: " + nameSetting[2]);
+                                        break;
+                                    default:
+                                        break;
+                                }
                                 //set Name
                                 for(int i = 0; i < MAX_MOTOR; i++){
                                     editor.putString(name[i], NameMotor[i]);

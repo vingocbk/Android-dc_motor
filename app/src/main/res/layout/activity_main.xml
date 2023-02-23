@@ -116,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent">
                     <LinearLayout
-                        android:weightSum="4"
+                        android:weightSum="5"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
@@ -130,6 +130,16 @@
                             android:textSize="15sp"
                             android:layout_weight="1"
                             android:textStyle="bold"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/txtModalLoading"
+                            android:textColor="@color/white"
+                            android:gravity="center"
+                            android:text="Model: None"
+                            android:textSize="15sp"
+                            android:layout_weight="1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
                         </TextView>
@@ -170,7 +180,7 @@
 
                     </LinearLayout>
                     <LinearLayout
-                        android:weightSum="6"
+                        android:weightSum="5"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
@@ -224,6 +234,7 @@
                         <Spinner
                             android:id="@+id/spnVoltageMotor1"
                             android:layout_weight="0.9"
+                            android:visibility="gone"
                             android:layout_gravity="center"
                             android:spinnerMode="dropdown"
                             android:layout_width="match_parent"
@@ -235,7 +246,7 @@
                     <LinearLayout
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:weightSum="6"
+                        android:weightSum="5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <EditText
@@ -288,6 +299,7 @@
                         <Spinner
                             android:id="@+id/spnVoltageMotor2"
                             android:layout_weight="0.9"
+                            android:visibility="gone"
                             android:layout_gravity="center"
                             android:spinnerMode="dropdown"
                             android:layout_width="match_parent"
@@ -298,7 +310,7 @@
                     <LinearLayout
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:weightSum="6"
+                        android:weightSum="5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <EditText
@@ -351,6 +363,7 @@
                         <Spinner
                             android:id="@+id/spnVoltageMotor3"
                             android:layout_weight="0.9"
+                            android:visibility="gone"
                             android:layout_gravity="center"
                             android:spinnerMode="dropdown"
                             android:layout_width="match_parent"
@@ -361,7 +374,7 @@
                     <LinearLayout
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:weightSum="6"
+                        android:weightSum="5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <EditText
@@ -414,6 +427,7 @@
                         <Spinner
                             android:id="@+id/spnVoltageMotor4"
                             android:layout_weight="0.9"
+                            android:visibility="gone"
                             android:layout_gravity="center"
                             android:spinnerMode="dropdown"
                             android:layout_width="match_parent"
@@ -424,7 +438,7 @@
                     <LinearLayout
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:weightSum="6"
+                        android:weightSum="5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <EditText
@@ -477,6 +491,7 @@
                         <Spinner
                             android:id="@+id/spnVoltageMotor5"
                             android:layout_weight="0.9"
+                            android:visibility="gone"
                             android:layout_gravity="center"
                             android:spinnerMode="dropdown"
                             android:layout_width="match_parent"
@@ -486,7 +501,7 @@
                     <LinearLayout
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:weightSum="6"
+                        android:weightSum="5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <EditText
@@ -539,6 +554,7 @@
                         <Spinner
                             android:id="@+id/spnVoltageMotor6"
                             android:layout_weight="0.9"
+                            android:visibility="gone"
                             android:layout_gravity="center"
                             android:spinnerMode="dropdown"
                             android:layout_width="match_parent"
@@ -548,7 +564,7 @@
                     <LinearLayout
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:weightSum="6"
+                        android:weightSum="5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <EditText
@@ -601,6 +617,7 @@
                         <Spinner
                             android:id="@+id/spnVoltageMotor7"
                             android:layout_weight="0.9"
+                            android:visibility="gone"
                             android:layout_gravity="center"
                             android:spinnerMode="dropdown"
                             android:layout_width="match_parent"
@@ -610,7 +627,7 @@
                     <LinearLayout
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:weightSum="6"
+                        android:weightSum="5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <EditText
@@ -663,6 +680,7 @@
                         <Spinner
                             android:id="@+id/spnVoltageMotor8"
                             android:layout_weight="0.9"
+                            android:visibility="gone"
                             android:layout_gravity="center"
                             android:spinnerMode="dropdown"
                             android:layout_width="match_parent"
@@ -672,7 +690,7 @@
                     <LinearLayout
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:weightSum="6"
+                        android:weightSum="5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <EditText
@@ -725,6 +743,7 @@
                         <Spinner
                             android:id="@+id/spnVoltageMotor9"
                             android:layout_weight="0.9"
+                            android:visibility="gone"
                             android:layout_gravity="center"
                             android:spinnerMode="dropdown"
                             android:layout_width="match_parent"
