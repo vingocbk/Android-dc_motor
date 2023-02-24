@@ -110,7 +110,8 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
     int MAX_MOTOR = 9;
-    ImageView imgBackground, imgSelectBackground, imgMenuListDevice, imgBluetoothConnection, imgSaveDataSetting, imgGetDataSetting, imgBackGetSetting;
+    ImageView imgBackground, imgSelectBackground, imgMenuListDevice, imgBluetoothConnection,
+            imgSaveDataSetting, imgGetDataSetting, imgBackGetSetting, imgLoadDataFromLocalFile;
     View layoutSetup, layoutListDevice, layoutSetup2, layoutSetupData, layoutSetupStep, layoutSaveDataSetting, layoutGetDataSetting;
     TextView txtBackSetting, txtBackListDevice, txtNameBluetoothConnection, txtBackSetting2, txtNextSetting;
     TextView[] txtNameGetSetting = new TextView[3];
@@ -120,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
     RelativeLayout[] rlGetDataSetting = new RelativeLayout[3];
 
-    ProgressBar pgbRefreshListDevice, proBarLoadingSaveDataSetting, proBarLoadingGetDataSetting;
+    ProgressBar pgbRefreshListDevice;
     ListView lvListDevice;
     //------------------ main menu---------------------
     EditText[] edtNameMotor = new EditText[MAX_MOTOR];
@@ -177,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
     public static int REQUEST_DISCOVERABLE_BT = 1;
     public static int REQUEST_CODE_STORAGE_PERMISSION = 1;
     public static int REQUEST_CODE_SELECT_IMAGE = 2;
+    public static int REQUEST_CODE_SELECT_FILE_SETTING = 3;
     private static final UUID MY_UUID_INSECURE =
             UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
@@ -201,12 +203,12 @@ public class MainActivity extends AppCompatActivity {
     String[] nameSetting = {"Setting 1", "Setting 2", "Setting 3"};
     String nameUri = "Uri";
     String IMAGES_FOLDER_NAME = "Landing";
+    File fileSaveText;
+    String file_folder_name_save_setting = "LandingGear";
+    String file_name_save_setting = "LandingGear.txt";
     String strIndexName = "index";
     int indexNameImageBackGround = 0;
 
-    Boolean flagSelectGetSettingLayout = false;
-    Boolean flagSelectSaveOkSettingLayout = false;
-    Boolean flagSelectGetNumberDataSetting = false;
     int flagSelectModalLoading = 0;
     String urlGetNameSetting = "https://api.thingspeak.com/channels/1969737/fields/1.json?api_key=ZI2MYDWIG7Y674KN&results=1";
     String urlGetSetting1 = "https://api.thingspeak.com/channels/1969538/feeds.json?api_key=MMUTBRCJKWS1L8TN&results=1";
@@ -276,174 +278,106 @@ public class MainActivity extends AppCompatActivity {
         btnOkSaveSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isInvalidData = true;
-//                for(int i = 0; i < MAX_MOTOR; i++){
-//                    if(edtNameMotor[i].getText().toString().equals("")
-//                            || edtMinCurrentMotor[i].getText().toString().equals("")
-//                            || edtMaxCurrentMotor[i].getText().toString().equals("")){
-//                        isInvalidData = false;
-//                    }
-//                }
-//                if(!isInvalidData){
-//                    edtSaveNameSetting.getText().clear();
-//                    layoutSaveDataSetting.setVisibility(View.INVISIBLE);
-//                    Toast.makeText(MainActivity.this, "Chưa nhập đủ thông số!", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-                proBarLoadingSaveDataSetting.setVisibility(View.VISIBLE);
-                flagSelectSaveOkSettingLayout = true;
-                StringBuilder paramField = new StringBuilder("field1=[");
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField.append("\"");
-                    paramField.append(edtNameMotor[i].getText().toString());
-                    paramField.append("\"");
-                    if(i == MAX_MOTOR - 1)break;
-                    paramField.append(",");
+                if(edtSaveNameSetting.getText().toString().equals("")){
+                    Toast.makeText(MainActivity.this, "Fill Name Setting!", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-                paramField.append("]&field2=[");
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    if(edtMinCurrentMotor[i].getText().toString().equals("")){
-                        paramField.append("-1");
-                    }else{
-                        paramField.append(edtMinCurrentMotor[i].getText().toString());
-                    }
-                    paramField.append(",");
-                }
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    if(edtMaxCurrentMotor[i].getText().toString().equals("")){
-                        paramField.append("-1");
-                    }else{
-                        paramField.append(edtMaxCurrentMotor[i].getText().toString());
-                    }
-                    if(i == MAX_MOTOR - 1)break;
-                    paramField.append(",");
-                }
-                paramField.append("]&field3=[");
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    if(cbSelectMotor[i].isChecked()){
-                        paramField.append("1");
-                    }else
-                        paramField.append("0");
-                    paramField.append(",");
-                }
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    if(cbSelectServo[i].isChecked()){
-                        paramField.append("1");
-                    }else
-                        paramField.append("0");
-                    paramField.append(",");
-                }
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    if(cbReverseMotor[i].isChecked()){
-                        paramField.append("1");
-                    }else
-                        paramField.append("0");
-                    if(i == MAX_MOTOR - 1)break;
-                    paramField.append(",");
-                }
-                paramField.append("]&field4=[");
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    if(edtStartAngleServo[i].getText().toString().equals("")){
-                        paramField.append("-1");
-                    }else{
-                        paramField.append(edtStartAngleServo[i].getText().toString());
-                    }
-                    paramField.append(",");
-                }
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    if(edtEndAngleServo[i].getText().toString().equals("")){
-                        paramField.append("-1");
-                    }else{
-                        paramField.append(edtEndAngleServo[i].getText().toString());
-                    }
-                    if(i == MAX_MOTOR - 1)break;
-                    paramField.append(",");
-                }
-                paramField.append("]&field5=[");
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    if(edtRunTimeServo[i].getText().toString().equals("")){
-                        paramField.append("-1");
-                    }else{
-                        paramField.append(edtRunTimeServo[i].getText().toString());
-                    }
-                    if(i == MAX_MOTOR - 1)break;
-                    paramField.append(",");
-                }
-                paramField.append("]&field6={\"1\":[");
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField.append(String.valueOf(spnOpenStep1Motor[i].getSelectedItemPosition()));
-                    if(i == MAX_MOTOR - 1)break;
-                    paramField.append(",");
-                }
-                paramField.append("],\"2\":[");
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField.append(String.valueOf(spnOpenStep2Motor[i].getSelectedItemPosition()));
-                    if(i == MAX_MOTOR - 1)break;
-                    paramField.append(",");
-                }
-                paramField.append("],\"3\":[");
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField.append(String.valueOf(spnOpenStep3Motor[i].getSelectedItemPosition()));
-                    if(i == MAX_MOTOR - 1)break;
-                    paramField.append(",");
-                }
-                paramField.append("]}&field7={\"1\":[");
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField.append(String.valueOf(spnCloseStep1Motor[i].getSelectedItemPosition()));
-                    if(i == MAX_MOTOR - 1)break;
-                    paramField.append(",");
-                }
-                paramField.append("],\"2\":[");
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField.append(String.valueOf(spnCloseStep2Motor[i].getSelectedItemPosition()));
-                    if(i == MAX_MOTOR - 1)break;
-                    paramField.append(",");
-                }
-                paramField.append("],\"3\":[");
-                for(int i = 0; i < MAX_MOTOR; i++){
-                    paramField.append(String.valueOf(spnCloseStep3Motor[i].getSelectedItemPosition()));
-                    if(i == MAX_MOTOR - 1)break;
-                    paramField.append(",");
-                }
-                paramField.append("]}&field8=[");
-                for(int i = 0; i < MAX_MOTOR; i++){
-//                    paramField.append(String.valueOf(spnVoltageMotor[i].getSelectedItemPosition()));
-                    paramField.append("0");
-                    if(i == MAX_MOTOR - 1)break;
-                    paramField.append(",");
-                }
-                paramField.append("]");
-//                Log.d("http_request", param);
-                String dataSendValue = "";
-                if(spnSelectNumberSetting.getSelectedItemPosition() == 0){
-                    nameSetting[0] = edtSaveNameSetting.getText().toString();
-                    dataSendValue = urlPreSendSetting1 + paramField;
-                }
-                else if(spnSelectNumberSetting.getSelectedItemPosition() == 1){
-                    nameSetting[1] = edtSaveNameSetting.getText().toString();
-                    dataSendValue = urlPreSendSetting2 + paramField;
-                }
-                else if(spnSelectNumberSetting.getSelectedItemPosition() == 2){
-                    nameSetting[2] = edtSaveNameSetting.getText().toString();
-                    dataSendValue = urlPreSendSetting3 + paramField;
-                }
-                String paramName = "field1=[\"";
-                paramName += nameSetting[0];
-                paramName += "\",\"";
-                paramName += nameSetting[1];
-                paramName += "\",\"";
-                paramName += nameSetting[2];
-                paramName += "\"]";
-                String dataSendName = urlPreSendNameSetting + paramName;
-                Log.d("http_request", "dataSendName: " + dataSendName);
-                Log.d("http_request", "dataSendValue: " + dataSendValue);
+                layoutSaveDataSetting.setVisibility(View.INVISIBLE);
+                layoutGetDataSetting.setVisibility(View.INVISIBLE);
+                int index = spnSelectNumberSetting.getSelectedItemPosition();
+                txtNameGetSetting[index].setText(edtSaveNameSetting.getText().toString());
+                String dataLocal = getDataSettingLocal();
                 try {
-                    getDataFromUrl(dataSendName);
-                    getDataFromUrl(dataSendValue);
-                } catch (IOException e) {
+                    JSONArray jsonArraySetting = new JSONArray(dataLocal);
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("name", edtSaveNameSetting.getText().toString());
+                    JSONObject jsonObjectData = new JSONObject();
+                    JSONArray jsonArrayNameMotor = new JSONArray();
+                    JSONArray jsonArrayMinCurrent = new JSONArray();
+                    JSONArray jsonArrayMaxCurrent = new JSONArray();
+                    JSONArray jsonArraySelectMotor = new JSONArray();
+                    JSONArray jsonArraySelectServo = new JSONArray();
+                    JSONArray jsonArrayReverse = new JSONArray();
+                    JSONArray jsonArrayStartAngle = new JSONArray();
+                    JSONArray jsonArrayEndAngle = new JSONArray();
+                    JSONArray jsonArrayTimeServo = new JSONArray();
+                    JSONArray jsonArrayOpenStep1 = new JSONArray();
+                    JSONArray jsonArrayOpenStep2 = new JSONArray();
+                    JSONArray jsonArrayOpenStep3 = new JSONArray();
+                    JSONArray jsonArrayCloseStep1 = new JSONArray();
+                    JSONArray jsonArrayCloseStep2 = new JSONArray();
+                    JSONArray jsonArrayCloseStep3 = new JSONArray();
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        //save Name
+                        jsonArrayNameMotor.put(edtNameMotor[i].getText());
+                        jsonObjectData.put("name", jsonArrayNameMotor);
+                        //Min Current
+                        if(edtMinCurrentMotor[i].getText().toString().equals("")){
+                            jsonArrayMinCurrent.put(-1);
+                        }else{
+                            jsonArrayMinCurrent.put(Integer.valueOf(edtMinCurrentMotor[i].getText().toString()));
+                        }
+                        jsonObjectData.put("minCurrent", jsonArrayMinCurrent);
+                        //Max Current
+                        if(edtMaxCurrentMotor[i].getText().toString().equals("")){
+                            jsonArrayMaxCurrent.put(-1);
+                        }else{
+                            jsonArrayMaxCurrent.put(Integer.valueOf(edtMaxCurrentMotor[i].getText().toString()));
+                        }
+                        jsonObjectData.put("maxCurrent", jsonArrayMaxCurrent);
+                        //Select Motor
+                        jsonArraySelectMotor.put(cbSelectMotor[i].isChecked());
+                        jsonObjectData.put("selectMotor", jsonArraySelectMotor);
+                        //Select Servo
+                        jsonArraySelectServo.put(cbSelectServo[i].isChecked());
+                        jsonObjectData.put("selectServo", jsonArraySelectServo);
+                        //Reverse
+                        jsonArrayReverse.put(cbReverseMotor[i].isChecked());
+                        jsonObjectData.put("reverse", jsonArrayReverse);
+                        //Start Angle
+                        if(edtStartAngleServo[i].getText().toString().equals("")){
+                            jsonArrayStartAngle.put(-1);
+                        }else{
+                            jsonArrayStartAngle.put(Integer.valueOf(edtStartAngleServo[i].getText().toString()));
+                        }
+                        jsonObjectData.put("startAngle", jsonArrayStartAngle);
+                        //End Angle
+                        if(edtEndAngleServo[i].getText().toString().equals("")){
+                            jsonArrayEndAngle.put(-1);
+                        }else{
+                            jsonArrayEndAngle.put(Integer.valueOf(edtEndAngleServo[i].getText().toString()));
+                        }
+                        jsonObjectData.put("endAngle", jsonArrayEndAngle);
+                        //Time Servo
+                        if(edtRunTimeServo[i].getText().toString().equals("")){
+                            jsonArrayTimeServo.put(-1);
+                        }else{
+                            jsonArrayTimeServo.put(Integer.valueOf(edtRunTimeServo[i].getText().toString()));
+                        }
+                        jsonObjectData.put("timeServo", jsonArrayTimeServo);
+                        //Step
+                        jsonArrayOpenStep1.put(spnOpenStep1Motor[i].getSelectedItemPosition());
+                        jsonObjectData.put("openStep1", jsonArrayOpenStep1);
+                        jsonArrayOpenStep2.put(spnOpenStep2Motor[i].getSelectedItemPosition());
+                        jsonObjectData.put("openStep2", jsonArrayOpenStep2);
+                        jsonArrayOpenStep3.put(spnOpenStep3Motor[i].getSelectedItemPosition());
+                        jsonObjectData.put("openStep3", jsonArrayOpenStep3);
+                        jsonArrayCloseStep1.put(spnCloseStep1Motor[i].getSelectedItemPosition());
+                        jsonObjectData.put("closeStep1", jsonArrayCloseStep1);
+                        jsonArrayCloseStep2.put(spnCloseStep2Motor[i].getSelectedItemPosition());
+                        jsonObjectData.put("closeStep2", jsonArrayCloseStep2);
+                        jsonArrayCloseStep3.put(spnCloseStep3Motor[i].getSelectedItemPosition());
+                        jsonObjectData.put("closeStep3", jsonArrayCloseStep3);
+                    }
+
+                    jsonObject.put("data", jsonObjectData);
+                    jsonArraySetting.put(index, jsonObject);
+                    dataLocal = jsonArraySetting.toString();
+                } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(MainActivity.this, "Không kết nối được Server!", Toast.LENGTH_SHORT).show();
                 }
+                Log.i("jsonObject put", dataLocal);
+                saveTextFileToLocal(dataLocal);
             }
         });
         btnCancelSaveSetting.setOnClickListener(new View.OnClickListener() {
@@ -461,16 +395,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 layoutSaveDataSetting.setVisibility(View.INVISIBLE);
                 layoutGetDataSetting.setVisibility(View.VISIBLE);
-                proBarLoadingGetDataSetting.setVisibility(View.VISIBLE);
-                flagSelectGetSettingLayout = true;
-                try {
-                    getDataFromUrl(urlGetNameSetting);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.d("http_request", e.toString());
-                }
-//                proBarLoadingGetDataSetting.setVisibility(View.INVISIBLE);
             }
         });
         imgBackGetSetting.setOnClickListener(new View.OnClickListener() {
@@ -480,42 +404,101 @@ public class MainActivity extends AppCompatActivity {
                 layoutGetDataSetting.setVisibility(View.INVISIBLE);
             }
         });
+        imgLoadDataFromLocalFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent data = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                data.setType("*/*");
+                data = Intent.createChooser(data, "Choose a file");
+                if(data.resolveActivity(getPackageManager()) != null){
+                    startActivityForResult(data, REQUEST_CODE_SELECT_FILE_SETTING);
+                }
+            }
+        });
 
         for(int i = 0; i < 3; i++){
             int finalI = i;
             rlGetDataSetting[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    flagSelectGetNumberDataSetting = true;
-                    proBarLoadingGetDataSetting.setVisibility(View.VISIBLE);
-                    switch (finalI){
-                    case 0:
-                        try {
-                            flagSelectModalLoading = 1;
-                            getDataFromUrl(urlGetSetting1);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Log.d("http_request", e.toString());
+                    layoutGetDataSetting.setVisibility(View.INVISIBLE);
+                    String data = getDataSettingLocal();
+                    try {
+                        JSONArray jsonArraySetting = new JSONArray(data);
+                        JSONObject jsonObjectSetting = jsonArraySetting.getJSONObject(finalI);
+                        txtModalLoading.setText("Model " + String.valueOf(finalI + 1) + ": "
+                                + jsonObjectSetting.getString("name"));
+                        JSONObject jsonObjectData = jsonObjectSetting.getJSONObject("data");
+                        JSONArray jsonArrayName = jsonObjectData.getJSONArray("name");
+                        JSONArray jsonArrayMinCurrent = jsonObjectData.getJSONArray("minCurrent");
+                        JSONArray jsonArrayMaxCurrent = jsonObjectData.getJSONArray("maxCurrent");
+                        JSONArray jsonArraySelectMotor = jsonObjectData.getJSONArray("selectMotor");
+                        JSONArray jsonArraySelectServo = jsonObjectData.getJSONArray("selectServo");
+                        JSONArray jsonArrayReverse = jsonObjectData.getJSONArray("reverse");
+                        JSONArray jsonArrayStartAngle = jsonObjectData.getJSONArray("startAngle");
+                        JSONArray jsonArrayEndAngle = jsonObjectData.getJSONArray("endAngle");
+                        JSONArray jsonArrayTimeServo = jsonObjectData.getJSONArray("timeServo");
+                        JSONArray jsonArrayOpenStep1 = jsonObjectData.getJSONArray("openStep1");
+                        JSONArray jsonArrayOpenStep2 = jsonObjectData.getJSONArray("openStep2");
+                        JSONArray jsonArrayOpenStep3 = jsonObjectData.getJSONArray("openStep3");
+                        JSONArray jsonArrayCloseStep1 = jsonObjectData.getJSONArray("closeStep1");
+                        JSONArray jsonArrayCloseStep2 = jsonObjectData.getJSONArray("closeStep2");
+                        JSONArray jsonArrayCloseStep3 = jsonObjectData.getJSONArray("closeStep3");
+                        for(int i = 0; i < MAX_MOTOR; i++){
+                            //name
+                            edtNameMotor[i].setText(jsonArrayName.getString(i));
+                            //Min Current
+                            if(jsonArrayMinCurrent.getInt(i) != -1){
+                                edtMinCurrentMotor[i].setText(String.valueOf(jsonArrayMinCurrent.getInt(i)));
+                            }
+                            else{
+                                edtMinCurrentMotor[i].getText().clear();
+                            }
+                            //Max Current
+                            if(jsonArrayMaxCurrent.getInt(i) != -1){
+                                edtMaxCurrentMotor[i].setText(String.valueOf(jsonArrayMaxCurrent.getInt(i)));
+                            }
+                            else{
+                                edtMaxCurrentMotor[i].getText().clear();
+                            }
+                            //Select Motor
+                            cbSelectMotor[i].setChecked(jsonArraySelectMotor.getBoolean(i));
+                            //Select Servo
+                            cbSelectServo[i].setChecked(jsonArraySelectServo.getBoolean(i));
+                            //Reverse
+                            cbReverseMotor[i].setChecked(jsonArrayReverse.getBoolean(i));
+                            //Start Angle
+                            if(jsonArrayStartAngle.getInt(i) != -1){
+                                edtStartAngleServo[i].setText(String.valueOf(jsonArrayStartAngle.getInt(i)));
+                            }
+                            else{
+                                edtStartAngleServo[i].getText().clear();
+                            }
+                            //End Angle
+                            if(jsonArrayEndAngle.getInt(i) != -1){
+                                edtEndAngleServo[i].setText(String.valueOf(jsonArrayEndAngle.getInt(i)));
+                            }
+                            else{
+                                edtEndAngleServo[i].getText().clear();
+                            }
+                            //Time Servo
+                            if(jsonArrayTimeServo.getInt(i) != -1){
+                                edtRunTimeServo[i].setText(String.valueOf(jsonArrayTimeServo.getInt(i)));
+                            }
+                            else{
+                                edtRunTimeServo[i].getText().clear();
+                            }
+                            //Step
+                            spnOpenStep1Motor[i].setSelection(jsonArrayOpenStep1.getInt(i));
+                            spnOpenStep2Motor[i].setSelection(jsonArrayOpenStep2.getInt(i));
+                            spnOpenStep3Motor[i].setSelection(jsonArrayOpenStep3.getInt(i));
+                            spnCloseStep1Motor[i].setSelection(jsonArrayCloseStep1.getInt(i));
+                            spnCloseStep2Motor[i].setSelection(jsonArrayCloseStep2.getInt(i));
+                            spnCloseStep3Motor[i].setSelection(jsonArrayCloseStep3.getInt(i));
                         }
-                        break;
-                    case 1:
-                        try {
-                            flagSelectModalLoading = 2;
-                            getDataFromUrl(urlGetSetting2);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Log.d("http_request", e.toString());
-                        }
-                        break;
-                    case 2:
-                        try {
-                            flagSelectModalLoading = 3;
-                            getDataFromUrl(urlGetSetting3);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Log.d("http_request", e.toString());
-                        }
-                        break;
+                    } catch (JSONException e) {
+                        Toast.makeText(MainActivity.this, "No Data!", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
                 }
             });
@@ -791,23 +774,23 @@ public class MainActivity extends AppCompatActivity {
                     txtNameOpenMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
                     txtNameCloseMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
                 }
-                if (mmDevice !=null && isConnected(mmDevice) && txtModeRunBoard.getText().toString().contains("Manual")) {
-                    StringBuilder data = new StringBuilder("{\"type\":\"voltage\",\"1\":[");
-                    for(int i = 0; i < MAX_MOTOR; i++){
-                        data.append(String.valueOf(spnVoltageMotor[i].getSelectedItemPosition()));
-                        if(i == (MAX_MOTOR - 1)){
-                            break;
-                        }
-                        data.append(",");
-                    }
-                    data.append("]}");
-                    byte[] bytes = data.toString().getBytes(Charset.defaultCharset());
-                    mConnectedThread.write(bytes);
-                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(MainActivity.this, "Kết nối thiết bị, chuyển Manual!", Toast.LENGTH_SHORT).show();
-                }
+//                if (mmDevice !=null && isConnected(mmDevice) && txtModeRunBoard.getText().toString().contains("Manual")) {
+//                    StringBuilder data = new StringBuilder("{\"type\":\"voltage\",\"1\":[");
+//                    for(int i = 0; i < MAX_MOTOR; i++){
+//                        data.append(String.valueOf(spnVoltageMotor[i].getSelectedItemPosition()));
+//                        if(i == (MAX_MOTOR - 1)){
+//                            break;
+//                        }
+//                        data.append(",");
+//                    }
+//                    data.append("]}");
+//                    byte[] bytes = data.toString().getBytes(Charset.defaultCharset());
+//                    mConnectedThread.write(bytes);
+//                    Toast.makeText(MainActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+//                }
+//                else{
+//                    Toast.makeText(MainActivity.this, "Kết nối thiết bị, chuyển Manual!", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
 
@@ -962,10 +945,10 @@ public class MainActivity extends AppCompatActivity {
         imgSaveDataSetting = findViewById(R.id.imgSaveDataSetting);
         imgGetDataSetting = findViewById(R.id.imgGetDataSetting);
         imgBackGetSetting = findViewById(R.id.imgBackGetSetting);
+        imgLoadDataFromLocalFile = findViewById(R.id.imgLoadDataFromLocalFile);
+
         edtSaveNameSetting = findViewById(R.id.edtSaveNameSetting);
         spnSelectNumberSetting = findViewById(R.id.spnSelectNumberSetting);
-        proBarLoadingSaveDataSetting = findViewById(R.id.proBarLoadingSaveDataSetting);
-        proBarLoadingGetDataSetting = findViewById(R.id.proBarLoadingGetDataSetting);
 
         rlGetDataSetting[0] = findViewById(R.id.rlGetDataSetting1);
         rlGetDataSetting[1] = findViewById(R.id.rlGetDataSetting2);
@@ -1374,281 +1357,128 @@ public class MainActivity extends AppCompatActivity {
         spnSelectNumberSetting.setAdapter(spinnerAdapterSetting);
 
         //------------------------------------------------------------------------------------------------------
-        flagSelectGetSettingLayout = true;
-        try {
-            getDataFromUrl(urlGetNameSetting);
+//        flagSelectGetSettingLayout = true;
+//        try {
+//            getDataFromUrl(urlGetNameSetting);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            Log.d("http_request", e.toString());
+//        }
+        readSettingFromLocal();
 
+    }
+
+    void readSettingFromLocal(){
+        //Create file if not exist
+        File fileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),file_folder_name_save_setting);
+        if (!fileDir.exists())
+        {
+            fileDir.mkdirs();
+        }
+        fileSaveText = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                + "/" + file_folder_name_save_setting,file_name_save_setting);
+        if (!fileSaveText.exists()){
+            try{
+                fileSaveText.createNewFile();
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        //read data from file
+        int length = (int) fileSaveText.length();
+        byte[] bytes = new byte[length];
+        FileInputStream in = null;
+        try {
+            in = new FileInputStream(fileSaveText);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            in.read(bytes);
         } catch (IOException e) {
             e.printStackTrace();
-            Log.d("http_request", e.toString());
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        String contentsLoadSettingLocalFile = getDataSettingLocal();
+        if(contentsLoadSettingLocalFile.equals("")){
+            JSONArray jsonArraySetting = new JSONArray();
+            for(int i = 0; i < 3; i++){
+                JSONObject jsonObjectSetting1 = new JSONObject();
+                try {
+                    jsonObjectSetting1.put("name", "No Data");
+                    jsonObjectSetting1.put("data", null);
+                    jsonArraySetting.put(jsonObjectSetting1);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            contentsLoadSettingLocalFile = jsonArraySetting.toString();
+            Log.i("jsonObject put", contentsLoadSettingLocalFile);
+            //write data begin to local file
+            saveTextFileToLocal(contentsLoadSettingLocalFile);
+        }
+        try {
+            JSONArray jsonArraySetting = new JSONArray(contentsLoadSettingLocalFile);
+            for(int i = 0; i < jsonArraySetting.length(); i++){
+                JSONObject jsonObjectSetting = jsonArraySetting.getJSONObject(i);
+                txtNameGetSetting[i].setText(jsonObjectSetting.getString("name"));
+            }
+        } catch (JSONException e) {
+            Toast.makeText(MainActivity.this, "Can,t load data setting", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+
+
+    }
+
+    String getDataSettingLocal(){
+        //read data from file
+        int length = (int) fileSaveText.length();
+        byte[] bytes = new byte[length];
+        FileInputStream in = null;
+        try {
+            in = new FileInputStream(fileSaveText);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            in.read(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return new String(bytes);
+    }
+
+    public void saveTextFileToLocal(String content){
+        try {
+            FileOutputStream fos = new FileOutputStream(fileSaveText);
+            try {
+                fos.write(content.getBytes());
+                fos.close();
+                Toast.makeText(MainActivity.this, "save!", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(MainActivity.this, "error save!", Toast.LENGTH_SHORT).show();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Toast.makeText(MainActivity.this, "file not found!", Toast.LENGTH_SHORT).show();
         }
     }
-
-    void getDataFromUrl(String url) throws IOException {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                call.cancel();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MainActivity.this, "Can't Connect To Network!",Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                final String myResponse = response.body().string();
-                Log.d("http_request", myResponse);
-//                countDownLatch.countDown();
-                proBarLoadingGetDataSetting.setVisibility(View.INVISIBLE);
-                if(flagSelectGetSettingLayout){
-                    flagSelectGetSettingLayout = false;
-                    try {
-                        JSONObject reader = new JSONObject(myResponse);
-                        String field4 = reader.getJSONArray("feeds").getJSONObject(0).getString("field1");
-                        JSONArray arrayField4 = new JSONArray(field4);
-                        nameSetting[0] = arrayField4.getString(0);
-                        nameSetting[1] = arrayField4.getString(1);
-                        nameSetting[2] = arrayField4.getString(2);
-//                        Log.d("http_request", name1);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                txtNameGetSetting[0].setText(nameSetting[0]);
-                                txtNameGetSetting[1].setText(nameSetting[1]);
-                                txtNameGetSetting[2].setText(nameSetting[2]);
-                            }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Log.d("http_request", e.toString());
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(MainActivity.this, "Không thể lấy dữ liệu!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                }
-                else if(flagSelectGetNumberDataSetting){
-                    flagSelectGetNumberDataSetting = false;
-
-                    try {
-                        JSONObject reader = new JSONObject(myResponse);
-                        String field1 = reader.getJSONArray("feeds").getJSONObject(0).getString("field1");
-                        JSONArray arrayField1 = new JSONArray(field1);
-                        String[] NameMotor = new String[MAX_MOTOR];
-                        for(int i = 0; i < MAX_MOTOR; i++){
-                            NameMotor[i] = arrayField1.getString(i);
-                        }
-                        String field2 = reader.getJSONArray("feeds").getJSONObject(0).getString("field2");
-                        JSONArray arrayField2 = new JSONArray(field2);
-                        int[] MinCurrent = new int[MAX_MOTOR];
-                        for(int i = 0; i < MAX_MOTOR; i++){
-                            MinCurrent[i] = arrayField2.getInt(i);
-                        }
-                        int[] MaxCurrent = new int[MAX_MOTOR];
-                        for(int i = 0; i < MAX_MOTOR; i++){
-                            MaxCurrent[i] = arrayField2.getInt(MAX_MOTOR+i);
-                        }
-                        String field3 = reader.getJSONArray("feeds").getJSONObject(0).getString("field3");
-                        JSONArray arrayField3 = new JSONArray(field3);
-                        int[] selectMotor = new int[MAX_MOTOR];
-                        for(int i = 0; i < MAX_MOTOR; i++){
-                            selectMotor[i] = arrayField3.getInt(i);
-                        }
-                        int[] selectServo = new int[MAX_MOTOR];
-                        for(int i = 0; i < MAX_MOTOR; i++){
-                            selectServo[i] = arrayField3.getInt(MAX_MOTOR+i);
-                        }
-                        int[] Reverse = new int[MAX_MOTOR];
-                        for(int i = 0; i < MAX_MOTOR; i++){
-                            Reverse[i] = arrayField3.getInt(2*MAX_MOTOR+i);
-                        }
-                        String field4 = reader.getJSONArray("feeds").getJSONObject(0).getString("field4");
-                        JSONArray arrayField4 = new JSONArray(field4);
-                        int[] StartAngle = new int[MAX_MOTOR];
-                        for(int i = 0; i < MAX_MOTOR; i++){
-                            StartAngle[i] = arrayField4.getInt(i);
-                        }
-                        int[] MaxAngle = new int[MAX_MOTOR];
-                        for(int i = 0; i < MAX_MOTOR; i++){
-                            MaxAngle[i] = arrayField4.getInt(MAX_MOTOR+i);
-                        }
-                        String field5 = reader.getJSONArray("feeds").getJSONObject(0).getString("field5");
-                        JSONArray arrayField5 = new JSONArray(field5);
-                        int[] TimeServo = new int[MAX_MOTOR];
-                        for(int i = 0; i < MAX_MOTOR; i++){
-                            TimeServo[i] = arrayField5.getInt(i);
-                        }
-                        String strFieldOpenStep1 = reader.getJSONArray("feeds").getJSONObject(0).getString("field6");
-                        JSONObject objectOpenStep1 = new JSONObject(strFieldOpenStep1);
-                        String strOpenStep1 = objectOpenStep1.getString("1");
-                        JSONArray arrayOpenStep1= new JSONArray(strOpenStep1);
-                        int[] intOpenStep1 = new int[9];
-                        String strFieldOpenStep2 = reader.getJSONArray("feeds").getJSONObject(0).getString("field6");
-                        JSONObject objectOpenStep2 = new JSONObject(strFieldOpenStep2);
-                        String strOpenStep2 = objectOpenStep2.getString("2");
-                        JSONArray arrayOpenStep2= new JSONArray(strOpenStep2);
-                        int[] intOpenStep2 = new int[9];
-                        String strFieldOpenStep3 = reader.getJSONArray("feeds").getJSONObject(0).getString("field6");
-                        JSONObject objectOpenStep3 = new JSONObject(strFieldOpenStep3);
-                        String strOpenStep3 = objectOpenStep3.getString("3");
-                        JSONArray arrayOpenStep3= new JSONArray(strOpenStep3);
-                        int[] intOpenStep3 = new int[9];
-                        String strFieldCloseStep1 = reader.getJSONArray("feeds").getJSONObject(0).getString("field7");
-                        JSONObject objectCloseStep1 = new JSONObject(strFieldCloseStep1);
-                        String strCloseStep1 = objectCloseStep1.getString("1");
-                        JSONArray arrayCloseStep1= new JSONArray(strCloseStep1);
-                        int[] intCloseStep1 = new int[9];
-                        String strFieldCloseStep2 = reader.getJSONArray("feeds").getJSONObject(0).getString("field7");
-                        JSONObject objectCloseStep2 = new JSONObject(strFieldCloseStep2);
-                        String strCloseStep2 = objectCloseStep2.getString("2");
-                        JSONArray arrayCloseStep2= new JSONArray(strCloseStep2);
-                        int[] intCloseStep2 = new int[9];
-                        String strFieldCloseStep3 = reader.getJSONArray("feeds").getJSONObject(0).getString("field7");
-                        JSONObject objectCloseStep3 = new JSONObject(strFieldCloseStep3);
-                        String strCloseStep3 = objectCloseStep3.getString("3");
-                        JSONArray arrayCloseStep3= new JSONArray(strCloseStep3);
-                        int[] intCloseStep3 = new int[9];
-
-                        for(int i = 0; i < MAX_MOTOR; i++){
-                            intOpenStep1[i] = arrayOpenStep1.getInt(i);
-                            intOpenStep2[i] = arrayOpenStep2.getInt(i);
-                            intOpenStep3[i] = arrayOpenStep3.getInt(i);
-                            intCloseStep1[i] = arrayCloseStep1.getInt(i);
-                            intCloseStep2[i] = arrayCloseStep2.getInt(i);
-                            intCloseStep3[i] = arrayCloseStep3.getInt(i);
-                        }
-
-                        String field8 = reader.getJSONArray("feeds").getJSONObject(0).getString("field8");
-                        JSONArray arrayField8 = new JSONArray(field8);
-                        int[] Voltage = new int[MAX_MOTOR];
-                        for(int i = 0; i < MAX_MOTOR; i++){
-                            Voltage[i] = arrayField8.getInt(i);
-                        }
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                layoutGetDataSetting.setVisibility(View.INVISIBLE);
-                                switch (flagSelectModalLoading){
-                                    case 1:
-                                        txtModalLoading.setText("Model 1: " + nameSetting[0]);
-                                        break;
-                                    case 2:
-                                        txtModalLoading.setText("Model 2: " + nameSetting[1]);
-                                        break;
-                                    case 3:
-                                        txtModalLoading.setText("Model 3: " + nameSetting[2]);
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                //set Name
-                                for(int i = 0; i < MAX_MOTOR; i++){
-                                    editor.putString(name[i], NameMotor[i]);
-                                    edtNameMotor[i].clearFocus();
-//                                    edtNameMotor[i].setCursorVisible(false);
-                                }
-                                editor.commit();
-                                for(int i = 0; i < MAX_MOTOR; i++){
-                                    edtNameMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
-                                    txtNameMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
-                                    txtNameOpenMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
-                                    txtNameCloseMotor[i].setText(sharedPreferences.getString(name[i], name[i]));
-                                }
-                                //Set Min Max Current
-                                for(int i = 0; i < MAX_MOTOR; i++){
-                                    if(MinCurrent[i] != -1){
-                                        edtMinCurrentMotor[i].setText(String.valueOf(MinCurrent[i]));
-                                    }
-                                    if(MaxCurrent[i] != -1){
-                                        edtMaxCurrentMotor[i].setText(String.valueOf(MaxCurrent[i]));
-                                    }
-                                }
-                                //Set Motor_servo_reverse
-                                for(int i = 0; i < MAX_MOTOR; i++){
-                                    if(selectMotor[i] == 1){
-                                        cbSelectMotor[i].setChecked(true);
-                                    }
-                                    else{
-                                        cbSelectMotor[i].setChecked(false);
-                                    }
-                                    if(selectServo[i] == 1){
-                                        cbSelectServo[i].setChecked(true);
-                                    }
-                                    else{
-                                        cbSelectServo[i].setChecked(false);
-                                    }
-                                    if(Reverse[i] == 1){
-                                        cbReverseMotor[i].setChecked(true);
-                                    }
-                                    else{
-                                        cbReverseMotor[i].setChecked(false);
-                                    }
-                                }
-                                //set Min Max Angle
-                                for(int i = 0; i < MAX_MOTOR; i++){
-                                    if(StartAngle[i] != -1){
-                                        edtStartAngleServo[i].setText(String.valueOf(StartAngle[i]));
-                                    }
-                                    if(MaxAngle[i] != -1){
-                                        edtEndAngleServo[i].setText(String.valueOf(MaxAngle[i]));
-                                    }
-                                }
-                                //set Time Servo
-                                for(int i = 0; i < MAX_MOTOR; i++){
-                                    if(TimeServo[i] != -1){
-                                        edtRunTimeServo[i].setText(String.valueOf(TimeServo[i]));
-                                    }
-                                }
-                                //set Step Open Close
-                                for(int i = 0; i < MAX_MOTOR; i++){
-                                    spnOpenStep1Motor[i].setSelection(intOpenStep1[i]);
-                                    spnOpenStep2Motor[i].setSelection(intOpenStep2[i]);
-                                    spnOpenStep3Motor[i].setSelection(intOpenStep3[i]);
-                                    spnCloseStep1Motor[i].setSelection(intCloseStep1[i]);
-                                    spnCloseStep2Motor[i].setSelection(intCloseStep2[i]);
-                                    spnCloseStep3Motor[i].setSelection(intCloseStep3[i]);
-                                }
-                                //Voltage
-                                for(int i = 0; i < MAX_MOTOR; i++){
-                                    spnVoltageMotor[i].setSelection(Voltage[i]);
-                                }
-                            }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Log.d("http_request", e.toString());
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                layoutGetDataSetting.setVisibility(View.INVISIBLE);
-                                Toast.makeText(MainActivity.this, "Không thể lấy dữ liệu!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                }
-                else if(flagSelectSaveOkSettingLayout){
-                    flagSelectSaveOkSettingLayout = false;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            layoutSaveDataSetting.setVisibility(View.INVISIBLE);
-                            layoutGetDataSetting.setVisibility(View.INVISIBLE);
-                            proBarLoadingSaveDataSetting.setVisibility(View.INVISIBLE);
-                        }
-                    });
-                }
-            }
-        });
-    }
-
 
     public void selectImage() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -1692,7 +1522,6 @@ public class MainActivity extends AppCompatActivity {
                         InputStream inputStream = getContentResolver().openInputStream(selectImageUri);
                         Log.d("filename_path", selectImageUri.toString());
 
-
                         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                         imgBackground.setImageBitmap(bitmap);
 //                        saveBitmap(bitmap);
@@ -1719,6 +1548,44 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        if(requestCode == REQUEST_CODE_SELECT_FILE_SETTING && resultCode == RESULT_OK){
+            if(data != null){
+                Uri uri = data.getData();
+                byte[] bytes = getBytesFromUri(getApplicationContext(), uri);
+                String dataFile = new String(bytes);
+                try {
+                    JSONArray jsonArray = new JSONArray(dataFile);
+                    for(int i = 0; i < jsonArray.length(); i++){
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        txtNameGetSetting[i].setText(jsonObject.getString("name"));
+                    }
+                    saveTextFileToLocal(dataFile);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+    byte[] getBytesFromUri(Context context, Uri uri){
+        InputStream iStream = null;
+        try {
+            iStream = context.getContentResolver().openInputStream(uri);
+            ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+            int len = 0;
+            while ( (len = iStream.read(buffer)) != -1){
+                byteBuffer.write(buffer, 0, len);
+            }
+            return byteBuffer.toByteArray();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
     private void saveImage(Bitmap bitmap, @NonNull String name) throws IOException {
