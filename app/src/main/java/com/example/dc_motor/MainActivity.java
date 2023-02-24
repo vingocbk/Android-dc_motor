@@ -177,6 +177,8 @@ public class MainActivity extends AppCompatActivity {
     public static int REQUEST_BLUETOOTH = 1;
     public static int REQUEST_DISCOVERABLE_BT = 1;
     public static int REQUEST_CODE_STORAGE_PERMISSION = 1;
+    public static int REQUEST_CODE_WRITE_PERMISSION = 10;
+    public static int REQUEST_CODE_READ_PERMISSION = 11;
     public static int REQUEST_CODE_SELECT_IMAGE = 2;
     public static int REQUEST_CODE_SELECT_FILE_SETTING = 3;
     private static final UUID MY_UUID_INSECURE =
@@ -227,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
 //                WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN); //enable full screen
         setContentView(R.layout.activity_main);
 
+        CheckPermission();
         InitLayout();
         LoadDataBegin();
 
@@ -378,6 +381,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Log.i("jsonObject put", dataLocal);
                 saveTextFileToLocal(dataLocal);
+                saveTextFileToDownloadFolder(dataLocal);
             }
         });
         btnCancelSaveSetting.setOnClickListener(new View.OnClickListener() {
@@ -916,27 +920,16 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
 //        checkBluetoothStatus();
     }
-    public void checkBluetoothStatus(){
-//        while (true){
-//            final Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (mmDevice == null || !isConnected(mmDevice)) {
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                Log.d(TAG, "checkBluetoothStatus");
-//                                imgBluetoothConnection.setBackgroundResource(R.mipmap.ic_bluetooth_disconnected);
-//                                txtNameBluetoothConnection.setText("No Connected");
-//                            }
-//                        });
-//                    }
-//                }
-//            }, 500);
-//        }
 
-
+    void CheckPermission(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_PERMISSION);
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_READ_PERMISSION);
+        }
     }
 
     public void InitLayout(){
@@ -1365,19 +1358,18 @@ public class MainActivity extends AppCompatActivity {
 //            e.printStackTrace();
 //            Log.d("http_request", e.toString());
 //        }
-        readSettingFromLocal();
+        readSettingFromLocalBegin();
 
     }
 
-    void readSettingFromLocal(){
+    void readSettingFromLocalBegin(){
         //Create file if not exist
-        File fileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),file_folder_name_save_setting);
-        if (!fileDir.exists())
-        {
-            fileDir.mkdirs();
-        }
-        fileSaveText = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                + "/" + file_folder_name_save_setting,file_name_save_setting);
+//        File fileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),file_folder_name_save_setting);
+//        if (!fileDir.exists())
+//        {
+//            fileDir.mkdirs();
+//        }
+        fileSaveText = new File(MainActivity.this.getFilesDir(),file_name_save_setting);
         if (!fileSaveText.exists()){
             try{
                 fileSaveText.createNewFile();
@@ -1396,12 +1388,16 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         try {
-            in.read(bytes);
+            if(in != null){
+                in.read(bytes);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
-                in.close();
+                if(in != null){
+                    in.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1479,6 +1475,34 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "file not found!", Toast.LENGTH_SHORT).show();
         }
     }
+    public void saveTextFileToDownloadFolder(String content){
+        File fileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),file_folder_name_save_setting);
+        if (!fileDir.exists())
+        {
+            fileDir.mkdirs();
+        }
+        File fileSaveTextDownload = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                + "/" + file_folder_name_save_setting,file_name_save_setting);
+        if(fileSaveTextDownload.exists()){
+            Toast.makeText(MainActivity.this, "exists!", Toast.LENGTH_SHORT).show();
+            fileSaveTextDownload.deleteOnExit();
+            fileSaveTextDownload.delete();
+        }
+//        try {
+//            FileOutputStream fos = new FileOutputStream(fileSaveTextDownload);
+//            try {
+//                fos.write(content.getBytes());
+//                fos.close();
+//                Toast.makeText(MainActivity.this, "save!", Toast.LENGTH_SHORT).show();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                Toast.makeText(MainActivity.this, "error save!", Toast.LENGTH_SHORT).show();
+//            }
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//            Toast.makeText(MainActivity.this, "file not found!", Toast.LENGTH_SHORT).show();
+//        }
+    }
 
     public void selectImage() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -1500,6 +1524,14 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 Toast.makeText(MainActivity.this, "Permission denied!", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(requestCode == REQUEST_CODE_WRITE_PERMISSION){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(MainActivity.this, "Permission write granted!", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(MainActivity.this, "Permission write not granted!", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
     }
@@ -1561,9 +1593,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                     saveTextFileToLocal(dataFile);
                 } catch (JSONException e) {
+                    Toast.makeText(MainActivity.this, "Can't Load Data", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-
             }
         }
     }
