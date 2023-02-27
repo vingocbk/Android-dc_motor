@@ -24,25 +24,21 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
+//import android.os.FileUtils;
 import android.os.ParcelUuid;
+
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -55,11 +51,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import org.apache.http.HttpResponse;
-//import org.apache.http.client.ClientProtocolException;
-//import org.apache.http.client.HttpClient;
-//import org.apache.http.client.methods.HttpGet;
-//import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -202,24 +193,16 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     String[] name = {"Motor1","Motor2","Motor3","Motor4","Motor5","Motor6","Motor7","Motor8","Motor9"};
-    String[] nameSetting = {"Setting 1", "Setting 2", "Setting 3"};
+
     String nameUri = "Uri";
     String IMAGES_FOLDER_NAME = "Landing";
     File fileSaveText;
     String file_folder_name_save_setting = "LandingGear";
-    String file_name_save_setting = "LandingGear.txt";
+    String file_name_local_save_setting = "LandingGear.txt";
+    String file_name_download_save_setting = "fileName";
     String strIndexName = "index";
     int indexNameImageBackGround = 0;
 
-    int flagSelectModalLoading = 0;
-    String urlGetNameSetting = "https://api.thingspeak.com/channels/1969737/fields/1.json?api_key=ZI2MYDWIG7Y674KN&results=1";
-    String urlGetSetting1 = "https://api.thingspeak.com/channels/1969538/feeds.json?api_key=MMUTBRCJKWS1L8TN&results=1";
-    String urlGetSetting2 = "https://api.thingspeak.com/channels/1969897/feeds.json?api_key=1DHSPY6TXVSPB5Q4&results=1";
-    String urlGetSetting3 = "https://api.thingspeak.com/channels/1969899/feeds.json?api_key=LGS28Z5RN15O2R91&results=1";
-    String urlPreSendNameSetting = "https://api.thingspeak.com/update?api_key=EPA2OD7UXCTK3X8G&";
-    String urlPreSendSetting1 = "https://api.thingspeak.com/update?api_key=JGLCM0HF57JB8YBZ&";
-    String urlPreSendSetting2 = "https://api.thingspeak.com/update?api_key=MGF81HYNBX9QZQ2I&";
-    String urlPreSendSetting3 = "https://api.thingspeak.com/update?api_key=10MX1ZD6VJCN806E&";
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1363,13 +1346,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void readSettingFromLocalBegin(){
-        //Create file if not exist
-//        File fileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),file_folder_name_save_setting);
-//        if (!fileDir.exists())
-//        {
-//            fileDir.mkdirs();
-//        }
-        fileSaveText = new File(MainActivity.this.getFilesDir(),file_name_save_setting);
+        fileSaveText = new File(MainActivity.this.getFilesDir(),file_name_local_save_setting);
         if (!fileSaveText.exists()){
             try{
                 fileSaveText.createNewFile();
@@ -1465,6 +1442,60 @@ public class MainActivity extends AppCompatActivity {
             try {
                 fos.write(content.getBytes());
                 fos.close();
+//                Toast.makeText(MainActivity.this, "save!", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+//                Toast.makeText(MainActivity.this, "error save!", Toast.LENGTH_SHORT).show();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+//            Toast.makeText(MainActivity.this, "file not found!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void saveTextFileToDownloadFolder(String content){
+        File fileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),file_folder_name_save_setting);
+        if (!fileDir.exists())
+        {
+            fileDir.mkdirs();
+        }
+        File fileSaveTextDownload;
+        String file_name = sharedPreferences.getString(file_name_download_save_setting, "");
+        if(file_name.equals("")){
+            int count = 0;
+            while(true){
+                fileSaveTextDownload = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                        + "/" + file_folder_name_save_setting,file_folder_name_save_setting + String.valueOf(count)+".txt");
+                if(!fileSaveTextDownload.exists()){
+                    editor.putString(file_name_download_save_setting, file_folder_name_save_setting + String.valueOf(count)+".txt");
+                    break;
+                }
+                if(fileSaveTextDownload.exists()){
+                    if(fileSaveTextDownload.delete()){
+                        editor.putString(file_name_download_save_setting, file_folder_name_save_setting + String.valueOf(count)+".txt");
+                        break;
+                    }
+                    Log.i("jsonObject put", fileSaveTextDownload.getAbsolutePath());
+                }
+                count++;
+            }
+        }
+        else{
+            fileSaveTextDownload = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                    + "/" + file_folder_name_save_setting,file_name);
+        }
+
+        if(!fileSaveTextDownload.exists()){
+            try {
+                fileSaveTextDownload.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(fileSaveTextDownload);
+            try {
+                fos.write(content.getBytes());
+                fos.close();
                 Toast.makeText(MainActivity.this, "save!", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1474,34 +1505,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             Toast.makeText(MainActivity.this, "file not found!", Toast.LENGTH_SHORT).show();
         }
-    }
-    public void saveTextFileToDownloadFolder(String content){
-        File fileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),file_folder_name_save_setting);
-        if (!fileDir.exists())
-        {
-            fileDir.mkdirs();
-        }
-        File fileSaveTextDownload = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                + "/" + file_folder_name_save_setting,file_name_save_setting);
-        if(fileSaveTextDownload.exists()){
-            Toast.makeText(MainActivity.this, "exists!", Toast.LENGTH_SHORT).show();
-            fileSaveTextDownload.deleteOnExit();
-            fileSaveTextDownload.delete();
-        }
-//        try {
-//            FileOutputStream fos = new FileOutputStream(fileSaveTextDownload);
-//            try {
-//                fos.write(content.getBytes());
-//                fos.close();
-//                Toast.makeText(MainActivity.this, "save!", Toast.LENGTH_SHORT).show();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                Toast.makeText(MainActivity.this, "error save!", Toast.LENGTH_SHORT).show();
-//            }
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//            Toast.makeText(MainActivity.this, "file not found!", Toast.LENGTH_SHORT).show();
-//        }
     }
 
     public void selectImage() {
