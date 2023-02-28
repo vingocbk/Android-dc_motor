@@ -198,8 +198,8 @@ public class MainActivity extends AppCompatActivity {
     String IMAGES_FOLDER_NAME = "Landing";
     File fileSaveText;
     String file_folder_name_save_setting = "LandingGear";
-    String file_name_local_save_setting = "LandingGear.txt";
-    String file_name_download_save_setting = "fileName";
+    String file_name_local_save_setting = "LandingGear1.txt";
+    String file_name_download_save_setting = "fileNameDC";
     String strIndexName = "index";
     int indexNameImageBackGround = 0;
 
@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     JSONArray jsonArraySetting = new JSONArray(dataLocal);
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("name", edtSaveNameSetting.getText().toString());
+                    jsonObject.put("name setting", edtSaveNameSetting.getText().toString());
                     JSONObject jsonObjectData = new JSONObject();
                     JSONArray jsonArrayNameMotor = new JSONArray();
                     JSONArray jsonArrayMinCurrent = new JSONArray();
@@ -414,7 +414,7 @@ public class MainActivity extends AppCompatActivity {
                         JSONArray jsonArraySetting = new JSONArray(data);
                         JSONObject jsonObjectSetting = jsonArraySetting.getJSONObject(finalI);
                         txtModalLoading.setText("Model " + String.valueOf(finalI + 1) + ": "
-                                + jsonObjectSetting.getString("name"));
+                                + jsonObjectSetting.getString("name setting"));
                         JSONObject jsonObjectData = jsonObjectSetting.getJSONObject("data");
                         JSONArray jsonArrayName = jsonObjectData.getJSONArray("name");
                         JSONArray jsonArrayMinCurrent = jsonObjectData.getJSONArray("minCurrent");
@@ -1355,37 +1355,38 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        //read data from file
-        int length = (int) fileSaveText.length();
-        byte[] bytes = new byte[length];
-        FileInputStream in = null;
-        try {
-            in = new FileInputStream(fileSaveText);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            if(in != null){
-                in.read(bytes);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if(in != null){
-                    in.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        //read data from file
+//        int length = (int) fileSaveText.length();
+//        byte[] bytes = new byte[length];
+//        FileInputStream in = null;
+//        try {
+//            in = new FileInputStream(fileSaveText);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            if(in != null){
+//                in.read(bytes);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if(in != null){
+//                    in.close();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
         String contentsLoadSettingLocalFile = getDataSettingLocal();
+        Log.i("jsonObject put", "test: " + contentsLoadSettingLocalFile);
         if(contentsLoadSettingLocalFile.equals("")){
             JSONArray jsonArraySetting = new JSONArray();
             for(int i = 0; i < 3; i++){
                 JSONObject jsonObjectSetting1 = new JSONObject();
                 try {
-                    jsonObjectSetting1.put("name", "No Data");
+                    jsonObjectSetting1.put("name setting", "No Data");
                     jsonObjectSetting1.put("data", null);
                     jsonArraySetting.put(jsonObjectSetting1);
 
@@ -1402,7 +1403,7 @@ public class MainActivity extends AppCompatActivity {
             JSONArray jsonArraySetting = new JSONArray(contentsLoadSettingLocalFile);
             for(int i = 0; i < jsonArraySetting.length(); i++){
                 JSONObject jsonObjectSetting = jsonArraySetting.getJSONObject(i);
-                txtNameGetSetting[i].setText(jsonObjectSetting.getString("name"));
+                txtNameGetSetting[i].setText(jsonObjectSetting.getString("name setting"));
             }
         } catch (JSONException e) {
             Toast.makeText(MainActivity.this, "Can,t load data setting", Toast.LENGTH_SHORT).show();
@@ -1592,7 +1593,8 @@ public class MainActivity extends AppCompatActivity {
                     JSONArray jsonArray = new JSONArray(dataFile);
                     for(int i = 0; i < jsonArray.length(); i++){
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        txtNameGetSetting[i].setText(jsonObject.getString("name"));
+                        txtNameGetSetting[i].setText(jsonObject.getString("name setting"));
+//                        JSONObject jsonObjectData = jsonObject.getJSONObject("data");
                     }
                     saveTextFileToLocal(dataFile);
                 } catch (JSONException e) {
