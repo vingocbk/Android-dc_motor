@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -28,7 +27,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-//import android.os.FileUtils;
 import android.os.ParcelUuid;
 
 import android.preference.PreferenceManager;
@@ -41,13 +39,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,7 +50,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,16 +57,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,16 +67,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static android.R.layout.simple_list_item_1;
-import static android.R.layout.simple_spinner_dropdown_item;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 //import com.android.volley.Request;
 //import com.android.volley.RequestQueue;
@@ -130,9 +108,10 @@ public class MainActivity extends AppCompatActivity {
     CheckBox[] cbSelectMotor = new CheckBox[MAX_MOTOR];
     CheckBox[] cbSelectServo = new CheckBox[MAX_MOTOR];
     CheckBox[] cbReverseMotor = new CheckBox[MAX_MOTOR];
-    EditText[] edtStartAngleServo = new EditText[MAX_MOTOR];
-    EditText[] edtEndAngleServo = new EditText[MAX_MOTOR];
+    EditText[] edtAngleOpenServo = new EditText[MAX_MOTOR];
+    EditText[] edtAngleCloseServo = new EditText[MAX_MOTOR];
     EditText[] edtRunTimeServo = new EditText[MAX_MOTOR];
+    EditText[] edtSpeedServo = new EditText[MAX_MOTOR];
     Button btnSaveDataAllMotor;
 
     //---------------------------------------------
@@ -287,6 +266,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONArray jsonArrayStartAngle = new JSONArray();
                     JSONArray jsonArrayEndAngle = new JSONArray();
                     JSONArray jsonArrayTimeServo = new JSONArray();
+                    JSONArray jsonArraySpeedServo = new JSONArray();
                     JSONArray jsonArrayOpenStep1 = new JSONArray();
                     JSONArray jsonArrayOpenStep2 = new JSONArray();
                     JSONArray jsonArrayOpenStep3 = new JSONArray();
@@ -321,19 +301,19 @@ public class MainActivity extends AppCompatActivity {
                         jsonArrayReverse.put(cbReverseMotor[i].isChecked());
                         jsonObjectData.put("reverse", jsonArrayReverse);
                         //Start Angle
-                        if(edtStartAngleServo[i].getText().toString().equals("")){
+                        if(edtAngleOpenServo[i].getText().toString().equals("")){
                             jsonArrayStartAngle.put(-1);
                         }else{
-                            jsonArrayStartAngle.put(Integer.valueOf(edtStartAngleServo[i].getText().toString()));
+                            jsonArrayStartAngle.put(Integer.valueOf(edtAngleOpenServo[i].getText().toString()));
                         }
-                        jsonObjectData.put("startAngle", jsonArrayStartAngle);
+                        jsonObjectData.put("openAngle", jsonArrayStartAngle);
                         //End Angle
-                        if(edtEndAngleServo[i].getText().toString().equals("")){
+                        if(edtAngleCloseServo[i].getText().toString().equals("")){
                             jsonArrayEndAngle.put(-1);
                         }else{
-                            jsonArrayEndAngle.put(Integer.valueOf(edtEndAngleServo[i].getText().toString()));
+                            jsonArrayEndAngle.put(Integer.valueOf(edtAngleCloseServo[i].getText().toString()));
                         }
-                        jsonObjectData.put("endAngle", jsonArrayEndAngle);
+                        jsonObjectData.put("closeAngle", jsonArrayEndAngle);
                         //Time Servo
                         if(edtRunTimeServo[i].getText().toString().equals("")){
                             jsonArrayTimeServo.put(-1);
@@ -341,6 +321,13 @@ public class MainActivity extends AppCompatActivity {
                             jsonArrayTimeServo.put(Integer.valueOf(edtRunTimeServo[i].getText().toString()));
                         }
                         jsonObjectData.put("timeServo", jsonArrayTimeServo);
+                        //Speed Servo
+                        if(edtSpeedServo[i].getText().toString().equals("")){
+                            jsonArraySpeedServo.put(-1);
+                        }else{
+                            jsonArraySpeedServo.put(Integer.valueOf(edtSpeedServo[i].getText().toString()));
+                        }
+                        jsonObjectData.put("speedServo", jsonArraySpeedServo);
                         //Step
                         jsonArrayOpenStep1.put(spnOpenStep1Motor[i].getSelectedItemPosition());
                         jsonObjectData.put("openStep1", jsonArrayOpenStep1);
@@ -355,7 +342,6 @@ public class MainActivity extends AppCompatActivity {
                         jsonArrayCloseStep3.put(spnCloseStep3Motor[i].getSelectedItemPosition());
                         jsonObjectData.put("closeStep3", jsonArrayCloseStep3);
                     }
-
                     jsonObject.put("data", jsonObjectData);
                     jsonArraySetting.put(index, jsonObject);
                     dataLocal = jsonArraySetting.toString();
@@ -422,9 +408,10 @@ public class MainActivity extends AppCompatActivity {
                         JSONArray jsonArraySelectMotor = jsonObjectData.getJSONArray("selectMotor");
                         JSONArray jsonArraySelectServo = jsonObjectData.getJSONArray("selectServo");
                         JSONArray jsonArrayReverse = jsonObjectData.getJSONArray("reverse");
-                        JSONArray jsonArrayStartAngle = jsonObjectData.getJSONArray("startAngle");
-                        JSONArray jsonArrayEndAngle = jsonObjectData.getJSONArray("endAngle");
+                        JSONArray jsonArrayStartAngle = jsonObjectData.getJSONArray("openAngle");
+                        JSONArray jsonArrayEndAngle = jsonObjectData.getJSONArray("closeAngle");
                         JSONArray jsonArrayTimeServo = jsonObjectData.getJSONArray("timeServo");
+                        JSONArray jsonArraySpeedServo = jsonObjectData.getJSONArray("speedServo");
                         JSONArray jsonArrayOpenStep1 = jsonObjectData.getJSONArray("openStep1");
                         JSONArray jsonArrayOpenStep2 = jsonObjectData.getJSONArray("openStep2");
                         JSONArray jsonArrayOpenStep3 = jsonObjectData.getJSONArray("openStep3");
@@ -456,17 +443,17 @@ public class MainActivity extends AppCompatActivity {
                             cbReverseMotor[i].setChecked(jsonArrayReverse.getBoolean(i));
                             //Start Angle
                             if(jsonArrayStartAngle.getInt(i) != -1){
-                                edtStartAngleServo[i].setText(String.valueOf(jsonArrayStartAngle.getInt(i)));
+                                edtAngleOpenServo[i].setText(String.valueOf(jsonArrayStartAngle.getInt(i)));
                             }
                             else{
-                                edtStartAngleServo[i].getText().clear();
+                                edtAngleOpenServo[i].getText().clear();
                             }
                             //End Angle
                             if(jsonArrayEndAngle.getInt(i) != -1){
-                                edtEndAngleServo[i].setText(String.valueOf(jsonArrayEndAngle.getInt(i)));
+                                edtAngleCloseServo[i].setText(String.valueOf(jsonArrayEndAngle.getInt(i)));
                             }
                             else{
-                                edtEndAngleServo[i].getText().clear();
+                                edtAngleCloseServo[i].getText().clear();
                             }
                             //Time Servo
                             if(jsonArrayTimeServo.getInt(i) != -1){
@@ -474,6 +461,13 @@ public class MainActivity extends AppCompatActivity {
                             }
                             else{
                                 edtRunTimeServo[i].getText().clear();
+                            }
+                            //Speed Servo
+                            if(jsonArraySpeedServo.getInt(i) != -1){
+                                edtSpeedServo[i].setText(String.valueOf(jsonArraySpeedServo.getInt(i)));
+                            }
+                            else{
+                                edtSpeedServo[i].getText().clear();
                             }
                             //Step
                             spnOpenStep1Motor[i].setSelection(jsonArrayOpenStep1.getInt(i));
@@ -610,8 +604,8 @@ public class MainActivity extends AppCompatActivity {
                         data.append(",");
                     }
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        if(!edtStartAngleServo[i].getText().toString().equals("")){
-                            data.append(edtStartAngleServo[i].getText().toString());
+                        if(!edtAngleOpenServo[i].getText().toString().equals("")){
+                            data.append(edtAngleOpenServo[i].getText().toString());
                         }
                         else{
                             data.append("-1");
@@ -619,8 +613,8 @@ public class MainActivity extends AppCompatActivity {
                         data.append(",");
                     }
                     for(int i = 0; i < MAX_MOTOR; i++){
-                        if(!edtEndAngleServo[i].getText().toString().equals("")){
-                            data.append(edtEndAngleServo[i].getText().toString());
+                        if(!edtAngleCloseServo[i].getText().toString().equals("")){
+                            data.append(edtAngleCloseServo[i].getText().toString());
                         }
                         else{
                             data.append("-1");
@@ -630,6 +624,15 @@ public class MainActivity extends AppCompatActivity {
                     for(int i = 0; i < MAX_MOTOR; i++){
                         if(!edtRunTimeServo[i].getText().toString().equals("")){
                             data.append(edtRunTimeServo[i].getText().toString());
+                        }
+                        else{
+                            data.append("-1");
+                        }
+                        data.append(",");
+                    }
+                    for(int i = 0; i < MAX_MOTOR; i++){
+                        if(!edtSpeedServo[i].getText().toString().equals("")){
+                            data.append(edtSpeedServo[i].getText().toString());
                         }
                         else{
                             data.append("-1");
@@ -1073,25 +1076,25 @@ public class MainActivity extends AppCompatActivity {
         cbReverseMotor[7] = findViewById(R.id.cbReverseMotor8);
         cbReverseMotor[8] = findViewById(R.id.cbReverseMotor9);
 
-        edtStartAngleServo[0] = findViewById(R.id.edtStartAngleServo1);
-        edtStartAngleServo[1] = findViewById(R.id.edtStartAngleServo2);
-        edtStartAngleServo[2] = findViewById(R.id.edtStartAngleServo3);
-        edtStartAngleServo[3] = findViewById(R.id.edtStartAngleServo4);
-        edtStartAngleServo[4] = findViewById(R.id.edtStartAngleServo5);
-        edtStartAngleServo[5] = findViewById(R.id.edtStartAngleServo6);
-        edtStartAngleServo[6] = findViewById(R.id.edtStartAngleServo7);
-        edtStartAngleServo[7] = findViewById(R.id.edtStartAngleServo8);
-        edtStartAngleServo[8] = findViewById(R.id.edtStartAngleServo9);
+        edtAngleOpenServo[0] = findViewById(R.id.edtAngleOpenServo1);
+        edtAngleOpenServo[1] = findViewById(R.id.edtAngleOpenServo2);
+        edtAngleOpenServo[2] = findViewById(R.id.edtAngleOpenServo3);
+        edtAngleOpenServo[3] = findViewById(R.id.edtAngleOpenServo4);
+        edtAngleOpenServo[4] = findViewById(R.id.edtAngleOpenServo5);
+        edtAngleOpenServo[5] = findViewById(R.id.edtAngleOpenServo6);
+        edtAngleOpenServo[6] = findViewById(R.id.edtAngleOpenServo7);
+        edtAngleOpenServo[7] = findViewById(R.id.edtAngleOpenServo8);
+        edtAngleOpenServo[8] = findViewById(R.id.edtAngleOpenServo9);
 
-        edtEndAngleServo[0] = findViewById(R.id.edtEndAngleServo1);
-        edtEndAngleServo[1] = findViewById(R.id.edtEndAngleServo2);
-        edtEndAngleServo[2] = findViewById(R.id.edtEndAngleServo3);
-        edtEndAngleServo[3] = findViewById(R.id.edtEndAngleServo4);
-        edtEndAngleServo[4] = findViewById(R.id.edtEndAngleServo5);
-        edtEndAngleServo[5] = findViewById(R.id.edtEndAngleServo6);
-        edtEndAngleServo[6] = findViewById(R.id.edtEndAngleServo7);
-        edtEndAngleServo[7] = findViewById(R.id.edtEndAngleServo8);
-        edtEndAngleServo[8] = findViewById(R.id.edtEndAngleServo9);
+        edtAngleCloseServo[0] = findViewById(R.id.edtAngleCloseServo1);
+        edtAngleCloseServo[1] = findViewById(R.id.edtAngleCloseServo2);
+        edtAngleCloseServo[2] = findViewById(R.id.edtAngleCloseServo3);
+        edtAngleCloseServo[3] = findViewById(R.id.edtAngleCloseServo4);
+        edtAngleCloseServo[4] = findViewById(R.id.edtAngleCloseServo5);
+        edtAngleCloseServo[5] = findViewById(R.id.edtAngleCloseServo6);
+        edtAngleCloseServo[6] = findViewById(R.id.edtAngleCloseServo7);
+        edtAngleCloseServo[7] = findViewById(R.id.edtAngleCloseServo8);
+        edtAngleCloseServo[8] = findViewById(R.id.edtAngleCloseServo9);
 
         edtRunTimeServo[0] = findViewById(R.id.edtRunTimeServo1);
         edtRunTimeServo[1] = findViewById(R.id.edtRunTimeServo2);
@@ -1102,6 +1105,16 @@ public class MainActivity extends AppCompatActivity {
         edtRunTimeServo[6] = findViewById(R.id.edtRunTimeServo7);
         edtRunTimeServo[7] = findViewById(R.id.edtRunTimeServo8);
         edtRunTimeServo[8] = findViewById(R.id.edtRunTimeServo9);
+
+        edtSpeedServo[0] = findViewById(R.id.edtSpeedServo1);
+        edtSpeedServo[1] = findViewById(R.id.edtSpeedServo2);
+        edtSpeedServo[2] = findViewById(R.id.edtSpeedServo3);
+        edtSpeedServo[3] = findViewById(R.id.edtSpeedServo4);
+        edtSpeedServo[4] = findViewById(R.id.edtSpeedServo5);
+        edtSpeedServo[5] = findViewById(R.id.edtSpeedServo6);
+        edtSpeedServo[6] = findViewById(R.id.edtSpeedServo7);
+        edtSpeedServo[7] = findViewById(R.id.edtSpeedServo8);
+        edtSpeedServo[8] = findViewById(R.id.edtSpeedServo9);
 
         btnSaveDataAllMotor = findViewById(R.id.btnSaveDataAllMotor);
 
@@ -1836,10 +1849,10 @@ public class MainActivity extends AppCompatActivity {
                                             else{
                                                 cbReverseMotor[i].setChecked(false);
                                             }
-                                            edtStartAngleServo[i].setText(String.valueOf(array.getInt(5*MAX_MOTOR+i)));
-                                            edtEndAngleServo[i].setText(String.valueOf(array.getInt(6*MAX_MOTOR+i)));
+                                            edtAngleOpenServo[i].setText(String.valueOf(array.getInt(5*MAX_MOTOR+i)));
+                                            edtAngleCloseServo[i].setText(String.valueOf(array.getInt(6*MAX_MOTOR+i)));
                                             edtRunTimeServo[i].setText(String.valueOf(array.getInt(7*MAX_MOTOR+i)));
-
+                                            edtSpeedServo[i].setText(String.valueOf(array.getInt(8*MAX_MOTOR+i)));
                                         } catch (JSONException e) {
 //                                            Log.d(TAG, "InputStream: " + e.toString());
                                             e.printStackTrace();
